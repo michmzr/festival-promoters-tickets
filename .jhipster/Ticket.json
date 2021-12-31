@@ -1,0 +1,32 @@
+{
+  "name": "Ticket",
+  "fields": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "ticketType",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "ticketType",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "guest",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "guest",
+      "ownerSide": false
+    }
+  ],
+  "changelogDate": "20211231141022",
+  "entityTableName": "ticket",
+  "dto": "mapstruct",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": true,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,45 @@
+<div>
+    <h2 id="page-heading">
+        <span>Tickets</span>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="tickets?.length === 0">
+        <span>No tickets found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="tickets && tickets.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Ticket Type</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ticket of tickets ;trackBy: trackId">
+                    <td><a [routerLink]="['/ticket', ticket.id, 'view']">{{ ticket.id }}</a></td>
+                    <td>
+                        <div *ngIf="ticket.ticketTypeId">
+                            <a [routerLink]="['/ticket-type', ticket.ticketTypeId , 'view']" >{{ ticket.ticketTypeId }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/ticket', ticket.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

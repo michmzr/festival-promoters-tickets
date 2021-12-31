@@ -1,0 +1,58 @@
+entity Promotor {
+	name String required,
+    lastName String required,
+    email String,
+    phoneNumber String ,
+    notes String maxlength(500),
+   createdAt Instant,
+   enabled Boolean required,
+}
+
+entity Guest {
+	name String required,
+    lastName String required,
+    email String required,
+    phoneNumber String ,
+    notes String maxlength(500),
+   createdAt Instant,
+   enabled Boolean required,
+}
+
+entity Ticket {
+   uuid UUID required,
+   ticketUrl String required unique,
+   ticketQR ImageBlob required unique,
+   ticketFile ImageBlob required unique,
+   enabled Boolean required,
+   disabledAt Instant,
+   createdAt Instant required,
+}
+
+entity TicketType {
+	name String required maxlength(30),
+    notes String maxlength(500),
+}
+
+relationship OneToOne {
+	Guest to Ticket,
+    Ticket to TicketType
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Promotor to Guest
+}
+
+// Set pagination options
+paginate Promotor, Guest with infinite-scroll
+
+// Use Data Transfert Objects (DTO)
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+@readOnly
+entity Ticket
+// Set an angular suffix
+// angularSuffix * with mySuffix
