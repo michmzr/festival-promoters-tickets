@@ -30,6 +30,7 @@ public class Guest implements Serializable {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @Email
     @NotNull
     @Column(name = "email", nullable = false)
     private String email;

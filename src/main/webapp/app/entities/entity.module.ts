@@ -20,6 +20,10 @@ import { RouterModule } from '@angular/router';
         path: 'ticket-type',
         loadChildren: () => import('./ticket-type/ticket-type.module').then(m => m.OrganicPromoTicketsTicketTypeModule),
       },
+      {
+        path: 'country',
+        loadChildren: () => import('./country/country.module').then(m => m.OrganicPromoTicketsCountryModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

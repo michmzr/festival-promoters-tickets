@@ -1,3 +1,7 @@
+entity Country {
+	countryName String
+}
+
 entity Promotor {
 	name String required,
     lastName String required,
@@ -20,12 +24,12 @@ entity Guest {
 
 entity Ticket {
    uuid UUID required,
-   ticketUrl String required unique,
-   ticketQR ImageBlob required unique,
-   ticketFile ImageBlob required unique,
+   ticketUrl String required,
+   ticketQR ImageBlob required,
+   ticketFile ImageBlob,
    enabled Boolean required,
-   disabledAt Instant,
    createdAt Instant required,
+   disabledAt Instant
 }
 
 entity TicketType {
@@ -52,7 +56,5 @@ dto * with mapstruct
 // Set service options to all except few
 service all with serviceImpl
 
-@readOnly
-entity Ticket
 // Set an angular suffix
 // angularSuffix * with mySuffix

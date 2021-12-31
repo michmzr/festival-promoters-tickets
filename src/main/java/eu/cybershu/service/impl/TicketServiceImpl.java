@@ -1,5 +1,7 @@
 package eu.cybershu.service.impl;
 
+import com.google.zxing.WriterException;
+import eu.cybershu.service.QRCodeService;
 import eu.cybershu.service.TicketService;
 import eu.cybershu.domain.Ticket;
 import eu.cybershu.repository.TicketRepository;
@@ -11,9 +13,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -24,23 +32,49 @@ import java.util.stream.StreamSupport;
 @Transactional
 public class TicketServiceImpl implements TicketService {
 
+    public static final String QRCODE_FORMAT = "png";
     private final Logger log = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     private final TicketRepository ticketRepository;
 
     private final TicketMapper ticketMapper;
+    private final QRCodeService qrCodeService;
 
-    public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper) {
+    public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper, QRCodeService qrCodeService) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
+        this.qrCodeService = qrCodeService;
     }
 
     @Override
-    public TicketDTO save(TicketDTO ticketDTO) {
+    public TicketDTO save(TicketDTO ticketDTO) throws WriterException, IOException {
         log.debug("Request to save Ticket : {}", ticketDTO);
         Ticket ticket = ticketMapper.toEntity(ticketDTO);
+
+        //todo handle exceptions
+        UUID uuid = UUID.randomUUID();
+
+        String ticketUrl = ticketUrl(uuid);
+        ticket.setUuid(uuid);
+        ticket.setTicketQR(generateQrCode(ticketUrl)); //todo create link
+        ticket.setTicketUrl(ticketUrl);
+        ticket.setCreatedAt(Instant.now());
+        ticket.setEnabled(true);
+
         ticket = ticketRepository.save(ticket);
         return ticketMapper.toDto(ticket);
+    }
+
+    private String ticketUrl(UUID uuid) {
+        return "/api/ticket/verify/" + uuid;
+    }
+
+    private byte[] generateQrCode(String qrCodeText) throws WriterException, IOException {
+        BufferedImage bufferedImage = qrCodeService.generateQRCode(qrCodeText);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, QRCODE_FORMAT, baos);
+        return baos.toByteArray();
     }
 
     @Override
@@ -58,7 +92,7 @@ public class TicketServiceImpl implements TicketService {
      *  Get all the tickets where Guest is {@code null}.
      *  @return the list of entities.
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<TicketDTO> findAllWhereGuestIsNull() {
         log.debug("Request to get all tickets where Guest is null");
         return StreamSupport

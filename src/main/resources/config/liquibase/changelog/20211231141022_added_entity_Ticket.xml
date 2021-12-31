@@ -15,11 +15,40 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="uuid" type="${uuidType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="ticket_url" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ticket_qr" type="longblob">
+                <constraints nullable="false" />
+            </column>
+            <column name="ticket_qr_content_type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ticket_file" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="ticket_file_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="enabled" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false" />
+            </column>
+            <column name="disabled_at" type="datetime">
+                <constraints nullable="true" />
+            </column>
             <column name="ticket_type_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_ticket_ticket_type_id" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="ticket" columnName="created_at" columnDataType="datetime"/>
+        <dropDefaultValue tableName="ticket" columnName="disabled_at" columnDataType="datetime"/>
     </changeSet>
 
     <changeSet id="20211231141022-1-relations" author="jhipster">
@@ -41,6 +70,15 @@
                   separator=";"
                   tableName="ticket">
             <column name="id" type="numeric"/>
+            <column name="uuid" type="${uuidType}"/>
+            <column name="ticket_url" type="string"/>
+            <column name="ticket_qr" type="blob"/>
+            <column name="ticket_qr_content_type" type="string"/>
+            <column name="ticket_file" type="blob"/>
+            <column name="ticket_file_content_type" type="string"/>
+            <column name="enabled" type="boolean"/>
+            <column name="created_at" type="datetime"/>
+            <column name="disabled_at" type="datetime"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

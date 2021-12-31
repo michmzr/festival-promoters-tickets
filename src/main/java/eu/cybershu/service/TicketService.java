@@ -1,7 +1,9 @@
 package eu.cybershu.service;
 
+import com.google.zxing.WriterException;
 import eu.cybershu.service.dto.TicketDTO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,7 @@ public interface TicketService {
      * @param ticketDTO the entity to save.
      * @return the persisted entity.
      */
-    TicketDTO save(TicketDTO ticketDTO);
+    TicketDTO save(TicketDTO ticketDTO) throws WriterException, IOException;
 
     /**
      * Get all the tickets.
