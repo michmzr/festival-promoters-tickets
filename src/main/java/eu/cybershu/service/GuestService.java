@@ -1,10 +1,14 @@
 package eu.cybershu.service;
 
+import com.google.zxing.WriterException;
+import eu.cybershu.service.dto.GuestCreateDTO;
 import eu.cybershu.service.dto.GuestDTO;
 
+import eu.cybershu.service.dto.GuestUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -18,7 +22,15 @@ public interface GuestService {
      * @param guestDTO the entity to save.
      * @return the persisted entity.
      */
-    GuestDTO save(GuestDTO guestDTO);
+    GuestDTO save(GuestCreateDTO guestDTO) throws IOException, WriterException;
+
+    /**
+     * Update a guest.
+     *
+     * @param guestDTO the entity to save.
+     * @return the persisted entity.
+     */
+    GuestDTO save(GuestUpdateDTO guestDTO);
 
     /**
      * Get all the guests.

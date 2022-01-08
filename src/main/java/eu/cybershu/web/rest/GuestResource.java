@@ -1,6 +1,9 @@
 package eu.cybershu.web.rest;
 
+import com.google.zxing.WriterException;
 import eu.cybershu.service.GuestService;
+import eu.cybershu.service.dto.GuestCreateDTO;
+import eu.cybershu.service.dto.GuestUpdateDTO;
 import eu.cybershu.web.rest.errors.BadRequestAlertException;
 import eu.cybershu.service.dto.GuestDTO;
 
@@ -19,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -52,12 +56,11 @@ public class GuestResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/guests")
-    public ResponseEntity<GuestDTO> createGuest(@Valid @RequestBody GuestDTO guestDTO) throws URISyntaxException {
+    public ResponseEntity<GuestDTO> createGuest(@Valid @RequestBody GuestCreateDTO guestDTO) throws URISyntaxException, IOException, WriterException {
         log.debug("REST request to save Guest : {}", guestDTO);
-        if (guestDTO.getId() != null) {
-            throw new BadRequestAlertException("A new guest cannot already have an ID", ENTITY_NAME, "idexists");
-        }
+
         GuestDTO result = guestService.save(guestDTO);
+
         return ResponseEntity.created(new URI("/api/guests/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -66,21 +69,23 @@ public class GuestResource {
     /**
      * {@code PUT  /guests} : Updates an existing guest.
      *
-     * @param guestDTO the guestDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated guestDTO,
-     * or with status {@code 400 (Bad Request)} if the guestDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the guestDTO couldn't be updated.
+     * @param guestUpdateTO the guestUpdateTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated guestUpdateTO,
+     * or with status {@code 400 (Bad Request)} if the guestUpdateTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the guestUpdateTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/guests")
-    public ResponseEntity<GuestDTO> updateGuest(@Valid @RequestBody GuestDTO guestDTO) throws URISyntaxException {
-        log.debug("REST request to update Guest : {}", guestDTO);
-        if (guestDTO.getId() == null) {
+    public ResponseEntity<GuestDTO> updateGuest(@Valid @RequestBody GuestUpdateDTO guestUpdateTO) throws URISyntaxException {
+        log.debug("REST request to update Guest : {}", guestUpdateTO);
+
+        if (guestUpdateTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        GuestDTO result = guestService.save(guestDTO);
+
+        GuestDTO result = guestService.save(guestUpdateTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, guestDTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, guestUpdateTO.getId().toString()))
             .body(result);
     }
 

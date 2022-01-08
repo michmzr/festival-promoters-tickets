@@ -19,7 +19,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link eu.cybershu.domain.Ticket}.
@@ -54,7 +53,7 @@ public class TicketResource {
         if (ticketDTO.getId() != null) {
             throw new BadRequestAlertException("A new ticket cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        TicketDTO result = ticketService.save(ticketDTO);
+        TicketDTO result = ticketService.create(ticketDTO);
         return ResponseEntity.created(new URI("/api/tickets/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -75,7 +74,11 @@ public class TicketResource {
         if (ticketDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        TicketDTO result = ticketService.save(ticketDTO);
+
+        //todo osobne DTO na edycje
+        //todo zmiana typu biletu -> kasuje stary i tworzy nowy
+
+        TicketDTO result = ticketService.create(ticketDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, ticketDTO.getId().toString()))
             .body(result);

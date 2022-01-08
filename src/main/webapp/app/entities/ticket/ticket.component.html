@@ -1,13 +1,6 @@
 <div>
     <h2 id="page-heading">
         <span>Tickets</span>
-
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-ticket" [routerLink]="['/ticket/new']">
-            <fa-icon icon="plus"></fa-icon>
-            <span>
-            Create a new Ticket
-            </span>
-        </button>
     </h2>
 
     <jhi-alert-error></jhi-alert-error>
@@ -68,12 +61,12 @@
                                 <span class="d-none d-md-inline">View</span>
                             </button>
 
-                            <button type="submit"
+                        <!--    <button type="submit"
                                     [routerLink]="['/ticket', ticket.id, 'edit']"
                                     class="btn btn-primary btn-sm">
                                 <fa-icon icon="pencil-alt"></fa-icon>
                                 <span class="d-none d-md-inline">Edit</span>
-                            </button>
+                            </button>-->
 
                             <button type="submit" (click)="delete(ticket)"
                                     class="btn btn-danger btn-sm">

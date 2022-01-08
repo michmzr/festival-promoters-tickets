@@ -8,12 +8,14 @@ import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
-import { IGuest, Guest } from 'app/shared/model/guest.model';
+import { Guest, IGuest } from 'app/shared/model/guest.model';
 import { GuestService } from './guest.service';
 import { ITicket } from 'app/shared/model/ticket.model';
 import { TicketService } from 'app/entities/ticket/ticket.service';
 import { IPromotor } from 'app/shared/model/promotor.model';
 import { PromotorService } from 'app/entities/promotor/promotor.service';
+import { TicketTypeService } from '../ticket-type/ticket-type.service';
+import { ITicketType } from '../../shared/model/ticket-type.model';
 
 type SelectableEntity = ITicket | IPromotor;
 
@@ -24,6 +26,7 @@ type SelectableEntity = ITicket | IPromotor;
 export class GuestUpdateComponent implements OnInit {
   isSaving = false;
   tickets: ITicket[] = [];
+  ticketTypes: ITicketType[] = [];
   promotors: IPromotor[] = [];
 
   editForm = this.fb.group({
@@ -36,6 +39,7 @@ export class GuestUpdateComponent implements OnInit {
     createdAt: [],
     enabled: [null, [Validators.required]],
     ticketId: [],
+    ticketTypeId: [null, [Validators.required]],
     promotorId: [],
   });
 
@@ -43,6 +47,7 @@ export class GuestUpdateComponent implements OnInit {
     protected guestService: GuestService,
     protected ticketService: TicketService,
     protected promotorService: PromotorService,
+    protected ticketTypeService: TicketTypeService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -78,6 +83,28 @@ export class GuestUpdateComponent implements OnInit {
           }
         });
 
+      this.ticketTypeService
+        .query({ filter: 'ticket-is-null' })
+        .pipe(
+          map((res: HttpResponse<ITicketType[]>) => {
+            return res.body || [];
+          })
+        )
+        .subscribe((resBody: ITicketType[]) => {
+          if (!guest.ticketTypeId) {
+            this.ticketTypes = resBody;
+          } else {
+            this.ticketTypeService
+              .find(guest.ticketTypeId)
+              .pipe(
+                map((subRes: HttpResponse<ITicketType>) => {
+                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
+                })
+              )
+              .subscribe((concatRes: ITicketType[]) => (this.ticketTypes = concatRes));
+          }
+        });
+
       this.promotorService.query().subscribe((res: HttpResponse<IPromotor[]>) => (this.promotors = res.body || []));
     });
   }
@@ -93,6 +120,7 @@ export class GuestUpdateComponent implements OnInit {
       createdAt: guest.createdAt ? guest.createdAt.format(DATE_TIME_FORMAT) : null,
       enabled: guest.enabled,
       ticketId: guest.ticketId,
+      ticketTypeId: guest.ticketTypeId,
       promotorId: guest.promotorId,
     });
   }
@@ -104,6 +132,7 @@ export class GuestUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const guest = this.createFromForm();
+    console.log(guest);
     if (guest.id !== undefined) {
       this.subscribeToSaveResponse(this.guestService.update(guest));
     } else {
@@ -123,6 +152,7 @@ export class GuestUpdateComponent implements OnInit {
       createdAt: this.editForm.get(['createdAt'])!.value ? moment(this.editForm.get(['createdAt'])!.value, DATE_TIME_FORMAT) : undefined,
       enabled: this.editForm.get(['enabled'])!.value,
       ticketId: this.editForm.get(['ticketId'])!.value,
+      ticketTypeId: this.editForm.get(['ticketTypeId'])!.value,
       promotorId: this.editForm.get(['promotorId'])!.value,
     };
   }

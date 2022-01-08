@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
-import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
+import { JhiDataUtils, JhiEventManager, JhiEventWithContent, JhiFileLoadError } from 'ng-jhipster';
 
 import { ITicket, Ticket } from 'app/shared/model/ticket.model';
 import { TicketService } from './ticket.service';
@@ -26,15 +26,15 @@ export class TicketUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     uuid: [null, [Validators.required]],
-    ticketUrl: [null, [Validators.required]],
-    ticketQR: [null, [Validators.required]],
+    ticketUrl: [null, []],
+    ticketQR: [null, []],
     ticketQRContentType: [],
     ticketFile: [],
     ticketFileContentType: [],
-    enabled: [null, [Validators.required]],
-    createdAt: [null, [Validators.required]],
+    enabled: [null, []],
+    createdAt: [null, []],
     disabledAt: [],
-    ticketTypeId: [],
+    ticketTypeId: [null, [Validators.required]],
   });
 
   constructor(

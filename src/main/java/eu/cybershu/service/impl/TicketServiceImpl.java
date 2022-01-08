@@ -47,7 +47,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public TicketDTO save(TicketDTO ticketDTO) throws WriterException, IOException {
+    public TicketDTO create(TicketDTO ticketDTO) throws WriterException, IOException {
         log.debug("Request to save Ticket : {}", ticketDTO);
         Ticket ticket = ticketMapper.toEntity(ticketDTO);
 
@@ -56,13 +56,24 @@ public class TicketServiceImpl implements TicketService {
 
         String ticketUrl = ticketUrl(uuid);
         ticket.setUuid(uuid);
-        ticket.setTicketQR(generateQrCode(ticketUrl)); //todo create link
+        ticket.setTicketQR(generateQrCode(ticketUrl));
+        ticket.setTicketQRContentType(QRCODE_FORMAT);
         ticket.setTicketUrl(ticketUrl);
         ticket.setCreatedAt(Instant.now());
         ticket.setEnabled(true);
 
         ticket = ticketRepository.save(ticket);
         return ticketMapper.toDto(ticket);
+    }
+
+    @Override
+    public TicketDTO create(Long ticketTypeId) throws IOException, WriterException {
+        log.info("Request to simple save ticket: {}", ticketTypeId);
+
+        TicketDTO ticketDTO = new TicketDTO();
+        ticketDTO.setTicketTypeId(ticketTypeId);
+
+        return create(ticketDTO);
     }
 
     private String ticketUrl(UUID uuid) {
@@ -85,8 +96,6 @@ public class TicketServiceImpl implements TicketService {
             .map(ticketMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
     }
-
-
 
     /**
      *  Get all the tickets where Guest is {@code null}.

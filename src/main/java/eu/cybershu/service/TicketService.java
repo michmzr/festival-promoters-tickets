@@ -1,6 +1,7 @@
 package eu.cybershu.service;
 
 import com.google.zxing.WriterException;
+import eu.cybershu.domain.TicketType;
 import eu.cybershu.service.dto.TicketDTO;
 
 import java.io.IOException;
@@ -18,7 +19,9 @@ public interface TicketService {
      * @param ticketDTO the entity to save.
      * @return the persisted entity.
      */
-    TicketDTO save(TicketDTO ticketDTO) throws WriterException, IOException;
+    TicketDTO create(TicketDTO ticketDTO) throws WriterException, IOException;
+
+    TicketDTO create(Long ticketTypeId) throws IOException, WriterException;
 
     /**
      * Get all the tickets.
@@ -26,6 +29,7 @@ public interface TicketService {
      * @return the list of entities.
      */
     List<TicketDTO> findAll();
+
     /**
      * Get all the TicketDTO where Guest is {@code null}.
      *

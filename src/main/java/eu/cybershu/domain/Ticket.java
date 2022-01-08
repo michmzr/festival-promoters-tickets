@@ -240,9 +240,7 @@ public class Ticket implements Serializable {
             "id=" + getId() +
             ", uuid='" + getUuid() + "'" +
             ", ticketUrl='" + getTicketUrl() + "'" +
-            ", ticketQR='" + getTicketQR() + "'" +
             ", ticketQRContentType='" + getTicketQRContentType() + "'" +
-            ", ticketFile='" + getTicketFile() + "'" +
             ", ticketFileContentType='" + getTicketFileContentType() + "'" +
             ", enabled='" + isEnabled() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +

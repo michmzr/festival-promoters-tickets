@@ -13,17 +13,10 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_uuid">Uuid</label>
-                    <input type="text" class="form-control" name="uuid" id="field_uuid"
-                           formControlName="uuid"/>
-                    <div *ngIf="editForm.get('uuid')!.invalid && (editForm.get('uuid')!.dirty || editForm.get('uuid')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('uuid')?.errors?.required">
-                        This field is required.
-                        </small>
-                    </div>
+                    <input type="text" class="form-control" name="uuid" id="field_uuid" formControlName="uuid" readonly/>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" [hidden]="!editForm.get('uuid')!.value">
                     <label class="form-control-label" for="field_ticketUrl">Ticket Url</label>
                     <input type="text" class="form-control" name="ticketUrl" id="field_ticketUrl"
                            formControlName="ticketUrl"/>
@@ -35,49 +28,21 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" for="field_ticketQR">Ticket QR</label>
+                <div class="form-group" [hidden]="!editForm.get('uuid')!.value">
+                    <label class="form-control-label">Ticket QR</label>
                     <div>
                         <img [src]="'data:' + editForm.get('ticketQRContentType')!.value + ';base64,' + editForm.get('ticketQR')!.value" style="max-height: 100px;" *ngIf="editForm.get('ticketQR')!.value" alt="ticket image"/>
-                        <div *ngIf="editForm.get('ticketQR')!.value" class="form-text text-danger clearfix">
-                            <span class="pull-left">{{ editForm.get('ticketQRContentType')!.value }}, {{ byteSize(editForm.get('ticketQR')!.value) }}</span>
-                            <button type="button" (click)="clearInputImage('ticketQR', 'ticketQRContentType', 'file_ticketQR')" class="btn btn-secondary btn-xs pull-right">
-                                <fa-icon icon="times"></fa-icon>
-                            </button>
-                        </div>
-                        <input type="file" id="file_ticketQR" (change)="setFileData($event, 'ticketQR', true)" accept="image/*"/>
-                    </div>
-                    <input type="hidden" class="form-control" name="ticketQR" id="field_ticketQR"
-                           formControlName="ticketQR"/>
-                    <input type="hidden" class="form-control" name="ticketQRContentType" id="field_ticketQRContentType"
-                           formControlName="ticketQRContentType" />
-                    <div *ngIf="editForm.get('ticketQR')!.invalid && (editForm.get('ticketQR')!.dirty || editForm.get('ticketQR')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('ticketQR')?.errors?.required">
-                        This field is required.
-                        </small>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" for="field_ticketFile">Ticket File</label>
+                <div class="form-group" [hidden]="!editForm.get('uuid')!.value">
+                    <label class="form-control-label">Ticket File</label>
                     <div>
                         <img [src]="'data:' + editForm.get('ticketFileContentType')!.value + ';base64,' + editForm.get('ticketFile')!.value" style="max-height: 100px;" *ngIf="editForm.get('ticketFile')!.value" alt="ticket image"/>
-                        <div *ngIf="editForm.get('ticketFile')!.value" class="form-text text-danger clearfix">
-                            <span class="pull-left">{{ editForm.get('ticketFileContentType')!.value }}, {{ byteSize(editForm.get('ticketFile')!.value) }}</span>
-                            <button type="button" (click)="clearInputImage('ticketFile', 'ticketFileContentType', 'file_ticketFile')" class="btn btn-secondary btn-xs pull-right">
-                                <fa-icon icon="times"></fa-icon>
-                            </button>
-                        </div>
-                        <input type="file" id="file_ticketFile" (change)="setFileData($event, 'ticketFile', true)" accept="image/*"/>
                     </div>
-                    <input type="hidden" class="form-control" name="ticketFile" id="field_ticketFile"
-                           formControlName="ticketFile"/>
-                    <input type="hidden" class="form-control" name="ticketFileContentType" id="field_ticketFileContentType"
-                           formControlName="ticketFileContentType" />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" [hidden]="!editForm.get('uuid')!.value">
                     <label class="form-control-label" for="field_enabled">Enabled</label>
                     <input type="checkbox" class="form-control" name="enabled" id="field_enabled"
                            formControlName="enabled"/>
@@ -89,27 +54,17 @@
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group"  [hidden]="!editForm.get('uuid')!.value">
                     <label class="form-control-label" for="field_createdAt">Created At</label>
                     <div class="d-flex">
-                        <input id="field_createdAt" type="datetime-local" class="form-control" name="createdAt" formControlName="createdAt" placeholder="YYYY-MM-DD HH:mm"/>
-                    </div>
-                    <div *ngIf="editForm.get('createdAt')!.invalid && (editForm.get('createdAt')!.dirty || editForm.get('createdAt')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('createdAt')?.errors?.required">
-                        This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                            [hidden]="!editForm.get('createdAt')?.errors?.ZonedDateTimelocal">
-                            This field should be a date and time.
-                        </small>
+                        <input id="field_createdAt" type="datetime-local" class="form-control" name="createdAt" formControlName="createdAt" placeholder="YYYY-MM-DD HH:mm" readonly/>
                     </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" [hidden]="!editForm.get('uuid')!.value">
                     <label class="form-control-label" for="field_disabledAt">Disabled At</label>
                     <div class="d-flex">
-                        <input id="field_disabledAt" type="datetime-local" class="form-control" name="disabledAt" formControlName="disabledAt" placeholder="YYYY-MM-DD HH:mm"/>
+                        <input id="field_disabledAt" type="datetime-local" class="form-control" name="disabledAt" formControlName="disabledAt" placeholder="YYYY-MM-DD HH:mm" readonly>
                     </div>
                 </div>
 
@@ -117,7 +72,7 @@
                     <label class="form-control-label" for="field_ticketType">Ticket Type</label>
                     <select class="form-control" id="field_ticketType" name="ticketType" formControlName="ticketTypeId">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="ticketTypeOption.id" *ngFor="let ticketTypeOption of tickettypes; trackBy: trackById">{{ ticketTypeOption.id }}</option>
+                        <option [ngValue]="ticketTypeOption.id" *ngFor="let ticketTypeOption of tickettypes; trackBy: trackById">{{ ticketTypeOption.name }}</option>
                     </select>
                 </div>
             </div>
