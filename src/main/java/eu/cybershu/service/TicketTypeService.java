@@ -24,13 +24,6 @@ public interface TicketTypeService {
      * @return the list of entities.
      */
     List<TicketTypeDTO> findAll();
-    /**
-     * Get all the TicketTypeDTO where Ticket is {@code null}.
-     *
-     * @return the {@link List} of entities.
-     */
-    List<TicketTypeDTO> findAllWhereTicketIsNull();
-
 
     /**
      * Get the "id" ticketType.

@@ -2,6 +2,7 @@ import { Moment } from 'moment';
 
 export interface ITicket {
   id?: number;
+  name?: string;
   uuid?: string;
   ticketUrl?: string;
   ticketQRContentType?: string;
@@ -18,6 +19,7 @@ export interface ITicket {
 export class Ticket implements ITicket {
   constructor(
     public id?: number,
+    public name?: string,
     public uuid?: string,
     public ticketUrl?: string,
     public ticketQRContentType?: string,

@@ -60,31 +60,6 @@ public class TicketResource {
     }
 
     /**
-     * {@code PUT  /tickets} : Updates an existing ticket.
-     *
-     * @param ticketDTO the ticketDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ticketDTO,
-     * or with status {@code 400 (Bad Request)} if the ticketDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the ticketDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
-     */
-    @PutMapping("/tickets")
-    public ResponseEntity<TicketDTO> updateTicket(@Valid @RequestBody TicketDTO ticketDTO) throws URISyntaxException, IOException, WriterException {
-        log.debug("REST request to update Ticket : {}", ticketDTO);
-        if (ticketDTO.getId() == null) {
-            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
-        }
-
-        //todo osobne DTO na edycje
-        //todo zmiana typu biletu -> kasuje stary i tworzy nowy
-
-        TicketDTO result = ticketService.create(ticketDTO);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, ticketDTO.getId().toString()))
-            .body(result);
-    }
-
-    /**
      * {@code GET  /tickets} : get all the tickets.
      *
      * @param filter the filter of the request.

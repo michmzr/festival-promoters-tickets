@@ -87,10 +87,6 @@ public class TicketTypeResource {
      */
     @GetMapping("/ticket-types")
     public List<TicketTypeDTO> getAllTicketTypes(@RequestParam(required = false) String filter) {
-        if ("ticket-is-null".equals(filter)) {
-            log.debug("REST request to get all TicketTypes where ticket is null");
-            return ticketTypeService.findAllWhereTicketIsNull();
-        }
         log.debug("REST request to get all TicketTypes");
         return ticketTypeService.findAll();
     }

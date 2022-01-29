@@ -7,7 +7,7 @@ import java.io.Serializable;
  * A DTO for the {@link eu.cybershu.domain.TicketType} entity.
  */
 public class TicketTypeDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -17,7 +17,6 @@ public class TicketTypeDTO implements Serializable {
     @Size(max = 500)
     private String notes;
 
-    
     public Long getId() {
         return id;
     }

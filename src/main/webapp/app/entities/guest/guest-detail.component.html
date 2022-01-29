@@ -1,13 +1,17 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="guest">
-            <h2><span>Guest</span> {{ guest.id }}</h2>
+            <h2><span>Gość </span> "{{guest.name}} {{guest.lastName}}"</h2>
 
             <hr>
 
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
+                <dt><span>Id</span></dt>
+                <dd>
+                    <span>{{ guest.id }}</span>
+                </dd>
                 <dt><span>Name</span></dt>
                 <dd>
                     <span>{{ guest.name }}</span>
@@ -38,6 +42,7 @@
                 </dd>
                 <dt><span>Ticket</span></dt>
                 <dd>
+<!--                    todo link-->
                     <div *ngIf="guest.ticketId">
                         <a [routerLink]="['/ticket', guest.ticketId, 'view']">{{ guest.ticketId }}</a>
                     </div>

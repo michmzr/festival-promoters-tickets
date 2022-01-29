@@ -59,6 +59,8 @@ public class GuestResource {
     public ResponseEntity<GuestDTO> createGuest(@Valid @RequestBody GuestCreateDTO guestDTO) throws URISyntaxException, IOException, WriterException {
         log.debug("REST request to save Guest : {}", guestDTO);
 
+        //todo repair nie działa create
+
         GuestDTO result = guestService.save(guestDTO);
 
         return ResponseEntity.created(new URI("/api/guests/" + result.getId()))

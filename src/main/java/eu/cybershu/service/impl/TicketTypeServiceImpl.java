@@ -52,22 +52,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
             .collect(Collectors.toCollection(LinkedList::new));
     }
 
-
-
-    /**
-     *  Get all the ticketTypes where Ticket is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true) 
-    public List<TicketTypeDTO> findAllWhereTicketIsNull() {
-        log.debug("Request to get all ticketTypes where Ticket is null");
-        return StreamSupport
-            .stream(ticketTypeRepository.findAll().spliterator(), false)
-            .filter(ticketType -> ticketType.getTicket() == null)
-            .map(ticketTypeMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
-
     @Override
     @Transactional(readOnly = true)
     public Optional<TicketTypeDTO> findOne(Long id) {

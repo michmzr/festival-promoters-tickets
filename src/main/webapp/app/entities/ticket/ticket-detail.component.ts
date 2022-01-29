@@ -17,7 +17,7 @@ export class TicketDetailComponent implements OnInit {
   ticket: ITicket | null = null;
   qrFileName: string | null = null;
   qrImagePath: SafeResourceUrl | null = null;
-  ticketTypes: ITicketType[] = [];
+  ticketType?: ITicketType;
 
   constructor(
     protected ticketTypeService: TicketTypeService,
@@ -32,27 +32,21 @@ export class TicketDetailComponent implements OnInit {
       this.qrFileName = 'ticket_qr_' + ticket.uuid + '.png';
       this.qrImagePath = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + ticket.ticketQR);
 
-      this.ticketTypeService
-        .query({ filter: 'ticket-is-null' })
-        .pipe(
-          map((res: HttpResponse<ITicketType[]>) => {
-            return res.body || [];
-          })
-        )
-        .subscribe((resBody: ITicketType[]) => {
-          if (!ticket.ticketTypeId) {
-            this.ticketTypes = resBody;
-          } else {
-            this.ticketTypeService
-              .find(ticket.ticketTypeId)
-              .pipe(
-                map((subRes: HttpResponse<ITicketType>) => {
-                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
-                })
-              )
-              .subscribe((concatRes: ITicketType[]) => (this.ticketTypes = concatRes));
-          }
-        });
+      if (ticket.ticketTypeId) {
+        this.ticketTypeService
+          .find(ticket.ticketTypeId)
+          .pipe(
+            map((subRes: HttpResponse<ITicketType>) => {
+              return subRes.body ? subRes.body : {};
+            })
+          )
+          .subscribe((concatRes: ITicketType) => {
+            this.ticketType = concatRes;
+            console.debug(this.ticketType);
+          });
+      } else {
+        this.ticketType = {};
+      }
     });
   }
 

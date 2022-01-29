@@ -30,10 +30,6 @@ public class TicketType implements Serializable {
     @Column(name = "notes", length = 500)
     private String notes;
 
-    @OneToOne(mappedBy = "ticketType")
-    @JsonIgnore
-    private Ticket ticket;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -69,18 +65,6 @@ public class TicketType implements Serializable {
         this.notes = notes;
     }
 
-    public Ticket getTicket() {
-        return ticket;
-    }
-
-    public TicketType ticket(Ticket ticket) {
-        this.ticket = ticket;
-        return this;
-    }
-
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

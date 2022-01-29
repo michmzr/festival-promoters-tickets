@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="ticket">
-            <h2><span>Ticket</span> {{ ticket.id }}</h2>
+            <h2><span>Ticket</span> #{{ ticket.id }}</h2>
 
             <hr>
 
@@ -57,11 +57,9 @@
 
                 <dt><span>Ticket Type</span></dt>
                 <dd>
-                    <!--TODO print ticket type + link-->
-                    {{ticket.ticketTypeId}}
-              <!--      <div *ngIf="ticket.ticketTypeId">
-                        <a [routerLink]="['/ticket-type', ticket.ticketTypeId, 'view']">{{ticketTypes[ticket.ticketTypeId].name}}</a>
-                    </div>-->
+                   <div *ngIf="ticket.ticketTypeId && ticketType">
+                        <a [routerLink]="['/ticket-type', ticket.ticketTypeId, 'view']">#{{ticketType.id}} {{ticketType.name}}</a>
+                    </div>
                 </dd>
             </dl>
 

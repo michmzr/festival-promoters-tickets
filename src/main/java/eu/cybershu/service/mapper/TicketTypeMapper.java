@@ -11,9 +11,6 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface TicketTypeMapper extends EntityMapper<TicketTypeDTO, TicketType> {
-
-
-    @Mapping(target = "ticket", ignore = true)
     TicketType toEntity(TicketTypeDTO ticketTypeDTO);
 
     default TicketType fromId(Long id) {

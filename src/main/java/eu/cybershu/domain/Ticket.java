@@ -57,6 +57,7 @@ public class Ticket implements Serializable {
     private Instant disabledAt;
 
     @OneToOne
+//    @Column(name = "ticket_type_id")
     @JoinColumn(unique = true)
     private TicketType ticketType;
 

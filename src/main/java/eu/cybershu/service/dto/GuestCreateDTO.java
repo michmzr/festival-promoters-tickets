@@ -2,10 +2,8 @@ package eu.cybershu.service.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 
 @Data
 public class GuestCreateDTO implements Serializable {
@@ -26,7 +24,9 @@ public class GuestCreateDTO implements Serializable {
     @Size(max = 500)
     private String notes;
 
-    private Long ticketTypeId; //todo co z tym
+    @NotNull
+    private Long ticketTypeId;
 
+    @NotNull
     private Long promotorId;
 }

@@ -70,10 +70,9 @@ public class PromotorResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated promotorDTO,
      * or with status {@code 400 (Bad Request)} if the promotorDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the promotorDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/promotors")
-    public ResponseEntity<PromotorDTO> updatePromotor(@Valid @RequestBody PromotorDTO promotorDTO) throws URISyntaxException {
+    public ResponseEntity<PromotorDTO> updatePromotor(@Valid @RequestBody PromotorDTO promotorDTO) {
         log.debug("REST request to update Promotor : {}", promotorDTO);
         if (promotorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
