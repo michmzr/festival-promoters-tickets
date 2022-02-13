@@ -1,0 +1,11 @@
+id;uuid;ticket_url;ticket_qr;ticket_qr_content_type;ticket_file;ticket_file_content_type;enabled;created_at;disabled_at
+1;b5c306cd-a43b-4d01-97f6-c80f9d1fab31;withdrawal invoice Norwegian Krone;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;false;2021-12-31T07:36:52;2021-12-31T05:27:40
+2;669234aa-f602-4b55-85ec-1e76a20901a0;optimize;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;true;2021-12-30T23:47:18;2021-12-31T05:05:32
+3;25152b0d-2169-472b-9b09-8aa1a15c31ec;Group Balanced;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;true;2021-12-31T12:19:54;2021-12-31T13:37:16
+4;0ee0cb22-37fc-4876-a9b6-a2449bf36560;Kids Investor;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;false;2021-12-30T18:34:11;2021-12-30T19:01:34
+5;e891455f-702f-4214-9d8f-cb08212fe3cc;asynchronous bluetooth Refined;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;false;2021-12-30T14:12:07;2021-12-30T22:37:10
+6;bd20aee2-7e16-46fb-a15d-010db115db6e;Cheese Enhanced;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;true;2021-12-31T10:06:58;2021-12-31T03:19:05
+7;09534775-ccc9-470a-960b-cd2c7fc4465b;Consultant SSL Wyoming;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;true;2021-12-30T16:38:07;2021-12-31T06:06:34
+8;592d3285-a253-4a0a-86af-81deab8c7429;next-generation;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;false;2021-12-31T01:43:50;2021-12-31T13:19:04
+9;27dda3ec-b0d6-45e2-90db-cd755a1ec682;Global;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;true;2021-12-31T01:48:22;2021-12-30T17:29:55
+10;9cb7b26a-6cc8-4e9e-bd44-3ece46422873;connecting Pants;../fake-data/blob/hipster.png;image/png;../fake-data/blob/hipster.png;image/png;false;2021-12-30T14:48:23;2021-12-31T09:05:32

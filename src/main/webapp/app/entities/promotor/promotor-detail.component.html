@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="promotor">
+            <h2><span>Promotor</span> {{ promotor.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{ promotor.name }}</span>
+                </dd>
+                <dt><span>Last Name</span></dt>
+                <dd>
+                    <span>{{ promotor.lastName }}</span>
+                </dd>
+                <dt><span>Email</span></dt>
+                <dd>
+                    <span>{{ promotor.email }}</span>
+                </dd>
+                <dt><span>Phone Number</span></dt>
+                <dd>
+                    <span>{{ promotor.phoneNumber }}</span>
+                </dd>
+                <dt><span>Notes</span></dt>
+                <dd>
+                    <span>{{ promotor.notes }}</span>
+                </dd>
+                <dt><span>Created At</span></dt>
+                <dd>
+                    <span>{{ promotor.createdAt }}</span>
+                </dd>
+                <dt><span>Enabled</span></dt>
+                <dd>
+                    <span>{{ promotor.enabled }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/promotor', promotor.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
