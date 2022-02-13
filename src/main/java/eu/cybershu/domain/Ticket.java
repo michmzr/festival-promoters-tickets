@@ -31,6 +31,7 @@ public class Ticket implements Serializable {
     @Column(name = "ticket_url", nullable = false)
     private String ticketUrl;
 
+    
     @Lob
     @Column(name = "ticket_qr", nullable = false)
     private byte[] ticketQR;
@@ -57,9 +58,12 @@ public class Ticket implements Serializable {
     private Instant disabledAt;
 
     @OneToOne
-//    @Column(name = "ticket_type_id")
     @JoinColumn(unique = true)
     private TicketType ticketType;
+
+    @OneToOne
+    @JoinColumn(unique = true)
+    private PromoCode promoCode;
 
     @OneToOne(mappedBy = "ticket")
     @JsonIgnore
@@ -204,6 +208,19 @@ public class Ticket implements Serializable {
         this.ticketType = ticketType;
     }
 
+    public PromoCode getPromoCode() {
+        return promoCode;
+    }
+
+    public Ticket promoCode(PromoCode promoCode) {
+        this.promoCode = promoCode;
+        return this;
+    }
+
+    public void setPromoCode(PromoCode promoCode) {
+        this.promoCode = promoCode;
+    }
+
     public Guest getGuest() {
         return guest;
     }
@@ -241,7 +258,9 @@ public class Ticket implements Serializable {
             "id=" + getId() +
             ", uuid='" + getUuid() + "'" +
             ", ticketUrl='" + getTicketUrl() + "'" +
+            ", ticketQR='" + getTicketQR() + "'" +
             ", ticketQRContentType='" + getTicketQRContentType() + "'" +
+            ", ticketFile='" + getTicketFile() + "'" +
             ", ticketFileContentType='" + getTicketFileContentType() + "'" +
             ", enabled='" + isEnabled() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +

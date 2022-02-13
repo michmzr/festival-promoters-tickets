@@ -1,10 +1,13 @@
 package eu.cybershu.service.impl;
 
 import com.google.zxing.WriterException;
+import eu.cybershu.domain.PromoCode;
+import eu.cybershu.repository.PromoCodeRepository;
 import eu.cybershu.service.QRCodeService;
 import eu.cybershu.service.TicketService;
 import eu.cybershu.domain.Ticket;
 import eu.cybershu.repository.TicketRepository;
+import eu.cybershu.service.dto.PromoCodeDTO;
 import eu.cybershu.service.dto.TicketDTO;
 import eu.cybershu.service.mapper.TicketMapper;
 import org.slf4j.Logger;
@@ -36,19 +39,24 @@ public class TicketServiceImpl implements TicketService {
     private final Logger log = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     private final TicketRepository ticketRepository;
-
     private final TicketMapper ticketMapper;
     private final QRCodeService qrCodeService;
+    private final PromoCodeRepository promoCodeRepository;
 
-    public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper, QRCodeService qrCodeService) {
+    public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper,
+                             QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
         this.qrCodeService = qrCodeService;
+        this.promoCodeRepository = promoCodeRepository;
     }
 
     @Override
     public TicketDTO create(TicketDTO ticketDTO) throws WriterException, IOException {
         log.debug("Request to save Ticket : {}", ticketDTO);
+
+        PromoCode promoCode = promoCodeRepository.getOne(ticketDTO.getPromoCodeId());
+
         Ticket ticket = ticketMapper.toEntity(ticketDTO);
 
         UUID uuid = UUID.randomUUID();
@@ -58,6 +66,7 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketQR(generateQrCode(ticketUrl));
         ticket.setTicketQRContentType(QRCODE_FORMAT);
         ticket.setTicketUrl(ticketUrl);
+        ticket.setPromoCode(promoCode);
         ticket.setCreatedAt(Instant.now());
         ticket.setEnabled(true);
 

@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="ticket_type"/>
 
+        <addForeignKeyConstraint baseColumnNames="promo_code_id"
+                                 baseTableName="ticket"
+                                 constraintName="fk_ticket_promo_code_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="promo_code"/>
+
     </changeSet>
 </databaseChangeLog>

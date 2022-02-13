@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { JhiDataUtils } from 'ng-jhipster';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-
 import { ITicket } from 'app/shared/model/ticket.model';
-import { ActivatedRoute } from '@angular/router';
 import { ITicketType } from '../../shared/model/ticket-type.model';
 import { map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';

@@ -1,5 +1,6 @@
 package eu.cybershu.service;
 
+import eu.cybershu.service.dto.PromotorCreateDTO;
 import eu.cybershu.service.dto.PromotorDTO;
 
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ public interface PromotorService {
      * @return the persisted entity.
      */
     PromotorDTO save(PromotorDTO promotorDTO);
+
+    PromotorDTO create(PromotorCreateDTO promotorDTO);
 
     /**
      * Get all the promotors.
@@ -43,4 +46,5 @@ public interface PromotorService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
 }

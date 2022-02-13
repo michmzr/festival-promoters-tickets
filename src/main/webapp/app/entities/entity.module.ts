@@ -24,6 +24,10 @@ import { RouterModule } from '@angular/router';
         path: 'country',
         loadChildren: () => import('./country/country.module').then(m => m.OrganicPromoTicketsCountryModule),
       },
+      {
+        path: 'promo-code',
+        loadChildren: () => import('./promo-code/promo-code.module').then(m => m.OrganicPromoTicketsPromoCodeModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

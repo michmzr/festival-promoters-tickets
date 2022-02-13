@@ -51,6 +51,9 @@ public class Promotor implements Serializable {
     @OneToMany(mappedBy = "promotor")
     private Set<Guest> guests = new HashSet<>();
 
+    @OneToMany(mappedBy = "promotor")
+    private Set<PromoCode> promoCodes = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -174,6 +177,31 @@ public class Promotor implements Serializable {
 
     public void setGuests(Set<Guest> guests) {
         this.guests = guests;
+    }
+
+    public Set<PromoCode> getPromoCodes() {
+        return promoCodes;
+    }
+
+    public Promotor promoCodes(Set<PromoCode> promoCodes) {
+        this.promoCodes = promoCodes;
+        return this;
+    }
+
+    public Promotor addPromoCode(PromoCode promoCode) {
+        this.promoCodes.add(promoCode);
+        promoCode.setPromotor(this);
+        return this;
+    }
+
+    public Promotor removePromoCode(PromoCode promoCode) {
+        this.promoCodes.remove(promoCode);
+        promoCode.setPromotor(null);
+        return this;
+    }
+
+    public void setPromoCodes(Set<PromoCode> promoCodes) {
+        this.promoCodes = promoCodes;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

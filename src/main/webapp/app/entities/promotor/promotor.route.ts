@@ -6,11 +6,12 @@ import { flatMap } from 'rxjs/operators';
 
 import { Authority } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
-import { IPromotor, Promotor } from 'app/shared/model/promotor.model';
+import { IPromotor, Promotor, PromotorCreate } from 'app/shared/model/promotor.model';
 import { PromotorService } from './promotor.service';
 import { PromotorComponent } from './promotor.component';
 import { PromotorDetailComponent } from './promotor-detail.component';
 import { PromotorUpdateComponent } from './promotor-update.component';
+import { PromotorCreateComponent } from './promotor-create.component';
 
 @Injectable({ providedIn: 'root' })
 export class PromotorResolve implements Resolve<IPromotor> {
@@ -58,13 +59,13 @@ export const promotorRoute: Routes = [
   },
   {
     path: 'new',
-    component: PromotorUpdateComponent,
+    component: PromotorCreateComponent,
     resolve: {
-      promotor: PromotorResolve,
+      //promotor: new PromotorCreate(),
     },
     data: {
       authorities: [Authority.USER],
-      pageTitle: 'Promotors',
+      pageTitle: 'Nowy promotor',
     },
     canActivate: [UserRouteAccessService],
   },

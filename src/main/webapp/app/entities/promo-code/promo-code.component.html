@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span>Promo Codes</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-promo-code" [routerLink]="['/promo-code/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Promo Code
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="promoCodes?.length === 0">
+        <span>No promoCodes found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="promoCodes && promoCodes.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Code</span></th>
+                    <th scope="col" ><span>Notes</span></th>
+                    <th scope="col" ><span>Enabled</span></th>
+                    <th scope="col" ><span>Created At</span></th>
+                    <th scope="col" ><span>Disabled At</span></th>
+                    <th scope="col" ><span>Promotor</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let promoCode of promoCodes ;trackBy: trackId">
+                    <td><a [routerLink]="['/promo-code', promoCode.id, 'view']">{{ promoCode.id }}</a></td>
+                    <td>{{ promoCode.code }}</td>
+                    <td>{{ promoCode.notes }}</td>
+                    <td>{{ promoCode.enabled }}</td>
+                    <td>{{ promoCode.createdAt | date:'medium' }}</td>
+                    <td>{{ promoCode.disabledAt | date:'medium' }}</td>
+                    <td>
+                        <div *ngIf="promoCode.promotorId">
+                            <a [routerLink]="['/promotor', promoCode.promotorId , 'view']" >{{ promoCode.promotorId }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/promo-code', promoCode.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/promo-code', promoCode.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(promoCode)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

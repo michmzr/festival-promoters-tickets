@@ -1,6 +1,7 @@
 package eu.cybershu.web.rest;
 
 import eu.cybershu.service.PromotorService;
+import eu.cybershu.service.dto.PromotorCreateDTO;
 import eu.cybershu.web.rest.errors.BadRequestAlertException;
 import eu.cybershu.service.dto.PromotorDTO;
 
@@ -52,12 +53,10 @@ public class PromotorResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/promotors")
-    public ResponseEntity<PromotorDTO> createPromotor(@Valid @RequestBody PromotorDTO promotorDTO) throws URISyntaxException {
+    public ResponseEntity<PromotorDTO> createPromotor(@Valid @RequestBody PromotorCreateDTO promotorDTO) throws URISyntaxException {
         log.debug("REST request to save Promotor : {}", promotorDTO);
-        if (promotorDTO.getId() != null) {
-            throw new BadRequestAlertException("A new promotor cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        PromotorDTO result = promotorService.save(promotorDTO);
+
+        PromotorDTO result = promotorService.create(promotorDTO);
         return ResponseEntity.created(new URI("/api/promotors/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -70,9 +69,10 @@ public class PromotorResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated promotorDTO,
      * or with status {@code 400 (Bad Request)} if the promotorDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the promotorDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/promotors")
-    public ResponseEntity<PromotorDTO> updatePromotor(@Valid @RequestBody PromotorDTO promotorDTO) {
+    public ResponseEntity<PromotorDTO> updatePromotor(@Valid @RequestBody PromotorDTO promotorDTO) throws URISyntaxException {
         log.debug("REST request to update Promotor : {}", promotorDTO);
         if (promotorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

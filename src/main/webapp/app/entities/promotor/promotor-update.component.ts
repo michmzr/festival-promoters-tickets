@@ -33,8 +33,7 @@ export class PromotorUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ promotor }) => {
       if (!promotor.id) {
-        const today = moment().startOf('day');
-        promotor.createdAt = today;
+        promotor.createdAt = moment().startOf('day');
       }
 
       this.updateForm(promotor);
@@ -64,7 +63,7 @@ export class PromotorUpdateComponent implements OnInit {
     if (promotor.id !== undefined) {
       this.subscribeToSaveResponse(this.promotorService.update(promotor));
     } else {
-      this.subscribeToSaveResponse(this.promotorService.create(promotor));
+      console.error('promotor has no id!');
     }
   }
 

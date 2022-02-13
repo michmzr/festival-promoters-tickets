@@ -15,6 +15,8 @@ public interface PromotorMapper extends EntityMapper<PromotorDTO, Promotor> {
 
     @Mapping(target = "guests", ignore = true)
     @Mapping(target = "removeGuest", ignore = true)
+    @Mapping(target = "promoCodes", ignore = true)
+    @Mapping(target = "removePromoCode", ignore = true)
     Promotor toEntity(PromotorDTO promotorDTO);
 
     default Promotor fromId(Long id) {

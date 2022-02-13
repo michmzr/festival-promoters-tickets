@@ -9,13 +9,15 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Ticket} and its DTO {@link TicketDTO}.
  */
-@Mapper(componentModel = "spring", uses = {TicketTypeMapper.class})
+@Mapper(componentModel = "spring", uses = {TicketTypeMapper.class, PromoCodeMapper.class})
 public interface TicketMapper extends EntityMapper<TicketDTO, Ticket> {
 
     @Mapping(source = "ticketType.id", target = "ticketTypeId")
+    @Mapping(source = "promoCode.id", target = "promoCodeId")
     TicketDTO toDto(Ticket ticket);
 
     @Mapping(source = "ticketTypeId", target = "ticketType")
+    @Mapping(source = "promoCodeId", target = "promoCode")
     @Mapping(target = "guest", ignore = true)
     Ticket toEntity(TicketDTO ticketDTO);
 
