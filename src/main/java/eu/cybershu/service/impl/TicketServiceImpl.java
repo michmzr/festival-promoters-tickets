@@ -51,7 +51,6 @@ public class TicketServiceImpl implements TicketService {
         log.debug("Request to save Ticket : {}", ticketDTO);
         Ticket ticket = ticketMapper.toEntity(ticketDTO);
 
-        //todo handle exceptions
         UUID uuid = UUID.randomUUID();
 
         String ticketUrl = ticketUrl(uuid);

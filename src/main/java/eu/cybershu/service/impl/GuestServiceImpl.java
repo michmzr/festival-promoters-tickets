@@ -45,7 +45,7 @@ public class GuestServiceImpl implements GuestService {
     public GuestDTO save(GuestCreateDTO guestCreateDTO) throws IOException, WriterException {
         log.debug("Request to save Guest : {}", guestCreateDTO);
 
-        TicketDTO ticket = ticketService.create(guestCreateDTO.getTicketTypeId()); //todo gdzie utworzyć bilet
+        TicketDTO ticket = ticketService.create(guestCreateDTO.getTicketTypeId());
 
         GuestDTO guestDto = guestMapper.toDto(guestCreateDTO);
         guestDto.setEnabled(true);
