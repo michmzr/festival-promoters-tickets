@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
-import { IPromotor, Promotor } from 'app/shared/model/promotor.model';
+import { IPromotor, IPromotorCreate, PromotorCreate } from 'app/shared/model/promotor.model';
 import { PromotorService } from './promotor.service';
+import { IPromoCode } from '../../shared/model/promo-code.model';
+import { PromoCodeService } from '../promo-code/promo-code.service';
+
+export interface Fruit {
+  name: string;
+}
 
 @Component({
   selector: 'jhi-promotor-update',
@@ -17,18 +21,28 @@ import { PromotorService } from './promotor.service';
 export class PromotorUpdateComponent implements OnInit {
   isSaving = false;
 
+  promotor?: IPromotor;
+  promoCodes?: IPromoCode[];
+
+  newPromoCodes: string[] = [];
+
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     lastName: [null, [Validators.required]],
-    email: [],
-    phoneNumber: [],
+    email: [null],
+    phoneNumber: [null],
     notes: [null, [Validators.maxLength(500)]],
     createdAt: [],
     enabled: [null, [Validators.required]],
   });
 
-  constructor(protected promotorService: PromotorService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    protected promotorService: PromotorService,
+    protected promoCodeService: PromoCodeService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ promotor }) => {
@@ -41,6 +55,9 @@ export class PromotorUpdateComponent implements OnInit {
   }
 
   updateForm(promotor: IPromotor): void {
+    this.promotor = promotor;
+    this.promoCodes = promotor.promoCodes;
+
     this.editForm.patchValue({
       id: promotor.id,
       name: promotor.name,
@@ -48,7 +65,6 @@ export class PromotorUpdateComponent implements OnInit {
       email: promotor.email,
       phoneNumber: promotor.phoneNumber,
       notes: promotor.notes,
-      createdAt: promotor.createdAt ? promotor.createdAt.format(DATE_TIME_FORMAT) : null,
       enabled: promotor.enabled,
     });
   }
@@ -59,6 +75,7 @@ export class PromotorUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
+
     const promotor = this.createFromForm();
     if (promotor.id !== undefined) {
       this.subscribeToSaveResponse(this.promotorService.update(promotor));
@@ -67,17 +84,16 @@ export class PromotorUpdateComponent implements OnInit {
     }
   }
 
-  private createFromForm(): IPromotor {
+  private createFromForm(): IPromotorCreate {
     return {
-      ...new Promotor(),
+      ...new PromotorCreate(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       lastName: this.editForm.get(['lastName'])!.value,
       email: this.editForm.get(['email'])!.value,
       phoneNumber: this.editForm.get(['phoneNumber'])!.value,
       notes: this.editForm.get(['notes'])!.value,
-      createdAt: this.editForm.get(['createdAt'])!.value ? moment(this.editForm.get(['createdAt'])!.value, DATE_TIME_FORMAT) : undefined,
-      enabled: this.editForm.get(['enabled'])!.value,
+      newPromoCodes: this.newPromoCodes,
     };
   }
 
@@ -95,5 +111,20 @@ export class PromotorUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  codeAdded(code: string): void {
+    console.info(`code ${code} added`);
+    this.newPromoCodes.push(code);
+  }
+
+  codeRemoved(code: string): void {
+    console.info(`code ${code} removed`);
+
+    const index = this.newPromoCodes.indexOf(code);
+
+    if (index >= 0) {
+      this.newPromoCodes.splice(index, 1);
+    }
   }
 }

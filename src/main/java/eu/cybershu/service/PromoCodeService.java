@@ -34,6 +34,14 @@ public interface PromoCodeService {
     Optional<PromoCodeDTO> findOne(Long id);
 
     /**
+     * Get the "code" promoCode.
+     *
+     * @param code the id of the entity.
+     * @return the entity.
+     */
+    Optional<PromoCodeDTO> findOne(String code);
+
+    /**
      * Delete the "id" promoCode.
      *
      * @param id the id of the entity.

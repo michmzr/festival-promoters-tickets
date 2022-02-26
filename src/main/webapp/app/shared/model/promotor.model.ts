@@ -40,7 +40,7 @@ export interface IPromotorCreate {
   phoneNumber?: string;
   notes?: string;
   guests?: IGuest[];
-  promoCodes?: String[];
+  newPromoCodes?: String[];
 }
 
 export class PromotorCreate implements IPromotorCreate {
@@ -51,7 +51,6 @@ export class PromotorCreate implements IPromotorCreate {
     public email?: string,
     public phoneNumber?: string,
     public notes?: string,
-    public guests?: IGuest[],
-    public promoCodes?: String[]
+    public newPromoCodes?: String[]
   ) {}
 }

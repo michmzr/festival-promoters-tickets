@@ -1,0 +1,5 @@
+<div *ngIf="promoCode">
+    <a [routerLink]="['/promo-code', promoCode.id, 'view']">#{{ promoCode.id}}
+        <mark>{{promoCode.code}}</mark>
+    </a>
+</div>

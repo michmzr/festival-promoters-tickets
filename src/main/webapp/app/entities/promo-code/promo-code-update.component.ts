@@ -24,9 +24,9 @@ export class PromoCodeUpdateComponent implements OnInit {
     id: [],
     code: [null, [Validators.required, Validators.maxLength(30)]],
     notes: [null, [Validators.maxLength(500)]],
-    enabled: [null, [Validators.required]],
+    /*  enabled: [null, [Validators.required]],
     createdAt: [null, [Validators.required]],
-    disabledAt: [],
+    disabledAt: [],*/
     promotorId: [],
   });
 

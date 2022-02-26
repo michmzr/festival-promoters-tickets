@@ -36,6 +36,14 @@
                 <dd>
                     <span>{{ promotor.enabled }}</span>
                 </dd>
+                <dt><span>Promo codes</span></dt>
+                <dd>
+                    <ul>
+                        <li *ngFor="let promo of promotor.promoCodes; let i = index">
+                            <jhi-promotor-promo-code [promoCode]="promo"></jhi-promotor-promo-code>
+                        </li>
+                    </ul>
+                </dd>
             </dl>
 
             <button type="submit"

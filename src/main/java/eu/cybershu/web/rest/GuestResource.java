@@ -3,23 +3,20 @@ package eu.cybershu.web.rest;
 import com.google.zxing.WriterException;
 import eu.cybershu.service.GuestService;
 import eu.cybershu.service.dto.GuestCreateDTO;
+import eu.cybershu.service.dto.GuestDTO;
 import eu.cybershu.service.dto.GuestUpdateDTO;
 import eu.cybershu.web.rest.errors.BadRequestAlertException;
-import eu.cybershu.service.dto.GuestDTO;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -31,12 +28,10 @@ import java.util.Optional;
 /**
  * REST controller for managing {@link eu.cybershu.domain.Guest}.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class GuestResource {
-
-    private final Logger log = LoggerFactory.getLogger(GuestResource.class);
-
     private static final String ENTITY_NAME = "guest";
 
     @Value("${jhipster.clientApp.name}")
@@ -58,8 +53,6 @@ public class GuestResource {
     @PostMapping("/guests")
     public ResponseEntity<GuestDTO> createGuest(@Valid @RequestBody GuestCreateDTO guestDTO) throws URISyntaxException, IOException, WriterException {
         log.debug("REST request to save Guest : {}", guestDTO);
-
-        //todo repair nie działa create
 
         GuestDTO result = guestService.save(guestDTO);
 

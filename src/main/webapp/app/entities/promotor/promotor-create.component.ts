@@ -4,7 +4,6 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IPromotor, IPromotorCreate, PromotorCreate } from 'app/shared/model/promotor.model';
 import { PromotorService } from './promotor.service';
@@ -16,16 +15,15 @@ import { PromotorService } from './promotor.service';
 export class PromotorCreateComponent implements OnInit {
   isSaving = false;
 
+  newPromoCodes: string[] = [];
+
   createForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     lastName: [null, [Validators.required]],
-    email: [],
-    phoneNumber: [],
+    email: [null, [Validators.required]],
+    phoneNumber: [null],
     notes: [null, [Validators.maxLength(500)]],
-    createdAt: [],
-    enabled: [null, [Validators.required]],
-    promoCodes: [],
   });
 
   constructor(protected promotorService: PromotorService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
@@ -36,8 +34,8 @@ export class PromotorCreateComponent implements OnInit {
         promotor.createdAt = moment().startOf('day');
       }
 
-      this.updateForm(promotor);
     });*/
+    this.createFromForm();
   }
 
   previousState(): void {
@@ -46,8 +44,8 @@ export class PromotorCreateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const promotor = this.createFromForm();
 
+    const promotor = this.createFromForm();
     this.subscribeToSaveResponse(this.promotorService.create(promotor));
   }
 
@@ -60,7 +58,7 @@ export class PromotorCreateComponent implements OnInit {
       email: this.createForm.get(['email'])!.value,
       phoneNumber: this.createForm.get(['phoneNumber'])!.value,
       notes: this.createForm.get(['notes'])!.value,
-      promoCodes: this.createForm.get(['promoCodes'])!.value,
+      newPromoCodes: this.newPromoCodes,
     };
   }
 
@@ -78,5 +76,20 @@ export class PromotorCreateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  codeAdded(code: string): void {
+    console.info(`code ${code} added`);
+    this.newPromoCodes.push(code);
+  }
+
+  codeRemoved(code: string): void {
+    console.info(`code ${code} removed`);
+
+    const index = this.newPromoCodes.indexOf(code);
+
+    if (index >= 0) {
+      this.newPromoCodes.splice(index, 1);
+    }
   }
 }

@@ -24,7 +24,7 @@ export class PromotorService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  update(promotor: IPromotor): Observable<EntityResponseType> {
+  update(promotor: IPromotorCreate): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(promotor);
     return this.http
       .put<IPromotor>(this.resourceUrl, copy, { observe: 'response' })

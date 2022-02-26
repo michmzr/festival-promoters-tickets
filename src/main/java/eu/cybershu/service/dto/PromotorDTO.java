@@ -1,14 +1,16 @@
 package eu.cybershu.service.dto;
 
-import java.time.Instant;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.Set;
 
 /**
  * A DTO for the {@link eu.cybershu.domain.Promotor} entity.
  */
 public class PromotorDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -29,7 +31,8 @@ public class PromotorDTO implements Serializable {
     @NotNull
     private Boolean enabled;
 
-    
+    private Set<PromoCodeDTO> promoCodes;
+
     public Long getId() {
         return id;
     }
@@ -124,5 +127,13 @@ public class PromotorDTO implements Serializable {
             ", createdAt='" + getCreatedAt() + "'" +
             ", enabled='" + isEnabled() + "'" +
             "}";
+    }
+
+    public Set<PromoCodeDTO> getPromoCodes() {
+        return promoCodes;
+    }
+
+    public void setPromoCodes(Set<PromoCodeDTO> promoCodes) {
+        this.promoCodes = promoCodes;
     }
 }

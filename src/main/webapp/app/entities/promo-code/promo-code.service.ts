@@ -37,6 +37,12 @@ export class PromoCodeService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
+  findByCode(code: string): Observable<EntityResponseType> {
+    return this.http
+      .get<IPromoCode>(`${this.resourceUrl}/code/${code}`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http

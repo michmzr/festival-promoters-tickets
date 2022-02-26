@@ -2,8 +2,8 @@ package eu.cybershu.domain;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -51,7 +51,7 @@ public class Promotor implements Serializable {
     @OneToMany(mappedBy = "promotor")
     private Set<Guest> guests = new HashSet<>();
 
-    @OneToMany(mappedBy = "promotor")
+    @OneToMany(mappedBy = "promotor", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<PromoCode> promoCodes = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

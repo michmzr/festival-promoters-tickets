@@ -1,13 +1,12 @@
 package eu.cybershu.service.impl;
 
-import eu.cybershu.service.PromoCodeService;
 import eu.cybershu.domain.PromoCode;
 import eu.cybershu.repository.PromoCodeRepository;
+import eu.cybershu.service.PromoCodeService;
 import eu.cybershu.service.dto.PromoCodeDTO;
 import eu.cybershu.service.mapper.PromoCodeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Service Implementation for managing {@link PromoCode}.
@@ -57,6 +55,14 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     public Optional<PromoCodeDTO> findOne(Long id) {
         log.debug("Request to get PromoCode : {}", id);
         return promoCodeRepository.findById(id)
+            .map(promoCodeMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<PromoCodeDTO> findOne(String code) {
+        log.debug("Request to get PromoCode : code={}", code);
+        return promoCodeRepository.findByCodeIgnoreCase(code)
             .map(promoCodeMapper::toDto);
     }
 

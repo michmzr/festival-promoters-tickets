@@ -2,7 +2,7 @@ package eu.cybershu.service;
 
 import eu.cybershu.service.dto.PromotorCreateDTO;
 import eu.cybershu.service.dto.PromotorDTO;
-
+import eu.cybershu.service.dto.PromotorUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,8 +19,14 @@ public interface PromotorService {
      * @param promotorDTO the entity to save.
      * @return the persisted entity.
      */
-    PromotorDTO save(PromotorDTO promotorDTO);
+    PromotorDTO save(PromotorUpdateDTO promotorDTO);
 
+    /**
+     * Create  a promotor.
+     *
+     * @param promotorDTO the entity to create.
+     * @return the persisted entity.
+     */
     PromotorDTO create(PromotorCreateDTO promotorDTO);
 
     /**

@@ -11,7 +11,8 @@ import java.util.Set;
  * A Create(save) DTO for the {@link eu.cybershu.domain.Promotor} entity.
  */
 @Data
-public class PromotorCreateDTO implements Serializable {
+public class PromotorUpdateDTO implements Serializable {
+    private Long id;
 
     @NotNull
     private String name;

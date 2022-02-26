@@ -1,14 +1,14 @@
 package eu.cybershu.web.rest;
 
 import eu.cybershu.service.PromoCodeService;
-import eu.cybershu.web.rest.errors.BadRequestAlertException;
 import eu.cybershu.service.dto.PromoCodeDTO;
-
+import eu.cybershu.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link eu.cybershu.domain.PromoCode}.
@@ -91,8 +90,6 @@ public class PromoCodeResource {
         return promoCodeService.findAll();
     }
 
-    //todo get promo codes by promotor
-
     /**
      * {@code GET  /promo-codes/:id} : get the "id" promoCode.
      *
@@ -104,6 +101,16 @@ public class PromoCodeResource {
         log.debug("REST request to get PromoCode : {}", id);
         Optional<PromoCodeDTO> promoCodeDTO = promoCodeService.findOne(id);
         return ResponseUtil.wrapOrNotFound(promoCodeDTO);
+    }
+
+    @GetMapping("/promo-codes/code/{code}")
+    public ResponseEntity<PromoCodeDTO> getPromoCode(@PathVariable String code) {
+        log.debug("REST request to get PromoCode : code={}", code);
+        Optional<PromoCodeDTO> promoCodeDTO = promoCodeService.findOne(code.trim());
+
+        return promoCodeDTO
+            .map((response) -> ResponseEntity.ok().body(response))
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     /**

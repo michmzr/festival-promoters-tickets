@@ -51,12 +51,19 @@
                     <label class="form-control-label" for="field_notes">Notes</label>
                     <input type="text" class="form-control" name="notes" id="field_notes"
                            formControlName="notes"/>
-                    <div *ngIf="createForm.get('notes')!.invalid && (createForm.get('notes')!.dirty || createForm.get('notes')!.touched)">
+                    <div
+                        *ngIf="createForm.get('notes')!.invalid && (createForm.get('notes')!.dirty || createForm.get('notes')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="createForm.get('notes')?.errors?.maxlength">
-                        This field cannot be longer than 500 characters.
+                            This field cannot be longer than 500 characters.
                         </small>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_notes">Przydziel kody promocyjne</label>
+                    <jhi-promotor-promo-code-form (codeAdded)="codeAdded($event)"
+                                                  (codeRemoved)="codeRemoved($event)"></jhi-promotor-promo-code-form>
                 </div>
             </div>
 
