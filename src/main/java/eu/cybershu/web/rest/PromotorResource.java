@@ -1,22 +1,21 @@
 package eu.cybershu.web.rest;
 
 import eu.cybershu.service.PromotorService;
-import eu.cybershu.web.rest.errors.BadRequestAlertException;
+import eu.cybershu.service.dto.PromotorCreateDTO;
 import eu.cybershu.service.dto.PromotorDTO;
-
+import eu.cybershu.service.dto.PromotorUpdateDTO;
+import eu.cybershu.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -27,12 +26,10 @@ import java.util.Optional;
 /**
  * REST controller for managing {@link eu.cybershu.domain.Promotor}.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class PromotorResource {
-
-    private final Logger log = LoggerFactory.getLogger(PromotorResource.class);
-
     private static final String ENTITY_NAME = "promotor";
 
     @Value("${jhipster.clientApp.name}")
@@ -52,12 +49,10 @@ public class PromotorResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/promotors")
-    public ResponseEntity<PromotorDTO> createPromotor(@Valid @RequestBody PromotorDTO promotorDTO) throws URISyntaxException {
+    public ResponseEntity<PromotorDTO> createPromotor(@Valid @RequestBody PromotorCreateDTO promotorDTO) throws URISyntaxException {
         log.debug("REST request to save Promotor : {}", promotorDTO);
-        if (promotorDTO.getId() != null) {
-            throw new BadRequestAlertException("A new promotor cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        PromotorDTO result = promotorService.save(promotorDTO);
+
+        PromotorDTO result = promotorService.create(promotorDTO);
         return ResponseEntity.created(new URI("/api/promotors/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -70,9 +65,10 @@ public class PromotorResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated promotorDTO,
      * or with status {@code 400 (Bad Request)} if the promotorDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the promotorDTO couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/promotors")
-    public ResponseEntity<PromotorDTO> updatePromotor(@Valid @RequestBody PromotorDTO promotorDTO) {
+    public ResponseEntity<PromotorDTO> updatePromotor(@Valid @RequestBody PromotorUpdateDTO promotorDTO) throws URISyntaxException {
         log.debug("REST request to update Promotor : {}", promotorDTO);
         if (promotorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

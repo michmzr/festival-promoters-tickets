@@ -41,6 +41,12 @@
       "otherEntityName": "guest",
       "otherEntityRelationshipName": "promotor",
       "relationshipName": "guest"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "promoCode",
+      "otherEntityRelationshipName": "promotor",
+      "relationshipName": "promoCode"
     }
   ],
   "changelogDate": "20211231140822",

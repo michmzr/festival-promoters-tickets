@@ -48,6 +48,14 @@
     },
     {
       "relationshipType": "one-to-one",
+      "otherEntityName": "promoCode",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "promoCode",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
       "otherEntityName": "guest",
       "otherEntityRelationshipName": "ticket",
       "relationshipName": "guest",

@@ -133,10 +133,6 @@ export class GuestUpdateComponent implements OnInit {
     this.isSaving = true;
     const guest = this.createFromForm();
 
-    //todo remove console.debug
-    // eslint-disable-next-line
-    console.debug(guest);
-
     if (guest.id !== undefined) {
       this.subscribeToSaveResponse(this.guestService.update(guest));
     } else {

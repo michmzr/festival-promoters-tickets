@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-            <h2 id="jhi-promotor-heading">Create or edit a Promotor</h2>
+            <h2 id="jhi-promotor-heading">Utwórz lub edytuj dane promotora</h2>
 
             <div>
                 <jhi-alert-error></jhi-alert-error>
@@ -51,24 +51,30 @@
                     <label class="form-control-label" for="field_notes">Notes</label>
                     <input type="text" class="form-control" name="notes" id="field_notes"
                            formControlName="notes"/>
-                    <div *ngIf="editForm.get('notes')!.invalid && (editForm.get('notes')!.dirty || editForm.get('notes')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('notes')?.errors?.maxlength">
-                        This field cannot be longer than 500 characters.
+                    <div
+                        *ngIf="editForm.get('notes')!.invalid && (editForm.get('notes')!.dirty || editForm.get('notes')!.touched)">
+                        <small class="form-text text-danger" *ngIf="editForm.get('notes')?.errors?.maxlength">
+                            This field cannot be longer than 500 characters.
                         </small>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_enabled">Enabled</label>
-                    <input type="checkbox" class="form-control" name="enabled" id="field_enabled"
-                           formControlName="enabled"/>
-                    <div *ngIf="editForm.get('enabled')!.invalid && (editForm.get('enabled')!.dirty || editForm.get('enabled')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('enabled')?.errors?.required">
-                        This field is required.
-                        </small>
+                    <label class="form-control-label" for="field_notes">Promo codes</label>
+                    <div *ngIf="promoCodes">
+                        <ul>
+                            <li *ngFor="let promo of promoCodes; let i = index">
+                                <jhi-promotor-promo-code [promoCode]="promo"></jhi-promotor-promo-code>
+                            </li>
+                        </ul>
                     </div>
+                    <jhi-promotor-promo-code></jhi-promotor-promo-code>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_notes">Przydziel nowe kody</label>
+                    <jhi-promotor-promo-code-form (codeAdded)="codeAdded($event)"
+                                                  (codeRemoved)="codeRemoved($event)"></jhi-promotor-promo-code-form>
                 </div>
             </div>
 

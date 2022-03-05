@@ -3,7 +3,7 @@ services:
   organicpromotickets-postgresql:
     image: postgres:12.3
     volumes:
-       - ~/volumes/jhipster/OrganicPromoTickets/postgresql/:/var/lib/postgresql/data/
+      - ~/volumes/jhipster/OrganicPromoTickets/postgresql/:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=OrganicPromoTickets
       - POSTGRES_PASSWORD=

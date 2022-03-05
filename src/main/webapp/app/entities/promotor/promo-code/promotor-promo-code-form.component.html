@@ -1,0 +1,22 @@
+<div>
+    <mat-form-field appearance="fill">
+        <mat-label>Enter lub przecinek, aby dodać nowy kod</mat-label>
+        <mat-chip-list #chipList>
+            <mat-chip *ngFor="let code of promoCodes" (removed)="remove(code)">
+                {{code}}
+                <button matChipRemove>
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-chip>
+            <input placeholder="Kod promocyjny..."
+                   [matChipInputFor]="chipList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   [matChipInputAddOnBlur]="addOnBlur"
+                   (matChipInputTokenEnd)="add($event)">
+        </mat-chip-list>
+    </mat-form-field>
+
+    <div *ngIf="promoCodeError">
+        <mat-error [id]="promoCodeError">{{promoCodeError}}</mat-error>
+    </div>
+</div>
