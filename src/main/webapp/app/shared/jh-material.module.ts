@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 // import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 // import {MatSnackBarModule} from "@angular/material/snack-bar";
-// import {MatTooltipModule} from "@angular/material/tooltip";
+import { MatTooltipModule } from '@angular/material/tooltip';
 // import {MatTabsModule} from "@angular/material/tabs";
 // import {MatDialogModule} from "@angular/material/dialog";
 // import {MatSelectModule} from "@angular/material/select";
@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { NgModule } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatCommonModule } from '@angular/material/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
   providers: [
@@ -34,7 +35,7 @@ import { MatCommonModule } from '@angular/material/core';
       },
     },
   ],
-  imports: [MatCommonModule, MatFormFieldModule, MatInputModule, MatChipsModule, MatIconModule],
-  exports: [MatCommonModule, MatFormFieldModule, MatInputModule, MatChipsModule, MatIconModule],
+  imports: [MatCommonModule, MatFormFieldModule, MatInputModule, MatChipsModule, MatIconModule, MatToolbarModule, MatTooltipModule],
+  exports: [MatCommonModule, MatFormFieldModule, MatInputModule, MatChipsModule, MatIconModule, MatToolbarModule, MatTooltipModule],
 })
 export class JhMaterialModule {}

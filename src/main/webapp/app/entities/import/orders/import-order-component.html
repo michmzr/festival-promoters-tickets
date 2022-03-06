@@ -1,0 +1,45 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <!-- (ngSubmit)="save()" [formGroup]="editForm"-->
+        <form name="importForm" role="form" novalidate (ngSubmit)="importOrders()" [formGroup]="editForm">
+            <h2 id="jhi-country-heading">Import orders</h2>
+
+            <!--todo : https://www.positronx.io/angular-material-file-browse-upload-ui-with-material-components/-->
+            <mat-form-field>
+                <div>
+                    <mat-toolbar>
+                        <!-- Display files names -->
+                        <input matInput readonly name="name"/>
+                        <!-- Browse Button -->
+                        <button mat-flat-button color="primary">Browse File</button>
+                    </mat-toolbar>
+                    <!-- Fetch selected filed on change -->
+                    <input
+                        type="file"
+                        #fileInput
+                        (change)="uploadFileEvt($event)"
+                        id="uploadFile"
+                        name="uploadFile"
+                        multiple="multiple"
+                        accept="image/*"
+                    />
+
+                    <div
+                        *ngIf="editForm.get('uploadFile')!.invalid && (editForm.get('uploadFile')!.dirty || editForm.get('uploadFile')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('uploadFile')?.errors?.required">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+            </mat-form-field>
+
+            <div>
+                <button type="submit" id="import" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="file-import"></fa-icon>&nbsp;<span>Import</span>
+                </button>
+            </div>
+        </form>
+    </div>
+    >
+</div>
