@@ -12,5 +12,5 @@ import java.util.Optional;
 @SuppressWarnings("unused")
 @Repository
 public interface PromoCodeRepository extends JpaRepository<PromoCode, Long> {
-    Optional<PromoCode> findByCodeIgnoreCase(String code);
+    Optional<PromoCode> findByCodeIgnoreCaseAndEnabledIsTrue(String code);
 }

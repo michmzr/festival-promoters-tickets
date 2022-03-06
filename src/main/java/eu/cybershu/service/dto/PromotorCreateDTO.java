@@ -1,5 +1,6 @@
 package eu.cybershu.service.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import java.util.Set;
  * A Create(save) DTO for the {@link eu.cybershu.domain.Promotor} entity.
  */
 @Data
+@Builder
 public class PromotorCreateDTO implements Serializable {
 
     @NotNull

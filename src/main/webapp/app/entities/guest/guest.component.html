@@ -30,8 +30,6 @@
                     <th scope="col"  jhiSortBy="notes"><span>Notes</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="createdAt"><span>Created At</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="enabled"><span>Enabled</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="ticketId"><span>Ticket</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="promotorId"><span>Promotor</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -45,16 +43,6 @@
                     <td>{{ guest.notes }}</td>
                     <td>{{ guest.createdAt | date:'medium' }}</td>
                     <td>{{ guest.enabled }}</td>
-                    <td>
-                        <div *ngIf="guest.ticketId">
-                            <a [routerLink]="['/ticket', guest.ticketId , 'view']" >{{ guest.ticketId }}</a>
-                        </div>
-                    </td>
-                    <td>
-                        <div *ngIf="guest.promotorId">
-                            <a [routerLink]="['/promotor', guest.promotorId , 'view']" >{{ guest.promotorId }}</a>
-                        </div>
-                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

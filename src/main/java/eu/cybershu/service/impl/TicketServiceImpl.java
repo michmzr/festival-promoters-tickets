@@ -1,15 +1,20 @@
 package eu.cybershu.service.impl;
 
 import com.google.zxing.WriterException;
+import eu.cybershu.domain.PromoCode;
+import eu.cybershu.domain.Promotor;
 import eu.cybershu.domain.Ticket;
+import eu.cybershu.domain.TicketType;
 import eu.cybershu.repository.PromoCodeRepository;
+import eu.cybershu.repository.PromotorRepository;
 import eu.cybershu.repository.TicketRepository;
+import eu.cybershu.repository.TicketTypeRepository;
 import eu.cybershu.service.QRCodeService;
 import eu.cybershu.service.TicketService;
+import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
 import eu.cybershu.service.mapper.TicketMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,28 +33,34 @@ import java.util.stream.StreamSupport;
 /**
  * Service Implementation for managing {@link Ticket}.
  */
+@Slf4j
 @Service
 @Transactional
 public class TicketServiceImpl implements TicketService {
 
     public static final String QRCODE_FORMAT = "png";
-    private final Logger log = LoggerFactory.getLogger(TicketServiceImpl.class);
 
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
+    private final TicketTypeRepository ticketTypeRepository;
+    private final PromotorRepository promotorRepository;
     private final QRCodeService qrCodeService;
     private final PromoCodeRepository promoCodeRepository;
 
+
     public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper,
+                             TicketTypeRepository ticketTypeRepository, PromotorRepository promotorRepository,
                              QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
+        this.ticketTypeRepository = ticketTypeRepository;
+        this.promotorRepository = promotorRepository;
         this.qrCodeService = qrCodeService;
         this.promoCodeRepository = promoCodeRepository;
     }
 
     @Override
-    public TicketDTO create(TicketDTO ticketDTO) throws WriterException, IOException {
+    public TicketDTO create(TicketCreateDTO ticketDTO) throws WriterException, IOException {
         log.debug("Request to save Ticket : {}", ticketDTO);
 
         Ticket ticket = ticketMapper.toEntity(ticketDTO);
@@ -61,25 +72,35 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketQR(generateQrCode(ticketUrl));
         ticket.setTicketQRContentType(QRCODE_FORMAT);
         ticket.setTicketUrl(ticketUrl);
+        ticket.setTicketPrice(ticketDTO.getTicketPrice());
 
-        if (ticketDTO.getPromoCodeId() != null)
-            ticket.setPromoCode(promoCodeRepository.getOne(ticketDTO.getPromoCodeId()));
+        if(ticketDTO.getTicketTypeId() != null) {
+            TicketType ticketType = ticketTypeRepository.getOne(ticketDTO.getTicketTypeId());
+            log.info("Ticket type: {}", ticketType);
+            if (ticketType != null) {
+                ticket.setTicketType(ticketType);
+            }
+        }
+
+        if (ticketDTO.getPromoCodeId() != null) {
+            PromoCode promoCode = promoCodeRepository.getOne(ticketDTO.getPromoCodeId());
+            log.info("Promo code: {}", promoCode);
+
+            ticket.setPromoCode(promoCode);
+        }
+
+        if (ticketDTO.getPromotorId() != null)  {
+            Promotor promotor = promotorRepository.getOne(ticketDTO.getPromotorId());
+            log.info("Promotor {}", promotor);
+
+            ticket.setPromotor(promotor);
+        }
 
         ticket.setCreatedAt(Instant.now());
         ticket.setEnabled(true);
 
         ticket = ticketRepository.save(ticket);
         return ticketMapper.toDto(ticket);
-    }
-
-    @Override
-    public TicketDTO create(Long ticketTypeId) throws IOException, WriterException {
-        log.info("Request to simple save ticket: {}", ticketTypeId);
-
-        TicketDTO ticketDTO = new TicketDTO();
-        ticketDTO.setTicketTypeId(ticketTypeId);
-
-        return create(ticketDTO);
     }
 
     private String ticketUrl(UUID uuid) {
@@ -104,8 +125,9 @@ public class TicketServiceImpl implements TicketService {
     }
 
     /**
-     *  Get all the tickets where Guest is {@code null}.
-     *  @return the list of entities.
+     * Get all the tickets where Guest is {@code null}.
+     *
+     * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public List<TicketDTO> findAllWhereGuestIsNull() {

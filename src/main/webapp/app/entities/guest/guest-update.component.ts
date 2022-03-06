@@ -36,11 +36,7 @@ export class GuestUpdateComponent implements OnInit {
     email: [null, [Validators.required]],
     phoneNumber: [],
     notes: [null, [Validators.maxLength(500)]],
-    createdAt: [],
     enabled: [null, [Validators.required]],
-    ticketId: [],
-    ticketTypeId: [null, [Validators.required]],
-    promotorId: [],
   });
 
   constructor(
@@ -119,9 +115,6 @@ export class GuestUpdateComponent implements OnInit {
       notes: guest.notes,
       createdAt: guest.createdAt ? guest.createdAt.format(DATE_TIME_FORMAT) : null,
       enabled: guest.enabled,
-      ticketId: guest.ticketId,
-      ticketTypeId: guest.ticketTypeId,
-      promotorId: guest.promotorId,
     });
   }
 
@@ -151,9 +144,6 @@ export class GuestUpdateComponent implements OnInit {
       notes: this.editForm.get(['notes'])!.value,
       createdAt: this.editForm.get(['createdAt'])!.value ? moment(this.editForm.get(['createdAt'])!.value, DATE_TIME_FORMAT) : undefined,
       enabled: this.editForm.get(['enabled'])!.value,
-      ticketId: this.editForm.get(['ticketId'])!.value,
-      ticketTypeId: this.editForm.get(['ticketTypeId'])!.value,
-      promotorId: this.editForm.get(['promotorId'])!.value,
     };
   }
 

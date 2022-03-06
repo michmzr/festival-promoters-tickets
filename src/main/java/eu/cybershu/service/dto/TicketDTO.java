@@ -1,16 +1,19 @@
 package eu.cybershu.service.dto;
 
-import java.time.Instant;
-import javax.validation.constraints.*;
-import java.io.Serializable;
-import java.util.UUID;
+import lombok.Data;
+
 import javax.persistence.Lob;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.UUID;
 
 /**
  * A DTO for the {@link eu.cybershu.domain.Ticket} entity.
  */
+@Data
 public class TicketDTO implements Serializable {
-    
+
     private Long id;
 
     @NotNull
@@ -19,7 +22,6 @@ public class TicketDTO implements Serializable {
     @NotNull
     private String ticketUrl;
 
-    
     @Lob
     private byte[] ticketQR;
 
@@ -36,11 +38,12 @@ public class TicketDTO implements Serializable {
 
     private Instant disabledAt;
 
+    private String ticketPrice;
 
     private Long ticketTypeId;
 
     private Long promoCodeId;
-    
+
     public Long getId() {
         return id;
     }

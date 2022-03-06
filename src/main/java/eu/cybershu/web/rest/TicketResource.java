@@ -2,9 +2,8 @@ package eu.cybershu.web.rest;
 
 import com.google.zxing.WriterException;
 import eu.cybershu.service.TicketService;
-import eu.cybershu.web.rest.errors.BadRequestAlertException;
+import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
-
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -48,11 +47,9 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tickets")
-    public ResponseEntity<TicketDTO> createTicket(@Valid @RequestBody TicketDTO ticketDTO) throws URISyntaxException, IOException, WriterException {
+    public ResponseEntity<TicketDTO> createTicket(@Valid @RequestBody TicketCreateDTO ticketDTO) throws URISyntaxException, IOException, WriterException {
         log.debug("REST request to save Ticket : {}", ticketDTO);
-        if (ticketDTO.getId() != null) {
-            throw new BadRequestAlertException("A new ticket cannot already have an ID", ENTITY_NAME, "idexists");
-        }
+
         TicketDTO result = ticketService.create(ticketDTO);
         return ResponseEntity.created(new URI("/api/tickets/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))

@@ -62,7 +62,7 @@ public class PromoCodeServiceImpl implements PromoCodeService {
     @Transactional(readOnly = true)
     public Optional<PromoCodeDTO> findOne(String code) {
         log.debug("Request to get PromoCode : code={}", code);
-        return promoCodeRepository.findByCodeIgnoreCase(code)
+        return promoCodeRepository.findByCodeIgnoreCaseAndEnabledIsTrue(code)
             .map(promoCodeMapper::toDto);
     }
 

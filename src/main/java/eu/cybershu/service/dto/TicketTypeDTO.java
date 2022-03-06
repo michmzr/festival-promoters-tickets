@@ -1,11 +1,21 @@
 package eu.cybershu.service.dto;
 
-import javax.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
  * A DTO for the {@link eu.cybershu.domain.TicketType} entity.
  */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TicketTypeDTO implements Serializable {
 
     private Long id;
@@ -17,54 +27,9 @@ public class TicketTypeDTO implements Serializable {
     @Size(max = 500)
     private String notes;
 
-    public Long getId() {
-        return id;
-    }
+    @Size(max = 50)
+    private String productId;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TicketTypeDTO)) {
-            return false;
-        }
-
-        return id != null && id.equals(((TicketTypeDTO) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "TicketTypeDTO{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", notes='" + getNotes() + "'" +
-            "}";
-    }
+    @Size(max=250)
+    private String productUrl;
 }

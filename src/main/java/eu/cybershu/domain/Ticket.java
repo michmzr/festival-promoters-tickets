@@ -3,8 +3,7 @@ package eu.cybershu.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
@@ -31,7 +30,6 @@ public class Ticket implements Serializable {
     @Column(name = "ticket_url", nullable = false)
     private String ticketUrl;
 
-    
     @Lob
     @Column(name = "ticket_qr", nullable = false)
     private byte[] ticketQR;
@@ -61,11 +59,18 @@ public class Ticket implements Serializable {
     @JoinColumn(unique = true)
     private TicketType ticketType;
 
+    @Column(name="ticket_price")
+    private String ticketPrice;
+
     @OneToOne
-    @JoinColumn(unique = true)
+    @JoinColumn(unique = true, nullable=true)
     private PromoCode promoCode;
 
-    @OneToOne(mappedBy = "ticket")
+    @OneToOne
+    @JoinColumn(nullable = true)
+    private Promotor promotor;
+
+    @OneToOne
     @JsonIgnore
     private Guest guest;
 
@@ -233,38 +238,27 @@ public class Ticket implements Serializable {
     public void setGuest(Guest guest) {
         this.guest = guest;
     }
+
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public String getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(String ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public Promotor getPromotor() {
+        return promotor;
+    }
+
+    public void setPromotor(Promotor promotor) {
+        this.promotor = promotor;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Ticket)) {
-            return false;
-        }
-        return id != null && id.equals(((Ticket) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "Ticket{" +
-            "id=" + getId() +
-            ", uuid='" + getUuid() + "'" +
-            ", ticketUrl='" + getTicketUrl() + "'" +
-            ", ticketQR='" + getTicketQR() + "'" +
-            ", ticketQRContentType='" + getTicketQRContentType() + "'" +
-            ", ticketFile='" + getTicketFile() + "'" +
-            ", ticketFileContentType='" + getTicketFileContentType() + "'" +
-            ", enabled='" + isEnabled() + "'" +
-            ", createdAt='" + getCreatedAt() + "'" +
-            ", disabledAt='" + getDisabledAt() + "'" +
-            "}";
-    }
 }

@@ -3,7 +3,6 @@ package eu.cybershu.service;
 import com.google.zxing.WriterException;
 import eu.cybershu.service.dto.GuestCreateDTO;
 import eu.cybershu.service.dto.GuestDTO;
-
 import eu.cybershu.service.dto.GuestUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +47,14 @@ public interface GuestService {
      * @return the entity.
      */
     Optional<GuestDTO> findOne(Long id);
+
+    /**
+     * Get guest by email
+     *
+     * @param email Email addresss
+     * @return
+     */
+    Optional<GuestDTO> findByEmail(String email);
 
     /**
      * Delete the "id" guest.

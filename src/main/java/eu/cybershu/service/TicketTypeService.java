@@ -34,6 +34,14 @@ public interface TicketTypeService {
     Optional<TicketTypeDTO> findOne(Long id);
 
     /**
+     * Get ticket type by defined product id (registered id in woocomerce)
+     *
+     * @param productId
+     * @return
+     */
+    Optional<TicketTypeDTO> findOneByProductId(String productId);
+
+    /**
      * Delete the "id" ticketType.
      *
      * @param id the id of the entity.

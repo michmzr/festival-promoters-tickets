@@ -81,28 +81,6 @@
                         </small>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_promotor">Promotor</label>
-                    <select class="form-control" id="field_promotor" name="promotor" formControlName="promotorId">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="promotorOption.id"
-                                *ngFor="let promotorOption of promotors; trackBy: trackById">{{"#" + promotorOption.id +
-                            " " + promotorOption.name + " " + promotorOption.lastName}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_ticketTypeId">Ticket Type</label>
-                    <select class="form-control" id="field_ticketTypeId" name="ticketTypeId"
-                            formControlName="ticketTypeId">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="ticketTypeOption.id"
-                                *ngFor="let ticketTypeOption of ticketTypes; trackBy: trackById">{{ "#" + ticketTypeOption.id + " " + ticketTypeOption.name }}
-                        </option>
-                    </select>
-                </div>
             </div>
 
             <div>
