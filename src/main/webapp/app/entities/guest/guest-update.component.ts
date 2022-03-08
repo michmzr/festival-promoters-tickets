@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { Guest, IGuest } from 'app/shared/model/guest.model';
 import { GuestService } from './guest.service';
@@ -113,7 +112,6 @@ export class GuestUpdateComponent implements OnInit {
       email: guest.email,
       phoneNumber: guest.phoneNumber,
       notes: guest.notes,
-      createdAt: guest.createdAt ? guest.createdAt.format(DATE_TIME_FORMAT) : null,
       enabled: guest.enabled,
     });
   }
@@ -142,7 +140,6 @@ export class GuestUpdateComponent implements OnInit {
       email: this.editForm.get(['email'])!.value,
       phoneNumber: this.editForm.get(['phoneNumber'])!.value,
       notes: this.editForm.get(['notes'])!.value,
-      createdAt: this.editForm.get(['createdAt'])!.value ? moment(this.editForm.get(['createdAt'])!.value, DATE_TIME_FORMAT) : undefined,
       enabled: this.editForm.get(['enabled'])!.value,
     };
   }

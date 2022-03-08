@@ -16,8 +16,8 @@
 logging:
   level:
     ROOT: INFO
-    io.github.jhipster: INFO
-    eu.cybershu: INFO
+    io.github.jhipster: DEBUG
+    eu.cybershu: DEBUG
 
 management:
   metrics:

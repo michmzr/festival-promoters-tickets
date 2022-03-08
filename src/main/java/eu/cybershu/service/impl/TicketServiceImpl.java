@@ -15,6 +15,7 @@ import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
 import eu.cybershu.service.mapper.TicketMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,7 @@ import java.util.stream.StreamSupport;
 public class TicketServiceImpl implements TicketService {
 
     public static final String QRCODE_FORMAT = "png";
+    private final String ticketDomainUrl;
 
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
@@ -50,13 +52,17 @@ public class TicketServiceImpl implements TicketService {
 
     public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper,
                              TicketTypeRepository ticketTypeRepository, PromotorRepository promotorRepository,
-                             QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository) {
+                             QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository,
+                             @Value("application.tickets.domain") String ticketDomainUrl
+
+    ) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
         this.ticketTypeRepository = ticketTypeRepository;
         this.promotorRepository = promotorRepository;
         this.qrCodeService = qrCodeService;
         this.promoCodeRepository = promoCodeRepository;
+        this.ticketDomainUrl = ticketDomainUrl;
     }
 
     @Override
@@ -67,14 +73,15 @@ public class TicketServiceImpl implements TicketService {
 
         UUID uuid = UUID.randomUUID();
 
-        String ticketUrl = ticketUrl(uuid);
+        String ticketUrl = ticketUrl(uuid); //todo podmienić
+
         ticket.setUuid(uuid);
         ticket.setTicketQR(generateQrCode(ticketUrl));
         ticket.setTicketQRContentType(QRCODE_FORMAT);
         ticket.setTicketUrl(ticketUrl);
         ticket.setTicketPrice(ticketDTO.getTicketPrice());
 
-        if(ticketDTO.getTicketTypeId() != null) {
+        if (ticketDTO.getTicketTypeId() != null) {
             TicketType ticketType = ticketTypeRepository.getOne(ticketDTO.getTicketTypeId());
             log.info("Ticket type: {}", ticketType);
             if (ticketType != null) {

@@ -6,8 +6,7 @@ import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +21,10 @@ import java.util.Optional;
 /**
  * REST controller for managing {@link eu.cybershu.domain.Ticket}.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class TicketResource {
-
-    private final Logger log = LoggerFactory.getLogger(TicketResource.class);
-
     private static final String ENTITY_NAME = "ticket";
 
     @Value("${jhipster.clientApp.name}")

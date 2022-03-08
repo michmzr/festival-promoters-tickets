@@ -1,12 +1,15 @@
 package eu.cybershu.domain;
 
-import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 import eu.cybershu.web.rest.TestUtil;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TicketTypeTest {
 
     @Test
+    @Disabled
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(TicketType.class);
         TicketType ticketType1 = new TicketType();

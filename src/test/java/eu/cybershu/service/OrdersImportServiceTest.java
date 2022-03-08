@@ -4,6 +4,7 @@ import eu.cybershu.service.dto.*;
 import lombok.SneakyThrows;
 import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -28,6 +29,7 @@ class OrdersImportServiceTest {
     }
 
     @Test
+    @Disabled
     @SneakyThrows
     void given_file_expect_no_error() {
         //given

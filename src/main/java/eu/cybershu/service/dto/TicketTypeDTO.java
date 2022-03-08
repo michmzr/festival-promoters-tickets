@@ -21,7 +21,7 @@ public class TicketTypeDTO implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 30)
+    @Size(max = 100)
     private String name;
 
     @Size(max = 500)

@@ -44,6 +44,7 @@ public class GuestServiceImpl implements GuestService {
 
         Guest guest = guestMapper.toEntity(guestDto);
         guest = guestRepository.save(guest);
+
         return guestMapper.toDto(guest);
     }
 
@@ -54,10 +55,7 @@ public class GuestServiceImpl implements GuestService {
         Guest guest = guestRepository.getOne(guestUpdateDTO.getId());
         log.debug("Guest: {}",  guest);
 
-        GuestDTO guestDTO = guestMapper.update(
-            guestMapper.toDto(guest),
-            guestUpdateDTO
-        );
+        GuestDTO guestDTO = guestMapper.update(guestMapper.toDto(guest), guestUpdateDTO);
         log.debug("GuestDTO: {}", guestDTO);
 
         guest = guestMapper.toEntity(guestDTO);
