@@ -44,10 +44,10 @@ class OrderImportJobITTest {
             .newPromoCodes(Set.of(promoCode, "kodzik90", "Miko120"))
             .build());
 
-        String productId = "2";
+        Long productId = 2L;
         var ticketType = ticketTypeService.save(
             TicketTypeDTO.builder()
-                .productId(productId)
+                .productId(productId.toString())
                 .name("Karnet 4 dniowy")
                 .productUrl("http://organic/bilet-4-dni.html")
                 .build()
@@ -55,7 +55,7 @@ class OrderImportJobITTest {
 
         OrderRecord orderRecord = new OrderRecord("X", "Y",
             "email@email.com", "Karnet2",
-            productId, 3, promoCode, "4.23", "Note");
+            productId, 3L, promoCode, "4.23", "Note");
 
         //when
         OrderImportResult importResult = orderImportJob.processRecord(orderRecord);
@@ -91,10 +91,10 @@ class OrderImportJobITTest {
             .newPromoCodes(Set.of(promoCode, "kodzik90", "Miko120"))
             .build());
 
-        String productId = "2";
+        Long productId = 2L;
         OrderRecord orderRecord = new OrderRecord("X", "Y",
             "email@email.com", "Karnet2",
-            productId, 3, promoCode, "4.23", "Note");
+            productId, 3L, promoCode, "4.23", "Note");
 
         //when
         OrderImportResult importResult = orderImportJob.processRecord(orderRecord);

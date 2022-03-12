@@ -164,4 +164,4 @@ jhipster:
 
 application:
   tickets:
-    domain: 'https://systembiletow.organicfestival.info/'
+    domain: 'http://localhost:8080/'

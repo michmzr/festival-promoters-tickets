@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+@Slf4j
 @Data
 @Builder
 @AllArgsConstructor
@@ -27,9 +29,9 @@ public class OrderRecord {
     private String productName;
 
     @NotNull
-    private String productId;
+    private Long productId;
 
-    private long orderId;
+    private Long orderId;
 
     @NotEmpty
     private String couponCode;
@@ -45,9 +47,9 @@ public class OrderRecord {
             .guestName(csvRecord.get(OrderCSVFileFields.BILLING_FIRST_NAME.getFieldName()))
             .guestLastName(csvRecord.get(OrderCSVFileFields.BILLING_LAST_NAME.getFieldName()))
             .guestEmail(csvRecord.get(OrderCSVFileFields.USER_EMAIL.getFieldName()))
-            .productId(csvRecord.get(OrderCSVFileFields.PRODUCT_ID.getFieldName()))
+            .productId(Long.parseLong(csvRecord.get(OrderCSVFileFields.PRODUCT_ID.getFieldName())))
             .productName(csvRecord.get(OrderCSVFileFields.PRODUCT_NAME.getFieldName()))
-            .orderId(Long.parseLong(OrderCSVFileFields.ORDER_ID.getFieldName()))
+            .orderId(Long.parseLong(csvRecord.get(OrderCSVFileFields.ORDER_ID.getFieldName())))
             .couponCode(csvRecord.get(OrderCSVFileFields.COUPON_CODE.getFieldName()))
             .price(csvRecord.get(OrderCSVFileFields.ORDER_TOTAL.getFieldName()))
             .note(csvRecord.get(OrderCSVFileFields.CUSTOMER_NOTE.getFieldName()))

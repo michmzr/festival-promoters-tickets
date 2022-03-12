@@ -16,6 +16,7 @@ export class TicketDetailComponent implements OnInit {
   ticket: ITicket | null = null;
   qrFileName: string | null = null;
   qrImagePath: SafeResourceUrl | null = null;
+  ticketImagePath: SafeResourceUrl | null = null;
   ticketType?: ITicketType;
 
   constructor(
@@ -28,8 +29,14 @@ export class TicketDetailComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ ticket }) => {
       this.ticket = ticket;
+
       this.qrFileName = 'ticket_qr_' + ticket.uuid + '.png';
+
       this.qrImagePath = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + ticket.ticketQR);
+
+      if (ticket.ticketFile)
+        this.ticketImagePath = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + ticket.ticketFile);
+      else this.ticketImagePath = this.qrImagePath;
 
       if (ticket.ticketTypeId) {
         this.ticketTypeService
@@ -53,8 +60,12 @@ export class TicketDetailComponent implements OnInit {
     return this.dataUtils.byteSize(base64String);
   }
 
-  openFile(contentType = '', base64String: string): void {
-    this.dataUtils.openFile(contentType, base64String);
+  openQrFile(): void {
+    this.dataUtils.openFile(this.ticket?.ticketQRContentType!, this.ticket?.ticketQR!);
+  }
+
+  openTicketFile(): void {
+    this.dataUtils.openFile(this.ticket?.ticketFileContentType!, this.ticket?.ticketFile!);
   }
 
   downloadFile(contentType = '', base64String: string, fileName: string): void {

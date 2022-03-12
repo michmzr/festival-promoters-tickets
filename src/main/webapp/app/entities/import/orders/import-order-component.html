@@ -1,18 +1,20 @@
+<script src="../../../shared/model/import-moder.model.ts"></script>
 <div class="row justify-content-center">
     <div class="col-8">
         <!-- (ngSubmit)="save()" [formGroup]="editForm"-->
         <form name="importForm" role="form" novalidate (ngSubmit)="importOrders()" [formGroup]="editForm">
             <h2 id="jhi-country-heading">Import orders</h2>
 
-            <!--todo : https://www.positronx.io/angular-material-file-browse-upload-ui-with-material-components/-->
             <mat-form-field>
                 <div>
                     <mat-toolbar>
                         <!-- Display files names -->
-                        <input matInput readonly name="name"/>
+                        <input matInput readonly name="fileName" value="{{fileAttr}}"/>
+
                         <!-- Browse Button -->
                         <button mat-flat-button color="primary">Browse File</button>
                     </mat-toolbar>
+
                     <!-- Fetch selected filed on change -->
                     <input
                         type="file"
@@ -20,8 +22,7 @@
                         (change)="uploadFileEvt($event)"
                         id="uploadFile"
                         name="uploadFile"
-                        multiple="multiple"
-                        accept="image/*"
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                     />
 
                     <div
@@ -40,6 +41,24 @@
                 </button>
             </div>
         </form>
+
+        <div *ngIf="importResults">
+            Zaimportowano: {{importResults.imported}}<br/>
+            Błędów: {{importResults.failed}}<br/>
+
+            Błedów:<br/>
+            <ul>
+                <li *ngFor="let e of importResults.errors; let i = index">
+                    <pre>{{e}}</pre>
+                </li>
+            </ul>
+
+            Wyniki:
+            <ul>
+                <li *ngFor="let result of importResults.results; let i = index">
+                    <jhi-import-order-result [importResult]="result"></jhi-import-order-result>
+                </li>
+            </ul>
+        </div>
     </div>
-    >
 </div>

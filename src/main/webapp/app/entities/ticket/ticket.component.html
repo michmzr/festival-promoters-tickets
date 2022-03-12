@@ -25,8 +25,6 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Uuid</span></th>
                     <th scope="col" ><span>Ticket Url</span></th>
-                    <th scope="col" ><span>Ticket QR</span></th>
-                    <th scope="col" ><span>Ticket File</span></th>
                     <th scope="col" ><span>Enabled</span></th>
                     <th scope="col" ><span>Created At</span></th>
                     <th scope="col" ><span>Disabled At</span></th>
@@ -40,18 +38,6 @@
                     <td><a [routerLink]="['/ticket', ticket.id, 'view']">{{ ticket.id }}</a></td>
                     <td>{{ ticket.uuid }}</td>
                     <td>{{ ticket.ticketUrl }}</td>
-                    <td>
-                        <a *ngIf="ticket.ticketQR" (click)="openFile(ticket.ticketQRContentType, ticket.ticketQR)">
-                            <img [src]="'data:' + ticket.ticketQRContentType + ';base64,' + ticket.ticketQR" style="max-height: 30px;" alt="ticket image"/>
-                        </a>
-                        <span *ngIf="ticket.ticketQR">{{ ticket.ticketQRContentType }}, {{ byteSize(ticket.ticketQR) }}</span>
-                    </td>
-                    <td>
-                        <a *ngIf="ticket.ticketFile" (click)="openFile(ticket.ticketFileContentType, ticket.ticketFile)">
-                            <img [src]="'data:' + ticket.ticketFileContentType + ';base64,' + ticket.ticketFile" style="max-height: 30px;" alt="ticket image"/>
-                        </a>
-                        <span *ngIf="ticket.ticketFile">{{ ticket.ticketFileContentType }}, {{ byteSize(ticket.ticketFile) }}</span>
-                    </td>
                     <td>{{ ticket.enabled }}</td>
                     <td>{{ ticket.createdAt | date:'medium' }}</td>
                     <td>{{ ticket.disabledAt | date:'medium' }}</td>
@@ -73,6 +59,13 @@
                                 <fa-icon icon="eye"></fa-icon>
                                 <span class="d-none d-md-inline">View</span>
                             </button>
+
+                            <a *ngIf="ticket.ticketFile"
+                               (click)="openFile(ticket.ticketFileContentType, ticket.ticketFile)">
+                                <img [src]="'data:' + ticket.ticketFileContentType + ';base64,' + ticket.ticketFile"
+                                     style="max-height: 30px;" alt="ticket image"/>
+                            </a>
+                            <span *ngIf="ticket.ticketFile">{{ ticket.ticketFileContentType }}, {{ byteSize(ticket.ticketFile) }}</span>
 
                             <button type="submit" (click)="delete(ticket)"
                                     class="btn btn-danger btn-sm">

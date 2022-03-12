@@ -6,7 +6,7 @@ export interface ITicket {
   uuid?: string;
   ticketUrl?: string;
   ticketQRContentType?: string;
-  ticketQR?: any;
+  ticketQR?: string;
   ticketFileContentType?: string;
   ticketFile?: any;
   enabled?: boolean;
@@ -24,7 +24,7 @@ export class Ticket implements ITicket {
     public uuid?: string,
     public ticketUrl?: string,
     public ticketQRContentType?: string,
-    public ticketQR?: any,
+    public ticketQR?: string,
     public ticketFileContentType?: string,
     public ticketFile?: any,
     public enabled?: boolean,

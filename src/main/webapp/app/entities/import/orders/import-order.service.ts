@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { IImportOrderRequest } from '../../../shared/model/import-oder.model';
-
-type EntityResponseType = HttpResponse<Object>;
-type EntityArrayResponseType = HttpResponse<Object[]>;
+import { IImportOrderRequest, IOrdersImportResult } from '../../../shared/model/import-moder.model';
 
 @Injectable({ providedIn: 'root' })
 export class ImportOrderService {
@@ -14,16 +11,14 @@ export class ImportOrderService {
 
   constructor(protected http: HttpClient) {}
 
-  import(payload: IImportOrderRequest): Observable<EntityResponseType> {
-    console.info('payload: ' + payload);
-
+  import(payload: IImportOrderRequest): Observable<HttpResponse<IOrdersImportResult>> {
     const formPayload = new FormData();
-    formPayload.append('file', payload?.file);
 
-    return this.http.post<Object>(this.resourceUrl, formPayload, {
-      headers: new HttpHeaders({
-        'Content-Type': 'multipart/form-data',
-      }),
+    const file: File = payload.file;
+    formPayload.append('file', file);
+
+    return this.http.post<IOrdersImportResult>(this.resourceUrl, formPayload, {
+      reportProgress: true,
       observe: 'response',
     });
   }

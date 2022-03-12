@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -63,7 +64,6 @@ public class OrdersImportService {
                     if (importResult.failed()) {
                         failed++;
                     }
-
                 }
 
                 ordersImportResult.setImported(imported);
@@ -100,14 +100,20 @@ public class OrdersImportService {
 
         List<String> fileHeaderNames = csvParser.getHeaderNames();
 
-        if (expectedColumns.equals(fileHeaderNames)) {
+        if (expectedColumns.containsAll(fileHeaderNames)) {
             return ValidationResult.ok();
         } else {
             ValidationResult validationResult = new ValidationResult();
 
-            String msg = String.format("Mismatch header fields.\nFile:\n %s, \nexpected:\n%s", fileHeaderNames, expectedColumns);
-            log.error(msg);
+            List<String> missingFields = new ArrayList<>(expectedColumns);
+            missingFields.removeAll(fileHeaderNames);
 
+            String msg = String.format("Mismatch header fields.\nFile:\n %s, \nexpected:\n%s\n Missing fields: \n%s",
+                fileHeaderNames.stream().sorted().collect(Collectors.toList()),
+                expectedColumns.stream().sorted().collect(Collectors.toList()),
+                missingFields);
+
+            log.error(msg);
             validationResult.addMessage(msg);
 
             return validationResult;

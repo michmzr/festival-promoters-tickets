@@ -64,6 +64,8 @@ public class OrderImportJob {
     }
 
     private TicketDTO createTicket(GuestDTO guestDTO, OrderRecord orderRecord, OrderImportResult importResult) throws IOException, WriterException {
+        log.info("Creating ticket guest:{}, order:{}", guestDTO, orderRecord);
+
         TicketCreateDTO ticketCreateDTO = new TicketCreateDTO();
         ticketCreateDTO.setGuestId(guestDTO.getId());
         ticketCreateDTO.setTicketPrice(orderRecord.getPrice());
@@ -82,7 +84,7 @@ public class OrderImportJob {
         }
 
         //Ticket Type
-        var ticketTypeOpt = ticketTypeService.findOneByProductId(orderRecord.getProductId());
+        var ticketTypeOpt = ticketTypeService.findOneByProductId(orderRecord.getProductId().toString());
         log.debug("ticket type: {}", ticketTypeOpt);
         if (ticketTypeOpt.isPresent()) {
             ticketCreateDTO.setTicketTypeId(ticketTypeOpt.get().getId());
@@ -92,6 +94,8 @@ public class OrderImportJob {
                     "Not recognised ticket type with defined product id = '%s'. Create ticket type in panel.",
                     orderRecord.getProductId()));
         }
+
+        //todo sprawdzenie czy gosć już ma taki biletwykupiuony i jest enabled
 
         TicketDTO ticketDTO = ticketService.create(ticketCreateDTO);
         log.info("Created ticket {}", ticketDTO);
@@ -112,6 +116,7 @@ public class OrderImportJob {
                 .email(orderRecord.getGuestEmail())
                 .name(orderRecord.getGuestName())
                 .lastName(orderRecord.getGuestLastName())
+                .notes(orderRecord.getNote())
                 .build();
 
             GuestDTO guestDTO = guestService.save(guestCreateDTO);

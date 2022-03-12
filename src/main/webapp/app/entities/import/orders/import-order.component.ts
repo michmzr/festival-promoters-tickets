@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ImportOrderService } from './import-order.service';
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
-import { IImportOrderRequest } from '../../../shared/model/import-oder.model';
+import { IImportOrderRequest, IOrdersImportResult } from '../../../shared/model/import-moder.model';
 
 @Component({
   selector: 'jhi-import-order',
@@ -13,28 +13,36 @@ import { IImportOrderRequest } from '../../../shared/model/import-oder.model';
 })
 export class ImportOrderComponent implements OnInit, OnDestroy {
   isSaving = false;
-
   editForm = this.fb.group({
     uploadFile: [null, [Validators.required]],
   });
 
+  fileName: String = 'Choose file';
   @ViewChild('fileInput') fileInput?: ElementRef;
   fileAttr: String = 'Choose File';
+
+  importResults?: IOrdersImportResult;
 
   constructor(protected importOrderService: ImportOrderService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
   ngOnDestroy(): void {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const lastImport = sessionStorage.getItem('import-order-last-results');
+
+    if (lastImport) {
+      this.importResults = JSON.parse(lastImport);
+    }
+  }
 
   uploadFileEvt(eventFile: any): void {
-    console.log(eventFile);
+    this.importResults = undefined;
 
     if (eventFile.target.files && eventFile.target.files[0]) {
       this.fileAttr = '';
 
       Array.from(eventFile.target.files).forEach((file: any) => {
-        this.fileAttr += file.name + ' - ';
+        this.fileAttr += file.name;
       });
 
       // HTML5 FileReader API
@@ -42,9 +50,6 @@ export class ImportOrderComponent implements OnInit, OnDestroy {
       reader.onload = (e: any) => {
         const image = new Image();
         image.src = e.target.result;
-        image.onload = rs => {
-          const imgBase64Path = e.target.result;
-        };
       };
 
       reader.readAsDataURL(eventFile.target.files[0]);
@@ -73,18 +78,33 @@ export class ImportOrderComponent implements OnInit, OnDestroy {
     this.subscribeToImportResponse(this.importOrderService.import(payload));
   }
 
-  protected subscribeToImportResponse(result: Observable<HttpResponse<Object>>): void {
-    result.subscribe(
-      () => this.onSaveSuccess(),
-      () => this.onSaveError()
+  protected subscribeToImportResponse(resultObs: Observable<HttpResponse<IOrdersImportResult>>): void {
+    resultObs.subscribe(
+      (httpResp: HttpResponse<IOrdersImportResult>) => this.onSuccess(httpResp.body!),
+      error => this.onError(error)
     );
   }
 
-  protected onSaveSuccess(): void {
+  protected onSuccess(results: IOrdersImportResult | undefined): void {
+    this.importResults = results;
+    console.info(this.importResults);
+
+    this.fileName = 'Choice file';
+    this.editForm.patchValue({
+      uploadFile: null,
+    });
+
+    //todo remove session storage
+    sessionStorage.setObj('import-order-last-results', JSON.stringify(this.importResults));
+
     this.isSaving = false;
   }
 
-  protected onSaveError(): void {
+  protected onError(error: any): void {
+    console.error(error);
+
+    //todo display
+
     this.isSaving = false;
   }
 }

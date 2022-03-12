@@ -55,15 +55,15 @@ public class Ticket implements Serializable {
     @Column(name = "disabled_at")
     private Instant disabledAt;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @NotNull
+    @ManyToOne
     private TicketType ticketType;
 
-    @Column(name="ticket_price")
+    @Column(name = "ticket_price")
     private String ticketPrice;
 
     @OneToOne
-    @JoinColumn(unique = true, nullable=true)
+    @JoinColumn
     private PromoCode promoCode;
 
     @OneToOne
