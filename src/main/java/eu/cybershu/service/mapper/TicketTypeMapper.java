@@ -1,10 +1,9 @@
 package eu.cybershu.service.mapper;
 
 
-import eu.cybershu.domain.*;
+import eu.cybershu.domain.TicketType;
 import eu.cybershu.service.dto.TicketTypeDTO;
-
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
 
 /**
  * Mapper for the entity {@link TicketType} and its DTO {@link TicketTypeDTO}.

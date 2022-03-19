@@ -1,7 +1,7 @@
 package eu.cybershu.service;
 
 import com.google.zxing.WriterException;
-import eu.cybershu.domain.TicketType;
+import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
 
 import java.io.IOException;
@@ -19,9 +19,7 @@ public interface TicketService {
      * @param ticketDTO the entity to save.
      * @return the persisted entity.
      */
-    TicketDTO create(TicketDTO ticketDTO) throws WriterException, IOException;
-
-    TicketDTO create(Long ticketTypeId) throws IOException, WriterException;
+    TicketDTO create(TicketCreateDTO ticketDTO) throws WriterException, IOException;
 
     /**
      * Get all the tickets.
@@ -37,6 +35,15 @@ public interface TicketService {
      */
     List<TicketDTO> findAllWhereGuestIsNull();
 
+    /**
+     * Get Ticket by Guest id, ticket type id and order id
+     *
+     * @param guestId      Guest id
+     * @param ticketTypeId Ticket type id
+     * @param orderId      Order id - string from WooComerce
+     * @return Ticket Dto
+     */
+    Optional<TicketDTO> findByGuestIdTicketTypeAndOrderId(Long guestId, Long ticketTypeId, String orderId);
 
     /**
      * Get the "id" ticket.

@@ -1,6 +1,8 @@
 package eu.cybershu.domain;
 
 
+import lombok.ToString;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,6 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "promotor")
+@ToString(of = {"id", "name", "lastName", "email"})
 public class Promotor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,9 +50,6 @@ public class Promotor implements Serializable {
     @NotNull
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
-
-    @OneToMany(mappedBy = "promotor")
-    private Set<Guest> guests = new HashSet<>();
 
     @OneToMany(mappedBy = "promotor", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<PromoCode> promoCodes = new HashSet<>();
@@ -154,31 +154,6 @@ public class Promotor implements Serializable {
         this.enabled = enabled;
     }
 
-    public Set<Guest> getGuests() {
-        return guests;
-    }
-
-    public Promotor guests(Set<Guest> guests) {
-        this.guests = guests;
-        return this;
-    }
-
-    public Promotor addGuest(Guest guest) {
-        this.guests.add(guest);
-        guest.setPromotor(this);
-        return this;
-    }
-
-    public Promotor removeGuest(Guest guest) {
-        this.guests.remove(guest);
-        guest.setPromotor(null);
-        return this;
-    }
-
-    public void setGuests(Set<Guest> guests) {
-        this.guests = guests;
-    }
-
     public Set<PromoCode> getPromoCodes() {
         return promoCodes;
     }
@@ -205,34 +180,28 @@ public class Promotor implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Promotor)) {
-            return false;
-        }
-        return id != null && id.equals(((Promotor) o).id);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Promotor promotor = (Promotor) o;
+
+        if (!id.equals(promotor.id)) return false;
+        if (!name.equals(promotor.name)) return false;
+        if (!lastName.equals(promotor.lastName)) return false;
+        if (!email.equals(promotor.email)) return false;
+        return enabled.equals(promotor.enabled);
     }
 
     @Override
     public int hashCode() {
-        return 31;
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "Promotor{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", lastName='" + getLastName() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", phoneNumber='" + getPhoneNumber() + "'" +
-            ", notes='" + getNotes() + "'" +
-            ", createdAt='" + getCreatedAt() + "'" +
-            ", enabled='" + isEnabled() + "'" +
-            "}";
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + lastName.hashCode();
+        result = 31 * result + email.hashCode();
+        result = 31 * result + enabled.hashCode();
+        return result;
     }
 }

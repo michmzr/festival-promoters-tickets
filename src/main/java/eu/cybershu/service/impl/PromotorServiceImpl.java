@@ -113,7 +113,7 @@ public class PromotorServiceImpl implements PromotorService {
         return promotorRepository.findById(id)
             .map(promotorMapper::toDto);
     }
-
+    
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Promotor : {}", id);

@@ -1,15 +1,18 @@
 package eu.cybershu.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
  * A TicketType.
  */
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "ticket_type")
 public class TicketType implements Serializable {
@@ -22,13 +25,23 @@ public class TicketType implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(max = 30)
-    @Column(name = "name", length = 30, nullable = false)
+    @Size(max = 100)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
     @Size(max = 500)
     @Column(name = "notes", length = 500)
     private String notes;
+
+    /** Product id in Woocommerce**/
+    @Size(max =50)
+    @Column(name = "product_id")
+    private String productId;
+
+    /** Product url in Woocommerce**/
+    @Size(max =250)
+    @Column(name = "product_url")
+    private String productUrl;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -65,31 +78,13 @@ public class TicketType implements Serializable {
         this.notes = notes;
     }
 
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof TicketType)) {
-            return false;
-        }
-        return id != null && id.equals(((TicketType) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "TicketType{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", notes='" + getNotes() + "'" +
-            "}";
-    }
 }

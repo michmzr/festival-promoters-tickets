@@ -58,7 +58,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="promo-code" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="promo-code" routerLinkActive="active"
+                           [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                             <span>Promo Code</span>
                         </a>
@@ -66,7 +67,24 @@
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
             </li>
-            <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic"
+                routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);">
+                    <fa-icon icon="file-import"></fa-icon>
+                    <span>Import</span>
+                </a>
+                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="import-menu">
+                    <li>
+                        <a class="dropdown-item" routerLink="import-orders" routerLinkActive="active"
+                           (click)="collapseNavbar()">
+                            <!--                            <fa-icon icon="file-basket" [fixedWidth]="true"></fa-icon>-->
+                            <span>Orders from WooCommerce</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic"
+                routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
                     <span>
                         <fa-icon icon="user-plus"></fa-icon>
@@ -75,7 +93,8 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
                     <li>
-                        <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active"
+                           (click)="collapseNavbar()">
                             <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
                             <span>User management</span>
                         </a>

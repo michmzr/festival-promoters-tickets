@@ -55,11 +55,10 @@ export class PromoCodeService {
   }
 
   protected convertDateFromClient(promoCode: IPromoCode): IPromoCode {
-    const copy: IPromoCode = Object.assign({}, promoCode, {
+    return Object.assign({}, promoCode, {
       createdAt: promoCode.createdAt && promoCode.createdAt.isValid() ? promoCode.createdAt.toJSON() : undefined,
       disabledAt: promoCode.disabledAt && promoCode.disabledAt.isValid() ? promoCode.disabledAt.toJSON() : undefined,
     });
-    return copy;
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {

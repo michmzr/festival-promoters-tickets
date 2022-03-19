@@ -6,7 +6,7 @@ export interface ITicket {
   uuid?: string;
   ticketUrl?: string;
   ticketQRContentType?: string;
-  ticketQR?: any;
+  ticketQR?: string;
   ticketFileContentType?: string;
   ticketFile?: any;
   enabled?: boolean;
@@ -15,6 +15,7 @@ export interface ITicket {
   ticketTypeId?: number;
   promoCodeId?: number;
   guestId?: number;
+  orderId?: string;
 }
 
 export class Ticket implements ITicket {
@@ -24,7 +25,7 @@ export class Ticket implements ITicket {
     public uuid?: string,
     public ticketUrl?: string,
     public ticketQRContentType?: string,
-    public ticketQR?: any,
+    public ticketQR?: string,
     public ticketFileContentType?: string,
     public ticketFile?: any,
     public enabled?: boolean,
@@ -32,7 +33,8 @@ export class Ticket implements ITicket {
     public disabledAt?: Moment,
     public ticketTypeId?: number,
     public promoCodeId?: number,
-    public guestId?: number
+    public guestId?: number,
+    public orderId?: string
   ) {
     this.enabled = this.enabled || false;
   }

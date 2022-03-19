@@ -1,5 +1,4 @@
 import { Moment } from 'moment';
-import { IGuest } from 'app/shared/model/guest.model';
 import { IPromoCode } from 'app/shared/model/promo-code.model';
 
 export interface IPromotor {
@@ -11,7 +10,6 @@ export interface IPromotor {
   notes?: string;
   createdAt?: Moment;
   enabled?: boolean;
-  guests?: IGuest[];
   promoCodes?: IPromoCode[];
 }
 
@@ -25,7 +23,6 @@ export class Promotor implements IPromotor {
     public notes?: string,
     public createdAt?: Moment,
     public enabled?: boolean,
-    public guests?: IGuest[],
     public promoCodes?: IPromoCode[]
   ) {
     this.enabled = this.enabled || false;
@@ -39,7 +36,6 @@ export interface IPromotorCreate {
   email?: string;
   phoneNumber?: string;
   notes?: string;
-  guests?: IGuest[];
   newPromoCodes?: String[];
 }
 

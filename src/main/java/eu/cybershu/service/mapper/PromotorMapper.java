@@ -7,7 +7,6 @@ import eu.cybershu.service.dto.PromoCodeDTO;
 import eu.cybershu.service.dto.PromotorDTO;
 import eu.cybershu.service.dto.PromotorUpdateDTO;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.Set;
 
@@ -18,14 +17,8 @@ import java.util.Set;
     PromoCodeMapper.class
 })
 public interface PromotorMapper extends EntityMapper<PromotorDTO, Promotor> {
-    @Mapping(target = "guests", ignore = true)
-    @Mapping(target = "removeGuest", ignore = true)
-    @Mapping(target = "removePromoCode", ignore = true)
     Promotor toEntity(PromotorDTO promotorDTO);
 
-    @Mapping(target = "guests", ignore = true)
-    @Mapping(target = "removeGuest", ignore = true)
-    @Mapping(target = "removePromoCode", ignore = true)
     Promotor toEntity(PromotorUpdateDTO promotorDTO);
 
     Set<PromoCodeDTO> map(Set<PromoCode> promoCodes);
