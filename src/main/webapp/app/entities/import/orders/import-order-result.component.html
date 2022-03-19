@@ -1,9 +1,7 @@
 <div class="card {{cardCSSClass()}}" style="width: 32rem">
     <div class="card-body">
-        <h5 class="card-title" *ngIf="importResult.processed">Zamówienie #{{importResult.orderRecord?.orderId}}
-            pomyślnie zaimportowane.</h5>
-        <h5 class="card-title" *ngIf="!importResult.processed">Błąd migracji zamówienia
-            #{{importResult.orderRecord?.orderId}}</h5>
+        <h5 class="card-title" *ngIf="importResult.processed">Zamówienie pomyślnie zaimportowane.</h5>
+        <h5 class="card-title" *ngIf="!importResult.processed">Błąd migracji zamówienia</h5>
 
         Rekord: {{importResult.orderRecord | json}}
     </div>
