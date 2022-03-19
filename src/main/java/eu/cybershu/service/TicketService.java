@@ -35,6 +35,15 @@ public interface TicketService {
      */
     List<TicketDTO> findAllWhereGuestIsNull();
 
+    /**
+     * Get Ticket by Guest id, ticket type id and order id
+     *
+     * @param guestId      Guest id
+     * @param ticketTypeId Ticket type id
+     * @param orderId      Order id - string from WooComerce
+     * @return Ticket Dto
+     */
+    Optional<TicketDTO> findByGuestIdTicketTypeAndOrderId(Long guestId, Long ticketTypeId, String orderId);
 
     /**
      * Get the "id" ticket.

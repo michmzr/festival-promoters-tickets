@@ -1,15 +1,23 @@
-{{importResult}}
+<div class="card {{cardCSSClass()}}" style="width: 32rem">
+    <div class="card-body">
+        <h5 class="card-title" *ngIf="importResult.processed">Zamówienie #{{importResult.orderRecord?.orderId}}
+            pomyślnie zaimportowane.</h5>
+        <h5 class="card-title" *ngIf="!importResult.processed">Błąd migracji zamówienia
+            #{{importResult.orderRecord?.orderId}}</h5>
 
-<!--todo logika wizualna-->
+        Rekord: {{importResult.orderRecord | json}}
+    </div>
 
-<mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-        <mat-panel-title>
-            This is the expansion title
-        </mat-panel-title>
-        <mat-panel-description>
-            This is a summary of the content
-        </mat-panel-description>
-    </mat-expansion-panel-header>
-    <p>This is the primary content of the panel.</p>
-</mat-expansion-panel>
+    <ul class="list-group list-group-flush" *ngIf="importResult.messages">
+        <li *ngFor="let msg of importResult.messages; let i = index" class="list-group-item">
+            -> {{msg}}
+        </li>
+    </ul>
+
+    <div class="card-body" *ngIf="importResult.processed">
+        <a *ngIf="importResult.guest" [routerLink]="['/guest',  importResult!.guest!.id, 'view']" class="card-link"
+           target="_blank" class="btn btn-primary"> Gość #{{ importResult!.guest!.id }}</a>
+        <a *ngIf="importResult.ticket" [routerLink]="['/ticket', importResult!.ticket!.id , 'view']" class="card-link"
+           target="_blank" class="btn btn-primary"> Bilet #{{ importResult!.ticket!.id }}</a>
+    </div>
+</div>

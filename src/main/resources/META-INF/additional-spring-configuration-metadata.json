@@ -3,7 +3,7 @@
     {
       "name": "application.tickets.domain",
       "type": "java.lang.String",
-      "description": "Host url - ticket validation. Url is part of QR code url"
+      "description": "Host url - ticket validation. Url is part of QR code url."
     }
   ]
 }

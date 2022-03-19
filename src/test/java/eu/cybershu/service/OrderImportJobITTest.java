@@ -2,6 +2,7 @@ package eu.cybershu.service;
 
 import eu.cybershu.OrganicPromoTicketsApp;
 import eu.cybershu.service.dto.*;
+import lombok.SneakyThrows;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,12 @@ class OrderImportJobITTest {
     private PromotorService promotorService;
 
     @Autowired
+    private GuestService guestService;
+
+    @Autowired
+    private TicketService ticketService;
+
+    @Autowired
     private OrderImportJob orderImportJob = null;
 
     @BeforeEach
@@ -44,10 +51,10 @@ class OrderImportJobITTest {
             .newPromoCodes(Set.of(promoCode, "kodzik90", "Miko120"))
             .build());
 
-        Long productId = 2L;
+        String productId = "2";
         var ticketType = ticketTypeService.save(
             TicketTypeDTO.builder()
-                .productId(productId.toString())
+                .productId(productId)
                 .name("Karnet 4 dniowy")
                 .productUrl("http://organic/bilet-4-dni.html")
                 .build()
@@ -55,7 +62,7 @@ class OrderImportJobITTest {
 
         OrderRecord orderRecord = new OrderRecord("X", "Y",
             "email@email.com", "Karnet2",
-            productId, 3L, promoCode, "4.23", "Note");
+            productId, "3", promoCode, "4.23", "Note");
 
         //when
         OrderImportResult importResult = orderImportJob.processRecord(orderRecord);
@@ -71,11 +78,11 @@ class OrderImportJobITTest {
         assertThat(importResult.getValidation().fieldNames).isEmpty();
 
         //and: guest assertions
-        GuestDTO guestDTO = importResult.getGuestDTO();
+        GuestDTO guestDTO = importResult.getGuest();
         assertGuest(guestDTO, orderRecord);
 
         //and: ticket assertions
-        TicketDTO ticketDTO = importResult.getTicketDTO();
+        TicketDTO ticketDTO = importResult.getTicket();
         assertTicketDTO(ticketDTO, orderRecord, ticketType);
     }
 
@@ -91,10 +98,10 @@ class OrderImportJobITTest {
             .newPromoCodes(Set.of(promoCode, "kodzik90", "Miko120"))
             .build());
 
-        Long productId = 2L;
+        String productId = "2";
         OrderRecord orderRecord = new OrderRecord("X", "Y",
             "email@email.com", "Karnet2",
-            productId, 3L, promoCode, "4.23", "Note");
+            productId, "3", promoCode, "4.23", "Note");
 
         //when
         OrderImportResult importResult = orderImportJob.processRecord(orderRecord);
@@ -111,14 +118,40 @@ class OrderImportJobITTest {
         assertThat(importResult.getValidation().fieldNames).isEmpty();
 
         //and: guest assertions
-        GuestDTO guestDTO = importResult.getGuestDTO();
+        GuestDTO guestDTO = importResult.getGuest();
         assertThat(guestDTO).isNull();
 
         //and: ticket assertions
-        TicketDTO ticketDTO = importResult.getTicketDTO();
+        TicketDTO ticketDTO = importResult.getTicket();
         assertThat(ticketDTO).isNull();
     }
 
+    @Test
+    @Transactional
+    @SneakyThrows
+    void given_already_imported_order_expected_return_registerd_ticket() {
+        //given
+        String productId = "22";
+        TicketTypeDTO ticketType = ticketTypeService.save(
+            ticketTypeDTO(10L, "Bilet 4 dni", "ticket-url", productId));
+
+        String orderId = "3";
+        GuestDTO guest = guestService.save(createGuest("X", "Y", "email@email.com"));
+        TicketDTO ticket = ticketService.create(ticketCreateDTO(guest.getId(), ticketType.getId(), orderId));
+
+        OrderRecord orderRecord = new OrderRecord("X", "Y",
+            "email@email.com", "Karnet2", productId, orderId, "s", "4.23", "Note");
+
+        //when
+        OrderImportResult importResult = orderImportJob.processRecord(orderRecord);
+
+        //then
+        assertThat(importResult.success()).isTrue();
+        assertThat(importResult.getMessages().toString())
+            .containsIgnoringCase("Found already registered ticket");
+        assertThat(importResult.getTicket()).isEqualTo(ticket);
+        assertThat(importResult.getGuest()).isEqualTo(guest);
+    }
 
     private void assertGuest(GuestDTO guestDTO, OrderRecord orderRecord) {
         assertThat(guestDTO).isNotNull();
@@ -148,6 +181,34 @@ class OrderImportJobITTest {
         softly.assertThat(ticketDTO.getTicketPrice()).isEqualTo(orderRecord.getPrice());
         softly.assertThat(ticketDTO.getTicketTypeId()).isEqualTo(ticketDTO.getId());
         softly.assertThat(ticketDTO.getPromoCodeId()).isNotNull();
+    }
+
+    private GuestCreateDTO createGuest(String name, String lastName, String email) {
+        return GuestCreateDTO
+            .builder()
+            .name(name)
+            .lastName(lastName)
+            .email(email)
+            .build();
+    }
+
+    private TicketCreateDTO ticketCreateDTO(Long guestId, Long ticketTypeId, String orderId) {
+        return TicketCreateDTO
+            .builder()
+            .guestId(guestId)
+            .ticketTypeId(ticketTypeId)
+            .orderId(orderId)
+            .build();
+    }
+
+    private TicketTypeDTO ticketTypeDTO(Long id, String name, String productUrl, String productId) {
+        return TicketTypeDTO
+            .builder()
+            .id(id)
+            .name(name)
+            .productUrl(productUrl)
+            .productId(productId)
+            .build();
     }
 
 }

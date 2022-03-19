@@ -14,9 +14,9 @@ import java.util.Set;
 /**
  * A Promotor.
  */
-@ToString
 @Entity
 @Table(name = "promotor")
+@ToString(of = {"id", "name", "lastName", "email"})
 public class Promotor implements Serializable {
 
     private static final long serialVersionUID = 1L;

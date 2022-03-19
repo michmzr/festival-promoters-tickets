@@ -1,6 +1,7 @@
 package eu.cybershu.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,13 @@ import java.util.UUID;
  * A Ticket.
  */
 @Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "ticket")
+@ToString(of = {"id", "uuid", "ticketType", "orderId", "createdAt"})
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,18 +56,15 @@ public class Ticket implements Serializable {
     private Boolean enabled;
 
     @NotNull
-    @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
-
-    @Column(name = "disabled_at")
-    private Instant disabledAt;
-
-    @NotNull
     @ManyToOne
     private TicketType ticketType;
 
     @Column(name = "ticket_price")
     private String ticketPrice;
+
+    @NotNull
+    @Column(name = "order_id")
+    private String orderId;
 
     @OneToOne
     @JoinColumn
@@ -73,6 +77,13 @@ public class Ticket implements Serializable {
     @OneToOne
     @JsonIgnore
     private Guest guest;
+
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private Instant createdAt;
+
+    @Column(name = "disabled_at")
+    private Instant disabledAt;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {

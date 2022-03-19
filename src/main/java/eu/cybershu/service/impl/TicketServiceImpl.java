@@ -5,10 +5,7 @@ import eu.cybershu.domain.PromoCode;
 import eu.cybershu.domain.Promotor;
 import eu.cybershu.domain.Ticket;
 import eu.cybershu.domain.TicketType;
-import eu.cybershu.repository.PromoCodeRepository;
-import eu.cybershu.repository.PromotorRepository;
-import eu.cybershu.repository.TicketRepository;
-import eu.cybershu.repository.TicketTypeRepository;
+import eu.cybershu.repository.*;
 import eu.cybershu.service.QRCodeService;
 import eu.cybershu.service.TicketService;
 import eu.cybershu.service.dto.TicketCreateDTO;
@@ -44,18 +41,20 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
+    private final QRCodeService qrCodeService;
+
+    private final GuestRepository guestRepository;
     private final TicketTypeRepository ticketTypeRepository;
     private final PromotorRepository promotorRepository;
-    private final QRCodeService qrCodeService;
     private final PromoCodeRepository promoCodeRepository;
 
 
     public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper,
                              TicketTypeRepository ticketTypeRepository, PromotorRepository promotorRepository,
                              QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository,
-                             @Value("application.tickets.domain") String ticketDomainUrl
+                             @Value("${application.tickets.domain}") String ticketDomainUrl,
 
-    ) {
+                             GuestRepository guestRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
         this.ticketTypeRepository = ticketTypeRepository;
@@ -63,6 +62,15 @@ public class TicketServiceImpl implements TicketService {
         this.qrCodeService = qrCodeService;
         this.promoCodeRepository = promoCodeRepository;
         this.ticketDomainUrl = ticketDomainUrl;
+        this.guestRepository = guestRepository;
+    }
+
+    public Optional<TicketDTO> findByGuestIdTicketTypeAndOrderId(Long guestId, Long ticketTypeId, String orderId) {
+        log.debug("Looking for a ticket: guest: {}, ticket type: {}, order id: {}", guestId, ticketTypeId, orderId);
+
+        Optional<Ticket> ticketOpt = ticketRepository
+            .findByGuestIdAndTicketTypeIdAndOrderIdAndEnabledTrue(guestId, ticketTypeId, orderId);
+        return ticketOpt.map(ticketMapper::toDto);
     }
 
     @Override
@@ -73,13 +81,15 @@ public class TicketServiceImpl implements TicketService {
 
         UUID uuid = UUID.randomUUID();
 
-        String ticketUrl = ticketUrl(uuid); //todo podmienić
+        String ticketUrl = ticketUrl(uuid);
 
         ticket.setUuid(uuid);
         ticket.setTicketQR(generateQrCode(ticketUrl));
         ticket.setTicketQRContentType(QRCODE_FORMAT);
         ticket.setTicketUrl(ticketUrl);
         ticket.setTicketPrice(ticketDTO.getTicketPrice());
+        ticket.setOrderId(ticketDTO.getOrderId());
+        //todo unikalny hash biletu w celu weryfikacji, czy bilet został już wygenerowany
 
         if (ticketDTO.getTicketTypeId() != null) {
             TicketType ticketType = ticketTypeRepository.getOne(ticketDTO.getTicketTypeId());
@@ -96,12 +106,15 @@ public class TicketServiceImpl implements TicketService {
             ticket.setPromoCode(promoCode);
         }
 
-        if (ticketDTO.getPromotorId() != null)  {
+        if (ticketDTO.getPromotorId() != null) {
             Promotor promotor = promotorRepository.getOne(ticketDTO.getPromotorId());
             log.info("Promotor {}", promotor);
 
             ticket.setPromotor(promotor);
         }
+
+        Long guestId = ticketDTO.getGuestId();
+        ticket.setGuest(guestRepository.getOne(guestId));
 
         ticket.setCreatedAt(Instant.now());
         ticket.setEnabled(true);
@@ -111,7 +124,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private String ticketUrl(UUID uuid) {
-        return "/api/ticket/verify/" + uuid;
+        return ticketDomainUrl + "/api/ticket/verify/" + uuid;
     }
 
     private byte[] generateQrCode(String qrCodeText) throws WriterException, IOException {

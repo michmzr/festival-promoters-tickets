@@ -48,7 +48,6 @@ export class TicketDetailComponent implements OnInit {
           )
           .subscribe((concatRes: ITicketType) => {
             this.ticketType = concatRes;
-            console.debug(this.ticketType);
           });
       } else {
         this.ticketType = {};
@@ -65,7 +64,7 @@ export class TicketDetailComponent implements OnInit {
   }
 
   openTicketFile(): void {
-    this.dataUtils.openFile(this.ticket?.ticketFileContentType!, this.ticket?.ticketFile!);
+    this.dataUtils.openFile(this.ticket?.ticketFileContentType!, this.ticket!.ticketFile);
   }
 
   downloadFile(contentType = '', base64String: string, fileName: string): void {

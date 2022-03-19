@@ -15,6 +15,7 @@ export interface ITicket {
   ticketTypeId?: number;
   promoCodeId?: number;
   guestId?: number;
+  orderId?: string;
 }
 
 export class Ticket implements ITicket {
@@ -32,7 +33,8 @@ export class Ticket implements ITicket {
     public disabledAt?: Moment,
     public ticketTypeId?: number,
     public promoCodeId?: number,
-    public guestId?: number
+    public guestId?: number,
+    public orderId?: string
   ) {
     this.enabled = this.enabled || false;
   }

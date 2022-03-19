@@ -28,40 +28,45 @@ export class ValidationResult implements IValidationResult {
 }
 
 export interface IOrderImportResult {
-  guestDTO?: IGuest;
-  ticketDTO?: ITicket;
+  guest?: IGuest;
+  ticket?: ITicket;
 
   orderRecord?: Object;
   validation?: IValidationResult;
 
   messages?: String[];
+
+  processed?: boolean;
 }
 
 export class OrderImportResult implements IOrderImportResult {
   constructor(
-    public guestDTO: IGuest,
+    public guest: IGuest,
     public messages: String[],
     public orderRecord: Object,
-    public ticketDTO: ITicket,
-    public validation: IValidationResult
+    public ticket: ITicket,
+    public validation: IValidationResult,
+    public processed: boolean
   ) {
-    this.guestDTO = guestDTO;
+    this.guest = guest;
     this.messages = messages;
     this.orderRecord = orderRecord;
-    this.ticketDTO = ticketDTO;
+    this.ticket = ticket;
     this.validation = validation;
+    this.processed = processed;
   }
 }
 
 export interface IOrdersImportResult {
-  results: IImportOrderRequest[];
-  errors: String[];
   imported: number;
   failed: number;
+
+  results: IOrderImportResult[];
+  errors: String[];
 }
 
 export class OrdersImportResult implements IOrdersImportResult {
-  constructor(public errors: String[], public failed: number, public imported: number, public results: IImportOrderRequest[]) {
+  constructor(public failed: number, public imported: number, public errors: String[], public results: IOrderImportResult[]) {
     this.errors = errors;
     this.failed = failed;
     this.imported = imported;

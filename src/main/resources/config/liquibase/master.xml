@@ -27,6 +27,7 @@
     <include file="config/liquibase/changelog/20220305110133_changelog.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220306121237_changelog.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20220312113503_changelog.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20220319103322_ticket_add_order-id.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

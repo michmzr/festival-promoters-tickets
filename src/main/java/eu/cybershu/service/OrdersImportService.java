@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -76,24 +75,11 @@ public class OrdersImportService {
                 ordersImportResult.setErrors(headerValidation.messages);
                 ordersImportResult.setResults(Collections.emptySet());
             }
-
         } catch (IOException e) {
-            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
-
-            //todo
+            throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
         }
 
         return ordersImportResult;
-    }
-
-    public static CSVParser readCsvRecords(InputStream is) {
-        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-             CSVParser csvParser = new CSVParser(fileReader,
-                 CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim())) {
-            return csvParser;
-        } catch (IOException e) {
-            throw new RuntimeException("fail to parse CSV file: " + e.getMessage());
-        }
     }
 
     private ValidationResult validateHeader(CSVParser csvParser) {

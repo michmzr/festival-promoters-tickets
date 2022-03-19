@@ -93,9 +93,9 @@ class OrdersImportServiceTest {
             OrderRecord.fromCSVRecord(csvRecord)
         );
         importResult.setValidation(ValidationResult.ok());
-        importResult.setGuestDTO(mock(GuestDTO.class));
-        importResult.setTicketDTO(mock(TicketDTO.class));
+        importResult.setGuest(mock(GuestDTO.class));
+        importResult.setTicket(mock(TicketDTO.class));
 
-        return  importResult;
+        return importResult;
     }
 }

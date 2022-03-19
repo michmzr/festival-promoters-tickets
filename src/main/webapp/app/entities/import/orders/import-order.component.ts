@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ImportOrderService } from './import-order.service';
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
-import { IImportOrderRequest, IOrdersImportResult } from '../../../shared/model/import-moder.model';
+import { IImportOrderRequest, IOrdersImportResult } from '../../../shared/model/import-order.model';
 
 @Component({
   selector: 'jhi-import-order',
@@ -28,11 +28,10 @@ export class ImportOrderComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   ngOnInit(): void {
-    const lastImport = sessionStorage.getItem('import-order-last-results');
-
-    if (lastImport) {
-      this.importResults = JSON.parse(lastImport);
-    }
+    /* const lastImport = localStorage.getItem('import-order-last-results');
+     if (lastImport) {
+       this.importResults = JSON.parse(lastImport);
+     }*/
   }
 
   uploadFileEvt(eventFile: any): void {
@@ -94,16 +93,13 @@ export class ImportOrderComponent implements OnInit, OnDestroy {
       uploadFile: null,
     });
 
-    //todo remove session storage
-    sessionStorage.setObj('import-order-last-results', JSON.stringify(this.importResults));
+    localStorage.setItem('import-order-last-results', JSON.stringify(this.importResults));
 
     this.isSaving = false;
   }
 
   protected onError(error: any): void {
     console.error(error);
-
-    //todo display
 
     this.isSaving = false;
   }

@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { IImportOrderRequest, IOrdersImportResult } from '../../../shared/model/import-moder.model';
+import { IImportOrderRequest, IOrdersImportResult } from '../../../shared/model/import-order.model';
 
 @Injectable({ providedIn: 'root' })
 export class ImportOrderService {

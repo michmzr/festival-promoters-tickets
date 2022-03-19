@@ -1,4 +1,4 @@
-<script src="../../../shared/model/import-moder.model.ts"></script>
+<!--<script src="../../../shared/model/import-order.model.ts"></script>-->
 <div class="row justify-content-center">
     <div class="col-8">
         <!-- (ngSubmit)="save()" [formGroup]="editForm"-->
@@ -42,23 +42,25 @@
             </div>
         </form>
 
-        <div *ngIf="importResults">
-            Zaimportowano: {{importResults.imported}}<br/>
-            Błędów: {{importResults.failed}}<br/>
+        <hr/>
 
-            Błedów:<br/>
-            <ul>
-                <li *ngFor="let e of importResults.errors; let i = index">
-                    <pre>{{e}}</pre>
-                </li>
-            </ul>
+        <div class="container" *ngIf="importResults">
+            <div>
+                Zaimportowano: {{importResults.imported}}<br/>
+                Błędnych rekordów: {{importResults.failed}}<br/>
 
-            Wyniki:
-            <ul>
-                <li *ngFor="let result of importResults.results; let i = index">
+                <ul *ngIf="importResults.errors">
+                    <li *ngFor="let e of importResults.errors; let i = index">
+                        <pre>{{e}}</pre>
+                    </li>
+                </ul>
+
+                <hr/>
+
+                <div *ngFor="let result of importResults.results; let i = index" class="card-group">
                     <jhi-import-order-result [importResult]="result"></jhi-import-order-result>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>

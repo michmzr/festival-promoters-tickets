@@ -53,7 +53,7 @@ public class TicketResourceIT {
     private static final String DEFAULT_TICKET_FILE_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_TICKET_FILE_CONTENT_TYPE = "image/png";
 
-    private static final Boolean DEFAULT_ENABLED = false;
+    private static final Boolean DEFAULT_ENABLED = true;
     private static final Boolean UPDATED_ENABLED = true;
 
     private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
@@ -61,6 +61,8 @@ public class TicketResourceIT {
 
     private static final Instant DEFAULT_DISABLED_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DISABLED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final String DEFAULT_ORDER_ID = "3";
+    private static final String UPDATED_ORDER_ID = "4";
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -86,16 +88,19 @@ public class TicketResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Ticket createEntity(EntityManager em) {
-        Ticket ticket = new Ticket()
-            .uuid(DEFAULT_UUID)
+        Ticket ticket = Ticket.builder()
             .ticketUrl(DEFAULT_TICKET_URL)
+            .uuid(DEFAULT_UUID)
             .ticketQR(DEFAULT_TICKET_QR)
             .ticketQRContentType(DEFAULT_TICKET_QR_CONTENT_TYPE)
             .ticketFile(DEFAULT_TICKET_FILE)
             .ticketFileContentType(DEFAULT_TICKET_FILE_CONTENT_TYPE)
+            .orderId(DEFAULT_ORDER_ID)
             .enabled(DEFAULT_ENABLED)
             .createdAt(DEFAULT_CREATED_AT)
-            .disabledAt(DEFAULT_DISABLED_AT);
+            .disabledAt(DEFAULT_DISABLED_AT)
+            .build();
+
         return ticket;
     }
 
@@ -106,16 +111,18 @@ public class TicketResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Ticket createUpdatedEntity(EntityManager em) {
-        Ticket ticket = new Ticket()
+        Ticket ticket = Ticket.builder()
             .uuid(UPDATED_UUID)
             .ticketUrl(UPDATED_TICKET_URL)
             .ticketQR(UPDATED_TICKET_QR)
             .ticketQRContentType(UPDATED_TICKET_QR_CONTENT_TYPE)
             .ticketFile(UPDATED_TICKET_FILE)
             .ticketFileContentType(UPDATED_TICKET_FILE_CONTENT_TYPE)
+            .orderId(UPDATED_ORDER_ID)
             .enabled(UPDATED_ENABLED)
             .createdAt(UPDATED_CREATED_AT)
-            .disabledAt(UPDATED_DISABLED_AT);
+            .disabledAt(UPDATED_DISABLED_AT)
+            .build();
         return ticket;
     }
 

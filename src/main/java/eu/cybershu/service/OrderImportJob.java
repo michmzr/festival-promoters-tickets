@@ -3,6 +3,7 @@ package eu.cybershu.service;
 import com.google.zxing.WriterException;
 import eu.cybershu.service.dto.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
@@ -48,8 +49,8 @@ public class OrderImportJob {
                 GuestDTO guestDTO = findGuestByEmailOrCreateNew(orderRecord);
                 TicketDTO ticketDTO = createTicket(guestDTO, orderRecord, importResult);
 
-                importResult.setGuestDTO(guestDTO);
-                importResult.setTicketDTO(ticketDTO);
+                importResult.setGuest(guestDTO);
+                importResult.setTicket(ticketDTO);
                 importResult.setProcessed(true);
             } else {
                 log.info("Record not passed validation: {}", validationResult.getMessages());
@@ -68,23 +69,26 @@ public class OrderImportJob {
 
         TicketCreateDTO ticketCreateDTO = new TicketCreateDTO();
         ticketCreateDTO.setGuestId(guestDTO.getId());
+        ticketCreateDTO.setOrderId(orderRecord.getOrderId());
         ticketCreateDTO.setTicketPrice(orderRecord.getPrice());
 
         //PromoCode
         String promoCode = orderRecord.getCouponCode();
-        var promoCodeOpt = promoCodeService.findOne(promoCode);
-        log.debug("Recognised promo code record {}", promoCodeOpt);
-        if (promoCodeOpt.isPresent()) {
-            ticketCreateDTO.setPromoCodeId(promoCodeOpt.get().getId());
-            ticketCreateDTO.setPromotorId(promoCodeOpt.get().getPromotorId());
-        } else {
-            importResult.addMessage(
-                String.format("Not found '%s' code in system", promoCode)
-            );
+        if (StringUtils.isNotBlank(promoCode)) {
+            var promoCodeOpt = promoCodeService.findOne(promoCode);
+            log.debug("Recognised promo code record {}", promoCodeOpt);
+            if (promoCodeOpt.isPresent()) {
+                ticketCreateDTO.setPromoCodeId(promoCodeOpt.get().getId());
+                ticketCreateDTO.setPromotorId(promoCodeOpt.get().getPromotorId());
+            } else {
+                importResult.addMessage(
+                    String.format("Not found '%s' promo code in system. Trying to create ticket by product id", promoCode)
+                );
+            }
         }
 
         //Ticket Type
-        var ticketTypeOpt = ticketTypeService.findOneByProductId(orderRecord.getProductId().toString());
+        var ticketTypeOpt = ticketTypeService.findOneByProductId(orderRecord.getProductId());
         log.debug("ticket type: {}", ticketTypeOpt);
         if (ticketTypeOpt.isPresent()) {
             ticketCreateDTO.setTicketTypeId(ticketTypeOpt.get().getId());
@@ -95,16 +99,26 @@ public class OrderImportJob {
                     orderRecord.getProductId()));
         }
 
-        //todo sprawdzenie czy gosć już ma taki biletwykupiuony i jest enabled
+        String orderId = orderRecord.getOrderId() != null ? orderRecord.getOrderId().trim() : null;
+        Optional<TicketDTO> ticketDTOOpt = ticketService.findByGuestIdTicketTypeAndOrderId(guestDTO.getId(),
+            ticketCreateDTO.getTicketTypeId(), orderId);
 
-        TicketDTO ticketDTO = ticketService.create(ticketCreateDTO);
-        log.info("Created ticket {}", ticketDTO);
+        if (ticketDTOOpt.isPresent()) {
+            String msg = String.format("Found already registered ticket %s for guest %s", ticketDTOOpt.get(), guestDTO);
+            log.info(msg);
+            importResult.addMessage(msg);
 
-        return ticketDTO;
+            return ticketDTOOpt.get();
+        } else {
+            TicketDTO ticketDTO = ticketService.create(ticketCreateDTO);
+            log.info("Created ticket {}", ticketDTO);
+
+            return ticketDTO;
+        }
     }
 
     private GuestDTO findGuestByEmailOrCreateNew(OrderRecord orderRecord) throws IOException, WriterException {
-        log.info("Find guest  by email {} or create", orderRecord.getGuestEmail());
+        log.info("Find guest by email {} or create", orderRecord.getGuestEmail());
 
         Optional<GuestDTO> guestDTOOpt = guestService.findByEmail(orderRecord.getGuestEmail());
         log.info("Finding result: {}", guestDTOOpt);
@@ -149,8 +163,5 @@ public class OrderImportJob {
 
             return validationResult;
         }
-
-
     }
-
 }

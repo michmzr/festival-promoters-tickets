@@ -15,6 +15,7 @@ public interface TicketMapper extends EntityMapper<TicketDTO, Ticket> {
 
     @Mapping(source = "ticketType.id", target = "ticketTypeId")
     @Mapping(source = "promoCode.id", target = "promoCodeId")
+    @Mapping(source = "guest.id", target = "guestId")
     TicketDTO toDto(Ticket ticket);
 
     @Mapping(source = "ticketTypeId", target = "ticketType")

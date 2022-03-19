@@ -9,14 +9,13 @@ import java.util.Set;
 
 @Data
 public class OrderImportResult implements Serializable {
-    private boolean processed;
-
-    private GuestDTO guestDTO;
-    private TicketDTO ticketDTO;
+    private GuestDTO guest;
+    private TicketDTO ticket;
 
     private OrderRecord orderRecord;
     private ValidationResult validation;
 
+    private boolean processed;
     private Set<String> messages = new HashSet<>();
 
     public boolean success() {

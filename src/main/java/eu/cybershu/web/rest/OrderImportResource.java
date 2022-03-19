@@ -32,9 +32,6 @@ public class OrderImportResource {
         consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}, produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<OrdersImportResult> importOrders(@RequestPart("file") MultipartFile file) throws IOException {
         OrdersImportResult ordersImportResult = ordersImportService.loadRecords(file);
-
-        //todo expect CSV file format
-
         return ResponseEntity.ok()
             .body(ordersImportResult);
     }

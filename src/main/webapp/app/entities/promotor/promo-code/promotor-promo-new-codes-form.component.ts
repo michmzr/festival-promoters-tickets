@@ -30,7 +30,6 @@ export class PromotorPromoNewCodesFormComponent implements OnInit {
     if (code) {
       if (this.promoCodes.filter(x => x.toLowerCase().includes(code.toLowerCase())).length > 0) {
         const message = `Podobny kod ${code} już został dodany`;
-        console.debug(message);
         this.setPromoError(message);
         return;
       }
