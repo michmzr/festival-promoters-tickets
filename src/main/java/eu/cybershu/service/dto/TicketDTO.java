@@ -36,10 +36,11 @@ public class TicketDTO implements Serializable {
     @NotNull
     private Boolean enabled;
 
-    @NotNull
     private Instant createdAt;
 
     private Instant disabledAt;
+
+    private Instant validatedAt;
 
     private String ticketPrice;
 

@@ -2,6 +2,7 @@ package eu.cybershu.web.rest;
 
 import eu.cybershu.OrganicPromoTicketsApp;
 import eu.cybershu.domain.Ticket;
+import eu.cybershu.domain.TicketType;
 import eu.cybershu.repository.TicketRepository;
 import eu.cybershu.service.TicketService;
 import eu.cybershu.service.dto.TicketDTO;
@@ -61,6 +62,10 @@ public class TicketResourceIT {
 
     private static final Instant DEFAULT_DISABLED_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DISABLED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final Instant DEFAULT_VALIDATED_AT = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_VALIDATED_AT = Instant.now().minusSeconds(30).truncatedTo(ChronoUnit.MILLIS);
+
     private static final String DEFAULT_ORDER_ID = "3";
     private static final String UPDATED_ORDER_ID = "4";
 
@@ -88,6 +93,9 @@ public class TicketResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Ticket createEntity(EntityManager em) {
+        TicketType ticketType = TicketTypeResourceIT.createEntity(em);
+        em.persist(ticketType);
+
         Ticket ticket = Ticket.builder()
             .ticketUrl(DEFAULT_TICKET_URL)
             .uuid(DEFAULT_UUID)
@@ -99,6 +107,8 @@ public class TicketResourceIT {
             .enabled(DEFAULT_ENABLED)
             .createdAt(DEFAULT_CREATED_AT)
             .disabledAt(DEFAULT_DISABLED_AT)
+            .ticketType(ticketType)
+            .validatedAt(DEFAULT_VALIDATED_AT)
             .build();
 
         return ticket;
@@ -111,6 +121,9 @@ public class TicketResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Ticket createUpdatedEntity(EntityManager em) {
+        TicketType ticketType = TicketTypeResourceIT.createEntity(em);
+        em.persist(ticketType);
+
         Ticket ticket = Ticket.builder()
             .uuid(UPDATED_UUID)
             .ticketUrl(UPDATED_TICKET_URL)
@@ -121,6 +134,8 @@ public class TicketResourceIT {
             .orderId(UPDATED_ORDER_ID)
             .enabled(UPDATED_ENABLED)
             .createdAt(UPDATED_CREATED_AT)
+            .validatedAt(UPDATED_VALIDATED_AT)
+            .ticketType(ticketType)
             .disabledAt(UPDATED_DISABLED_AT)
             .build();
         return ticket;
@@ -135,6 +150,7 @@ public class TicketResourceIT {
     @Transactional
     public void createTicket() throws Exception {
         int databaseSizeBeforeCreate = ticketRepository.findAll().size();
+
         // Create the Ticket
         TicketDTO ticketDTO = ticketMapper.toDto(ticket);
         restTicketMockMvc.perform(post("/api/tickets").with(csrf())
@@ -152,6 +168,7 @@ public class TicketResourceIT {
         assertThat(testTicket.getTicketQRContentType()).isEqualTo(DEFAULT_TICKET_QR_CONTENT_TYPE);
         assertThat(testTicket.getTicketFile()).isEqualTo(DEFAULT_TICKET_FILE);
         assertThat(testTicket.getTicketFileContentType()).isEqualTo(DEFAULT_TICKET_FILE_CONTENT_TYPE);
+        assertThat(testTicket.getValidatedAt()).isEqualTo(DEFAULT_VALIDATED_AT);
 //        assertThat(testTicket.isEnabled()).isEqualTo(DEFAULT_ENABLED);
         assertThat(testTicket.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
         assertThat(testTicket.getDisabledAt()).isEqualTo(DEFAULT_DISABLED_AT);
@@ -207,7 +224,6 @@ public class TicketResourceIT {
 
         // Create the Ticket, which fails.
         TicketDTO ticketDTO = ticketMapper.toDto(ticket);
-
 
         restTicketMockMvc.perform(post("/api/tickets").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -277,6 +293,7 @@ public class TicketResourceIT {
             .andExpect(jsonPath("$.[*].ticketFile").value(hasItem(Base64Utils.encodeToString(DEFAULT_TICKET_FILE))))
             .andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())))
             .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
+            .andExpect(jsonPath("$.[*].validatedAt").value(hasItem(DEFAULT_VALIDATED_AT.toString())))
             .andExpect(jsonPath("$.[*].disabledAt").value(hasItem(DEFAULT_DISABLED_AT.toString())));
     }
 
@@ -297,8 +314,9 @@ public class TicketResourceIT {
             .andExpect(jsonPath("$.ticketQR").value(Base64Utils.encodeToString(DEFAULT_TICKET_QR)))
             .andExpect(jsonPath("$.ticketFileContentType").value(DEFAULT_TICKET_FILE_CONTENT_TYPE))
             .andExpect(jsonPath("$.ticketFile").value(Base64Utils.encodeToString(DEFAULT_TICKET_FILE)))
-            .andExpect(jsonPath("$.enabled").value(DEFAULT_ENABLED.booleanValue()))
+            .andExpect(jsonPath("$.enabled").value(DEFAULT_ENABLED))
             .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT.toString()))
+            .andExpect(jsonPath("$.validatedAt").value(DEFAULT_VALIDATED_AT.toString()))
             .andExpect(jsonPath("$.disabledAt").value(DEFAULT_DISABLED_AT.toString()));
     }
 
@@ -351,6 +369,7 @@ public class TicketResourceIT {
         assertThat(testTicket.getTicketFileContentType()).isEqualTo(UPDATED_TICKET_FILE_CONTENT_TYPE);
         assertThat(testTicket.isEnabled()).isEqualTo(UPDATED_ENABLED);
         assertThat(testTicket.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
+        assertThat(testTicket.getValidatedAt()).isEqualTo(UPDATED_VALIDATED_AT);
         assertThat(testTicket.getDisabledAt()).isEqualTo(UPDATED_DISABLED_AT);
     }
 

@@ -36,7 +36,8 @@ import java.util.stream.StreamSupport;
 @Transactional
 public class TicketServiceImpl implements TicketService {
 
-    public static final String QRCODE_FORMAT = "png";
+    private static final String QRCODE_FORMAT = "png";
+
     private final String ticketDomainUrl;
 
     private final TicketRepository ticketRepository;
@@ -124,7 +125,11 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private String ticketUrl(UUID uuid) {
-        return ticketDomainUrl + "/api/ticket/verify/" + uuid;
+        String ticketDomainUrl = this.ticketDomainUrl;
+        if (!ticketDomainUrl.endsWith("/"))
+            ticketDomainUrl = ticketDomainUrl.concat("/");
+
+        return ticketDomainUrl + "api/ticket/verify/" + uuid;
     }
 
     private byte[] generateQrCode(String qrCodeText) throws WriterException, IOException {
@@ -165,6 +170,24 @@ public class TicketServiceImpl implements TicketService {
         log.debug("Request to get Ticket : {}", id);
         return ticketRepository.findById(id)
             .map(ticketMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<TicketDTO> findByUUID(String uuid) {
+        log.debug("Request to get Ticket by uuid : {}", uuid);
+        return ticketRepository.findByUuidEquals(UUID.fromString(uuid))
+            .map(ticketMapper::toDto);
+    }
+
+    @Override
+    @Transactional
+    public void validateTicket(Long id) {
+        log.debug("Validating ticket {}", id);
+
+        Ticket ticket = ticketRepository.getOne(id);
+        ticket.setValidatedAt(Instant.now());
+        ticketRepository.saveAndFlush(ticket);
     }
 
     @Override

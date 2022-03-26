@@ -34,7 +34,6 @@ public class OrderRecord {
     @NotNull
     private String orderId;
 
-    @NotEmpty
     private String couponCode;
 
     @NotEmpty

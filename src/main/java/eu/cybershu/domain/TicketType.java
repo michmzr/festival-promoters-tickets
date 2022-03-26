@@ -12,8 +12,8 @@ import java.io.Serializable;
  * A TicketType.
  */
 @ToString
-@EqualsAndHashCode
 @Entity
+@EqualsAndHashCode
 @Table(name = "ticket_type")
 public class TicketType implements Serializable {
 
@@ -84,6 +84,14 @@ public class TicketType implements Serializable {
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
