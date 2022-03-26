@@ -129,7 +129,7 @@ public class TicketServiceImpl implements TicketService {
         if (!ticketDomainUrl.endsWith("/"))
             ticketDomainUrl = ticketDomainUrl.concat("/");
 
-        return ticketDomainUrl + "api/ticket/verify/" + uuid;
+        return ticketDomainUrl + "ticket/verify/" + uuid;
     }
 
     private byte[] generateQrCode(String qrCodeText) throws WriterException, IOException {
