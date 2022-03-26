@@ -14,6 +14,7 @@ export interface ITicket {
   disabledAt?: Moment;
   ticketTypeId?: number;
   promoCodeId?: number;
+  ticketPrice?: string;
   guestId?: number;
   orderId?: string;
 }
@@ -32,6 +33,7 @@ export class Ticket implements ITicket {
     public createdAt?: Moment,
     public disabledAt?: Moment,
     public ticketTypeId?: number,
+    public ticketPrice?: string,
     public promoCodeId?: number,
     public guestId?: number,
     public orderId?: string
