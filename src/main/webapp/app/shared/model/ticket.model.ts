@@ -45,15 +45,15 @@ export class Ticket implements ITicket {
   }
 }
 
-enum VerificationStatus {
-  OK,
-  ALREADY_VALIDATED,
-  DEACTIVATED,
-  NOT_FOUND,
+export enum VerificationStatus {
+  OK = 'OK',
+  ALREADY_VALIDATED = 'ALREADY_VALIDATED',
+  DEACTIVATED = 'DEACTIVATED',
+  NOT_FOUND = 'NOT_FOUND',
 }
 
 export interface ITicketVerificationStatus {
-  status?: VerificationStatus;
+  status: VerificationStatus;
   guest?: IGuest;
   ticketType?: ITicketType;
   promotor?: IPromotor;
@@ -62,7 +62,7 @@ export interface ITicketVerificationStatus {
 
 export class TicketVerificationStatus implements ITicketVerificationStatus {
   constructor(
-    public status?: VerificationStatus,
+    public status: VerificationStatus,
     public guest?: IGuest,
     public ticketType?: ITicketType,
     public promotor?: IPromotor,

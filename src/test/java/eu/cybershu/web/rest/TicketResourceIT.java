@@ -5,6 +5,7 @@ import eu.cybershu.domain.Ticket;
 import eu.cybershu.domain.TicketType;
 import eu.cybershu.repository.TicketRepository;
 import eu.cybershu.service.TicketService;
+import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
 import eu.cybershu.service.mapper.TicketMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -152,7 +153,11 @@ public class TicketResourceIT {
         int databaseSizeBeforeCreate = ticketRepository.findAll().size();
 
         // Create the Ticket
-        TicketDTO ticketDTO = ticketMapper.toDto(ticket);
+        TicketCreateDTO ticketDTO = new TicketCreateDTO();
+        ticketDTO.setTicketTypeId(ticket.getTicketType().getId());
+        ticketDTO.setOrderId(DEFAULT_ORDER_ID);
+        ticketDTO.setGuestId(ticket.getGuest().getId());
+
         restTicketMockMvc.perform(post("/api/tickets").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
@@ -326,51 +331,6 @@ public class TicketResourceIT {
         // Get the ticket
         restTicketMockMvc.perform(get("/api/tickets/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Transactional
-    public void updateTicket() throws Exception {
-        // Initialize the database
-        ticketRepository.saveAndFlush(ticket);
-
-        int databaseSizeBeforeUpdate = ticketRepository.findAll().size();
-
-        // Update the ticket
-        Ticket updatedTicket = ticketRepository.findById(ticket.getId()).get();
-        // Disconnect from session so that the updates on updatedTicket are not directly saved in db
-        em.detach(updatedTicket);
-        updatedTicket
-            .uuid(UPDATED_UUID)
-            .ticketUrl(UPDATED_TICKET_URL)
-            .ticketQR(UPDATED_TICKET_QR)
-            .ticketQRContentType(UPDATED_TICKET_QR_CONTENT_TYPE)
-            .ticketFile(UPDATED_TICKET_FILE)
-            .ticketFileContentType(UPDATED_TICKET_FILE_CONTENT_TYPE)
-            .enabled(UPDATED_ENABLED)
-            .createdAt(UPDATED_CREATED_AT)
-            .disabledAt(UPDATED_DISABLED_AT);
-        TicketDTO ticketDTO = ticketMapper.toDto(updatedTicket);
-
-        restTicketMockMvc.perform(put("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isOk());
-
-        // Validate the Ticket in the database
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeUpdate);
-        Ticket testTicket = ticketList.get(ticketList.size() - 1);
-        assertThat(testTicket.getUuid()).isEqualTo(UPDATED_UUID);
-        assertThat(testTicket.getTicketUrl()).isEqualTo(UPDATED_TICKET_URL);
-        assertThat(testTicket.getTicketQR()).isEqualTo(UPDATED_TICKET_QR);
-        assertThat(testTicket.getTicketQRContentType()).isEqualTo(UPDATED_TICKET_QR_CONTENT_TYPE);
-        assertThat(testTicket.getTicketFile()).isEqualTo(UPDATED_TICKET_FILE);
-        assertThat(testTicket.getTicketFileContentType()).isEqualTo(UPDATED_TICKET_FILE_CONTENT_TYPE);
-        assertThat(testTicket.isEnabled()).isEqualTo(UPDATED_ENABLED);
-        assertThat(testTicket.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testTicket.getValidatedAt()).isEqualTo(UPDATED_VALIDATED_AT);
-        assertThat(testTicket.getDisabledAt()).isEqualTo(UPDATED_DISABLED_AT);
     }
 
     @Test

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -81,20 +82,23 @@ public class PromotorServiceImpl implements PromotorService {
     }
 
     private Set<PromoCode> createPromoCodes(Set<String> newPromoCodes, Promotor promotor) {
-        return
-            newPromoCodes
-                .stream()
-                .map(code -> {
-                    PromoCode promoCode = new PromoCode();
-                    promoCode.setCode(code);
-                    promoCode.setCreatedAt(Instant.now());
-                    promoCode.setEnabled(true);
+        if (newPromoCodes == null)
+            return Collections.emptySet();
+        else
+            return
+                newPromoCodes
+                    .stream()
+                    .map(code -> {
+                        PromoCode promoCode = new PromoCode();
+                        promoCode.setCode(code);
+                        promoCode.setCreatedAt(Instant.now());
+                        promoCode.setEnabled(true);
 
-                    if (promotor != null)
-                        promoCode.setPromotor(promotor);
+                        if (promotor != null)
+                            promoCode.setPromotor(promotor);
 
-                    return promoCode;
-                }).collect(Collectors.toSet());
+                        return promoCode;
+                    }).collect(Collectors.toSet());
     }
 
     @Override
@@ -113,7 +117,7 @@ public class PromotorServiceImpl implements PromotorService {
         return promotorRepository.findById(id)
             .map(promotorMapper::toDto);
     }
-    
+
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Promotor : {}", id);

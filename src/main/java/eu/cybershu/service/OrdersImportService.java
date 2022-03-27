@@ -54,7 +54,8 @@ public class OrdersImportService {
                     OrderImportResult importResult = orderImportJob.processRecord(
                         OrderRecord.fromCSVRecord(csvRecord));
 
-                    ordersImportResult.getResults().add(importResult);
+                    ordersImportResult
+                        .getResults().add(importResult);
 
                     if (importResult.success()) {
                         imported++;

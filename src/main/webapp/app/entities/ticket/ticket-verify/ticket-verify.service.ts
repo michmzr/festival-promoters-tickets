@@ -18,12 +18,9 @@ export class TicketVerifyService {
 
     console.info(`Calling ${url}....`);
 
-    return (
-      this.http
-        .get<ITicketVerificationStatus>(url, { observe: 'response' })
-        //todo handle 422
-        .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)))
-    );
+    return this.http
+      .get<ITicketVerificationStatus>(url, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
