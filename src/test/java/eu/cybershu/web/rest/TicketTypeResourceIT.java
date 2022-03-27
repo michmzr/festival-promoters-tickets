@@ -66,6 +66,7 @@ public class TicketTypeResourceIT {
         TicketType ticketType = new TicketType()
             .name(DEFAULT_NAME)
             .notes(DEFAULT_NOTES);
+
         return ticketType;
     }
 
@@ -195,6 +196,7 @@ public class TicketTypeResourceIT {
 
         // Update the ticketType
         TicketType updatedTicketType = ticketTypeRepository.findById(ticketType.getId()).get();
+
         // Disconnect from session so that the updates on updatedTicketType are not directly saved in db
         em.detach(updatedTicketType);
         updatedTicketType

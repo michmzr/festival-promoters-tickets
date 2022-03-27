@@ -1,4 +1,7 @@
 import { Moment } from 'moment';
+import { IGuest } from './guest.model';
+import { ITicketType } from './ticket-type.model';
+import { IPromotor } from './promotor.model';
 
 export interface ITicket {
   id?: number;
@@ -40,4 +43,29 @@ export class Ticket implements ITicket {
   ) {
     this.enabled = this.enabled || false;
   }
+}
+
+export enum VerificationStatus {
+  OK = 'OK',
+  ALREADY_VALIDATED = 'ALREADY_VALIDATED',
+  DEACTIVATED = 'DEACTIVATED',
+  NOT_FOUND = 'NOT_FOUND',
+}
+
+export interface ITicketVerificationStatus {
+  status: VerificationStatus;
+  guest?: IGuest;
+  ticketType?: ITicketType;
+  promotor?: IPromotor;
+  message?: String;
+}
+
+export class TicketVerificationStatus implements ITicketVerificationStatus {
+  constructor(
+    public status: VerificationStatus,
+    public guest?: IGuest,
+    public ticketType?: ITicketType,
+    public promotor?: IPromotor,
+    public message?: String
+  ) {}
 }

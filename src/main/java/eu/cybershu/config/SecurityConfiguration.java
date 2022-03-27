@@ -1,10 +1,10 @@
 package eu.cybershu.config;
 
-import eu.cybershu.security.*;
-
+import eu.cybershu.security.AuthoritiesConstants;
 import io.github.jhipster.config.JHipsterProperties;
-import io.github.jhipster.security.*;
-
+import io.github.jhipster.security.AjaxAuthenticationFailureHandler;
+import io.github.jhipster.security.AjaxAuthenticationSuccessHandler;
+import io.github.jhipster.security.AjaxLogoutSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
@@ -109,6 +109,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
             .frameOptions()
             .deny()
+        .and()
+            .authorizeRequests()
+            .antMatchers("/api/ticket/verify/*").permitAll()
         .and()
             .authorizeRequests()
             .antMatchers("/api/authenticate").permitAll()

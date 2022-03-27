@@ -54,6 +54,22 @@ public interface TicketService {
     Optional<TicketDTO> findOne(Long id);
 
     /**
+     * Get the ticket by UUID number
+     *
+     * @param uuid UUID number
+     * @return
+     */
+    Optional<TicketDTO> findByUUID(String uuid);
+
+    /**
+     * Validate ticket
+     *
+     * @param id Ticket id
+     * @return
+     */
+    void validateTicket(Long id);
+
+    /**
      * Delete the "id" ticket.
      *
      * @param id the id of the entity.

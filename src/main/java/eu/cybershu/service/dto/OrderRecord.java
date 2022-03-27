@@ -34,7 +34,6 @@ public class OrderRecord {
     @NotNull
     private String orderId;
 
-    @NotEmpty
     private String couponCode;
 
     @NotEmpty
@@ -43,18 +42,27 @@ public class OrderRecord {
     private String note;
 
     public static OrderRecord fromCSVRecord(CSVRecord csvRecord) {
+
         return OrderRecord
             .builder()
-            .guestName(csvRecord.get(OrderCSVFileFields.BILLING_FIRST_NAME.getFieldName()))
-            .guestLastName(csvRecord.get(OrderCSVFileFields.BILLING_LAST_NAME.getFieldName()))
+            .guestName(getOrDefault(csvRecord, OrderCSVFileFields.BILLING_FIRST_NAME.getFieldName(), ""))
+            .guestLastName(getOrDefault(csvRecord, OrderCSVFileFields.BILLING_LAST_NAME.getFieldName(), ""))
             .guestEmail(csvRecord.get(OrderCSVFileFields.USER_EMAIL.getFieldName()))
             .productId(csvRecord.get(OrderCSVFileFields.PRODUCT_ID.getFieldName()))
             .productName(csvRecord.get(OrderCSVFileFields.PRODUCT_NAME.getFieldName()))
             .orderId(csvRecord.get(OrderCSVFileFields.ORDER_ID.getFieldName()))
-            .couponCode(csvRecord.get(OrderCSVFileFields.COUPON_CODE.getFieldName()))
+            .couponCode(getOrDefault(csvRecord, OrderCSVFileFields.COUPON_CODE.getFieldName(), null))
             .price(csvRecord.get(OrderCSVFileFields.ORDER_TOTAL.getFieldName()))
             .note(csvRecord.get(OrderCSVFileFields.CUSTOMER_NOTE.getFieldName()))
             .build();
+    }
+
+    static String getOrDefault(CSVRecord csvRecord, String fieldName, String defaultValue) {
+        if (csvRecord.isSet(fieldName)) {
+            return csvRecord.get(fieldName);
+        } else {
+            return defaultValue;
+        }
     }
 
 }

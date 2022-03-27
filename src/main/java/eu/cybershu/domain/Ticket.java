@@ -78,6 +78,9 @@ public class Ticket implements Serializable {
     @JsonIgnore
     private Guest guest;
 
+    @Column(name = "validated_at")
+    private Instant validatedAt;
+
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;

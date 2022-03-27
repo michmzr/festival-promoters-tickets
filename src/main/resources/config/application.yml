@@ -74,7 +74,7 @@ spring:
   jpa:
     open-in-view: false
     properties:
-      hibernate.jdbc.time_zone: UTC
+      hibernate.jdbc.time_zone: CET
       hibernate.id.new_generator_mappings: true
       hibernate.connection.provider_disables_autocommit: true
       hibernate.cache.use_second_level_cache: false
@@ -164,4 +164,4 @@ jhipster:
 
 application:
   tickets:
-    domain: 'http://localhost:8080/'
+    domain: 'http://localhost:9060/'
