@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { JhiDataUtils } from 'ng-jhipster';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { ITicket } from 'app/shared/model/ticket.model';
-import { ITicketType } from '../../shared/model/ticket-type.model';
-import { map } from 'rxjs/operators';
-import { HttpResponse } from '@angular/common/http';
-import { TicketTypeService } from '../ticket-type/ticket-type.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {JhiDataUtils} from 'ng-jhipster';
+import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
+import {ITicket} from 'app/shared/model/ticket.model';
+import {ITicketType} from '../../shared/model/ticket-type.model';
+import {map} from 'rxjs/operators';
+import {HttpResponse} from '@angular/common/http';
+import {TicketTypeService} from '../ticket-type/ticket-type.service';
+import {IGuest} from "../../shared/model/guest.model";
+import {GuestService} from "../guest/guest.service";
 
 @Component({
   selector: 'jhi-ticket-detail',
@@ -14,6 +16,7 @@ import { TicketTypeService } from '../ticket-type/ticket-type.service';
 })
 export class TicketDetailComponent implements OnInit {
   ticket: ITicket | null = null;
+  guest: IGuest | null = null;
   qrFileName: string | null = null;
   qrImagePath: SafeResourceUrl | null = null;
   ticketImagePath: SafeResourceUrl | null = null;
@@ -21,6 +24,7 @@ export class TicketDetailComponent implements OnInit {
 
   constructor(
     protected ticketTypeService: TicketTypeService,
+    protected guestService: GuestService,
     protected dataUtils: JhiDataUtils,
     protected activatedRoute: ActivatedRoute,
     private _sanitizer: DomSanitizer
@@ -37,6 +41,9 @@ export class TicketDetailComponent implements OnInit {
       if (ticket.ticketFile)
         this.ticketImagePath = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + ticket.ticketFile);
       else this.ticketImagePath = this.qrImagePath;
+
+      this.guestService.find(ticket.guestId)
+        .subscribe(resp => (this.guest = resp.body));
 
       if (ticket.ticketTypeId) {
         this.ticketTypeService

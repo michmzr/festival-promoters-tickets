@@ -1,7 +1,7 @@
-import { Moment } from 'moment';
-import { IGuest } from './guest.model';
-import { ITicketType } from './ticket-type.model';
-import { IPromotor } from './promotor.model';
+import {Moment} from 'moment';
+import {IGuest} from './guest.model';
+import {ITicketType} from './ticket-type.model';
+import {IPromotor} from './promotor.model';
 
 export interface ITicket {
   id?: number;
@@ -42,6 +42,18 @@ export class Ticket implements ITicket {
     public orderId?: string
   ) {
     this.enabled = this.enabled || false;
+  }
+}
+
+export class TicketCreate {
+  constructor(
+    public ticketTypeId?: number,
+    public ticketPrice?: string,
+    public promoCodeId?: number,
+    public guestId?: number,
+    public promotorId?: number,
+    public orderId?: string
+  ) {
   }
 }
 

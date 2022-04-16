@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import {FormBuilder, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs';
 
-import { ITicketType, TicketType } from 'app/shared/model/ticket-type.model';
-import { TicketTypeService } from './ticket-type.service';
+import {ITicketType, TicketType} from 'app/shared/model/ticket-type.model';
+import {TicketTypeService} from './ticket-type.service';
 
 @Component({
   selector: 'jhi-ticket-type-update',
@@ -17,7 +17,7 @@ export class TicketTypeUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    name: [null, [Validators.required, Validators.maxLength(30)]],
+    name: [null, [Validators.required, Validators.maxLength(200)]],
     notes: [null, [Validators.maxLength(500)]],
     productId: [null, [Validators.maxLength(50)]],
     productUrl: [null, [Validators.maxLength(250)]],

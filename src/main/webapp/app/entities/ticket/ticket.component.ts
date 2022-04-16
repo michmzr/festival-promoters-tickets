@@ -1,12 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { Subscription } from 'rxjs';
-import { JhiEventManager, JhiDataUtils } from 'ng-jhipster';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {Subscription} from 'rxjs';
+import {JhiDataUtils, JhiEventManager} from 'ng-jhipster';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
-import { ITicket } from 'app/shared/model/ticket.model';
-import { TicketService } from './ticket.service';
-import { TicketDeleteDialogComponent } from './ticket-delete-dialog.component';
+import {ITicket} from 'app/shared/model/ticket.model';
+import {TicketService} from './ticket.service';
+import {TicketDeleteDialogComponent} from './ticket-delete-dialog.component';
+import {ITicketType} from "../../shared/model/ticket-type.model";
+import {map} from "rxjs/operators";
+import {TicketTypeService} from "../ticket-type/ticket-type.service";
 
 @Component({
   selector: 'jhi-ticket',
@@ -14,12 +17,14 @@ import { TicketDeleteDialogComponent } from './ticket-delete-dialog.component';
 })
 export class TicketComponent implements OnInit, OnDestroy {
   tickets?: ITicket[];
+  ticketTypes: ITicketType[] = [];
   eventSubscriber?: Subscription;
 
   constructor(
     protected ticketService: TicketService,
     protected dataUtils: JhiDataUtils,
     protected eventManager: JhiEventManager,
+    protected ticketTypeService: TicketTypeService,
     protected modalService: NgbModal
   ) {}
 
@@ -30,6 +35,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadAll();
     this.registerChangeInTickets();
+    this.loadTicketTypes();
   }
 
   ngOnDestroy(): void {
@@ -56,7 +62,21 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   delete(ticket: ITicket): void {
-    const modalRef = this.modalService.open(TicketDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(TicketDeleteDialogComponent, {size: 'lg', backdrop: 'static'});
     modalRef.componentInstance.ticket = ticket;
+  }
+
+
+  private loadTicketTypes(): void {
+    this.ticketTypeService
+      .query({filter: 'ticket-is-null'})
+      .pipe(
+        map((res: HttpResponse<ITicketType[]>) => {
+          return res.body || [];
+        })
+      )
+      .subscribe((resBody: ITicketType[]) => {
+        this.ticketTypes = resBody;
+      });
   }
 }

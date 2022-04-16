@@ -1,26 +1,27 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption } from 'app/shared/util/request-util';
-import { ITicket } from 'app/shared/model/ticket.model';
+import {SERVER_API_URL} from 'app/app.constants';
+import {createRequestOption} from 'app/shared/util/request-util';
+import {ITicket, TicketCreate} from 'app/shared/model/ticket.model';
 
 type EntityResponseType = HttpResponse<ITicket>;
 type EntityArrayResponseType = HttpResponse<ITicket[]>;
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class TicketService {
   public resourceUrl = SERVER_API_URL + 'api/tickets';
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient) {
+  }
 
-  create(ticket: ITicket): Observable<EntityResponseType> {
+  create(ticket: TicketCreate): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(ticket);
     return this.http
-      .post<ITicket>(this.resourceUrl, copy, { observe: 'response' })
+      .post<TicketCreate>(this.resourceUrl, copy, {observe: 'response'})
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 

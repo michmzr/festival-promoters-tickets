@@ -16,8 +16,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TicketCreateDTO implements Serializable {
-    private String ticketPrice;
-
     @NotNull
     private Long ticketTypeId;
 
@@ -29,4 +27,6 @@ public class TicketCreateDTO implements Serializable {
 
     @NotNull
     private String orderId;
+
+    private String ticketPrice;
 }

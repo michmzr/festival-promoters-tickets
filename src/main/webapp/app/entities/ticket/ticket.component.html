@@ -43,8 +43,12 @@
                     <td>{{ ticket.disabledAt | date:'medium' }}</td>
                     <td>
                         <div *ngIf="ticket.ticketTypeId">
-                            <a [routerLink]="['/ticket-type', ticket.ticketTypeId , 'view']" >{{ ticket.ticketTypeId }}</a>
+                            <a [routerLink]="['/ticket-type', ticket.ticketTypeId , 'view']">
+                                #{{ ticket.ticketTypeId }} {{ticketTypes[ ticket.ticketTypeId ] | json}}
+                            </a>
                         </div>
+
+
                     </td>
                     <td>
                         <div *ngIf="ticket.promoCodeId">

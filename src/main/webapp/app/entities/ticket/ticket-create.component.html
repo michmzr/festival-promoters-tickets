@@ -1,0 +1,92 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form (ngSubmit)="save()" [formGroup]="editForm" name="editForm" novalidate role="form">
+            <h2 id="jhi-ticket-heading">Create a Ticket</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div *ngIf="guests" class="form-group">
+                    <label class="form-control-label" for="field_guestId">Guest</label>
+                    <select class="form-control" formControlName="guestId" id="field_guestId" name="guest">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let guestOption of guests; trackBy: trackById"
+                                [ngValue]="guestOption.id">#{{ guestOption.id }} {{guestOption.name}}
+                            {{guestOption?.lastName}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_ticketType">Ticket Type</label>
+                    <select class="form-control" formControlName="ticketTypeId" id="field_ticketType" name="ticketType">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let ticketTypeOption of ticketTypes; trackBy: trackById"
+                                [ngValue]="ticketTypeOption.id">
+                            #{{ ticketTypeOption.id }} {{ ticketTypeOption.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_promotorId">Promotor</label>
+                    <select class="form-control" formControlName="promotorId" id="field_promotorId" name="promotorId">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let promotorOption of promotors;"
+                                [ngValue]="promotorOption.id">
+                            #{{ promotorOption.id }} {{promotorOption.name}} {{promotorOption.lastName}}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_promoCode">Promo Code</label>
+                    <select class="form-control" formControlName="promoCodeId" id="field_promoCode" name="promoCode">
+                        <option [ngValue]="null"></option>
+                        <option *ngFor="let promoCodeOption of promoCodes;"
+                                [ngValue]="promoCodeOption.id">
+                            {{ promoCodeOption.id }} {{ promoCodeOption.code }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_orderId">Order Id</label>
+                    <input class="form-control" formControlName="orderId" id="field_orderId" name="orderId"
+                           type="text"/>
+                    <div
+                        *ngIf="editForm.get('orderId')!.invalid && (editForm.get('orderId')!.dirty || editForm.get('orderId')!.touched)">
+                        <small *ngIf="editForm.get('orderId')?.errors?.required"
+                               class="form-text text-danger">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_ticketPrice">Ticket price (zł)</label>
+                    <input class="form-control" formControlName="ticketPrice" id="field_ticketPrice" name="ticketPrice"
+                           type="text"/>
+                    <div
+                        *ngIf="editForm.get('ticketPrice')!.invalid && (editForm.get('ticketPrice')!.dirty || editForm.get('ticketPrice')!.touched)">
+                        <small *ngIf="editForm.get('ticketPrice')?.errors?.required"
+                               class="form-text text-danger">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button (click)="previousState()" class="btn btn-secondary" id="cancel-save" type="button">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+
+                <button [disabled]="editForm.invalid || isSaving" class="btn btn-primary" id="save-entity"
+                        type="submit">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
