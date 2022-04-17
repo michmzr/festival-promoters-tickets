@@ -60,12 +60,11 @@
                                 <span class="d-none d-md-inline">View</span>
                             </button>
 
-                            <a *ngIf="ticket.ticketFile"
-                               (click)="openFile(ticket.ticketFileContentType, ticket.ticketFile)">
-                                <img [src]="'data:' + ticket.ticketFileContentType + ';base64,' + ticket.ticketFile"
-                                     style="max-height: 30px;" alt="ticket image"/>
-                            </a>
-                            <span *ngIf="ticket.ticketFile">{{ ticket.ticketFileContentType }}, {{ byteSize(ticket.ticketFile) }}</span>
+                            <button (click)="downloadFile(ticket)" *ngIf="ticket.ticketFile"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="download"></fa-icon>
+                                Download
+                            </button>
 
                             <button type="submit" (click)="delete(ticket)"
                                     class="btn btn-danger btn-sm">

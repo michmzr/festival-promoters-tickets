@@ -28,7 +28,8 @@ public class QRCodeService {
         var hints = new HashMap<DecodeHintType, String>();
         hints.put(DecodeHintType.CHARACTER_SET, Charset.defaultCharset().toString());
 
-        BinaryBitmap binaryMap=new BinaryBitmap(new GlobalHistogramBinarizer(new BufferedImageLuminanceSource(bufferedImage)));
+        BinaryBitmap binaryMap = new BinaryBitmap(
+            new GlobalHistogramBinarizer(new BufferedImageLuminanceSource(bufferedImage)));
         Result result = new MultiFormatReader().decode(binaryMap, hints);
         return result.getText();
     }

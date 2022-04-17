@@ -1,6 +1,7 @@
 package eu.cybershu.web.rest;
 
 import com.google.zxing.WriterException;
+import com.lowagie.text.DocumentException;
 import eu.cybershu.service.TicketService;
 import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
@@ -44,7 +45,8 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tickets")
-    public ResponseEntity<TicketDTO> createTicket(@Valid @RequestBody TicketCreateDTO ticketDTO) throws URISyntaxException, IOException, WriterException {
+    public ResponseEntity<TicketDTO> createTicket(@Valid @RequestBody TicketCreateDTO ticketDTO)
+        throws URISyntaxException, IOException, WriterException, DocumentException {
         log.debug("REST request to save Ticket : {}", ticketDTO);
 
         TicketDTO result = ticketService.create(ticketDTO);
@@ -76,7 +78,8 @@ public class TicketResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ticketDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/tickets/{id}")
-    public ResponseEntity<TicketDTO> getTicket(@PathVariable Long id) {
+    public ResponseEntity<TicketDTO> getTicket(@PathVariable Long id)
+        throws DocumentException, IOException {
         log.debug("REST request to get Ticket : {}", id);
         Optional<TicketDTO> ticketDTO = ticketService.findOne(id);
         return ResponseUtil.wrapOrNotFound(ticketDTO);
