@@ -121,6 +121,7 @@ public class TicketServiceImpl implements TicketService {
         ticket.setEnabled(true);
 
         ticket = ticketRepository.save(ticket);
+
         return ticketMapper.toDto(ticket);
     }
 
