@@ -86,7 +86,7 @@ public class PromoCodeResource {
      */
     @GetMapping("/promo-codes")
     public List<PromoCodeDTO> getAllPromoCodes(@RequestParam(required = false) String filter) {
-        log.debug("REST request to get all PromoCodes");
+        log.debug("REST request to get all PromoCodes- filter={}", filter);
         return promoCodeService.findAll();
     }
 

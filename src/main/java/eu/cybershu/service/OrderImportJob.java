@@ -1,6 +1,7 @@
 package eu.cybershu.service;
 
 import com.google.zxing.WriterException;
+import com.lowagie.text.DocumentException;
 import eu.cybershu.service.dto.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +23,11 @@ public class OrderImportJob {
 
     private final Validator validator;
 
-    public OrderImportJob(Validator validator, GuestService guestService,
+    public OrderImportJob(Validator validator,
+                          GuestService guestService,
                           PromoCodeService promoCodeService,
-                          TicketTypeService ticketTypeService, TicketService ticketService) {
+                          TicketTypeService ticketTypeService,
+                          TicketService ticketService) {
         this.validator = validator;
         this.guestService = guestService;
         this.promoCodeService = promoCodeService;
@@ -64,7 +67,8 @@ public class OrderImportJob {
         return importResult;
     }
 
-    private TicketDTO createTicket(GuestDTO guestDTO, OrderRecord orderRecord, OrderImportResult importResult) throws IOException, WriterException {
+    private TicketDTO createTicket(GuestDTO guestDTO, OrderRecord orderRecord, OrderImportResult importResult)
+        throws IOException, WriterException, DocumentException {
         log.info("Creating ticket guest:{}, order:{}", guestDTO, orderRecord);
 
         TicketCreateDTO ticketCreateDTO = new TicketCreateDTO();

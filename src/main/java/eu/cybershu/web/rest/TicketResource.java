@@ -1,8 +1,11 @@
 package eu.cybershu.web.rest;
 
 import com.google.zxing.WriterException;
+import com.lowagie.text.DocumentException;
+import eu.cybershu.service.TicketQueryService;
 import eu.cybershu.service.TicketService;
 import eu.cybershu.service.dto.TicketCreateDTO;
+import eu.cybershu.service.dto.TicketCriteria;
 import eu.cybershu.service.dto.TicketDTO;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -32,8 +35,11 @@ public class TicketResource {
 
     private final TicketService ticketService;
 
-    public TicketResource(TicketService ticketService) {
+    private final TicketQueryService ticketQueryService;
+
+    public TicketResource(TicketService ticketService, TicketQueryService ticketQueryService) {
         this.ticketService = ticketService;
+        this.ticketQueryService = ticketQueryService;
     }
 
     /**
@@ -44,7 +50,8 @@ public class TicketResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/tickets")
-    public ResponseEntity<TicketDTO> createTicket(@Valid @RequestBody TicketCreateDTO ticketDTO) throws URISyntaxException, IOException, WriterException {
+    public ResponseEntity<TicketDTO> createTicket(@Valid @RequestBody TicketCreateDTO ticketDTO)
+        throws URISyntaxException, IOException, WriterException, DocumentException {
         log.debug("REST request to save Ticket : {}", ticketDTO);
 
         TicketDTO result = ticketService.create(ticketDTO);
@@ -56,17 +63,26 @@ public class TicketResource {
     /**
      * {@code GET  /tickets} : get all the tickets.
      *
-     * @param filter the filter of the request.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
     @GetMapping("/tickets")
-    public List<TicketDTO> getAllTickets(@RequestParam(required = false) String filter) {
-        if ("guest-is-null".equals(filter)) {
-            log.debug("REST request to get all Tickets where guest is null");
-            return ticketService.findAllWhereGuestIsNull();
-        }
-        log.debug("REST request to get all Tickets");
-        return ticketService.findAll();
+    public ResponseEntity<List<TicketDTO>> getAllTickets(TicketCriteria criteria) {
+        log.debug("REST request to get Tickets by criteria: {}", criteria);
+        List<TicketDTO> entityList = ticketQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /tickets/count} : count all the tickets.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/tickets/count")
+    public ResponseEntity<Long> countTickets(TicketCriteria criteria) {
+        log.debug("REST request to count Tickets by criteria: {}", criteria);
+        return ResponseEntity.ok().body(ticketQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -79,6 +95,26 @@ public class TicketResource {
     public ResponseEntity<TicketDTO> getTicket(@PathVariable Long id) {
         log.debug("REST request to get Ticket : {}", id);
         Optional<TicketDTO> ticketDTO = ticketService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(ticketDTO);
+    }
+
+    /**
+     * {@code GET  /tickets/:id/rebuild} : regenerated ticket pdf file
+     *
+     * @param id the id of the ticketDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ticketDTO, or with status {@code 404 (Not Found)}.
+     * @throws DocumentException
+     * @throws IOException
+     */
+    @GetMapping("/tickets/{id}/rebuild")
+    public ResponseEntity<TicketDTO> rebuildTicketPdf(@PathVariable Long id)
+        throws DocumentException, IOException {
+        log.debug("REST request to rebuild Ticket : {}", id);
+
+        Optional<TicketDTO> ticketDTO = ticketService.findOne(id);
+        if (ticketDTO.isPresent()) {
+            ticketDTO = ticketService.regenerateTicketPdf(id);
+        }
         return ResponseUtil.wrapOrNotFound(ticketDTO);
     }
 

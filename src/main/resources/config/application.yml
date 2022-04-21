@@ -164,4 +164,6 @@ jhipster:
 
 application:
   tickets:
+    templateDir: '/templates/ticket/'
+    templateFileName: 'ticket-pdf-template'
     domain: 'http://localhost:9060/'
