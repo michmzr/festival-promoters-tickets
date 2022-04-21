@@ -9,8 +9,7 @@ import eu.cybershu.service.dto.TicketCriteria;
 import eu.cybershu.service.dto.TicketDTO;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +24,10 @@ import java.util.Optional;
 /**
  * REST controller for managing {@link eu.cybershu.domain.Ticket}.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class TicketResource {
-
-    private final Logger log = LoggerFactory.getLogger(TicketResource.class);
-
     private static final String ENTITY_NAME = "ticket";
 
     @Value("${jhipster.clientApp.name}")
@@ -98,6 +95,26 @@ public class TicketResource {
     public ResponseEntity<TicketDTO> getTicket(@PathVariable Long id) {
         log.debug("REST request to get Ticket : {}", id);
         Optional<TicketDTO> ticketDTO = ticketService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(ticketDTO);
+    }
+
+    /**
+     * {@code GET  /tickets/:id/rebuild} : regenerated ticket pdf file
+     *
+     * @param id the id of the ticketDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ticketDTO, or with status {@code 404 (Not Found)}.
+     * @throws DocumentException
+     * @throws IOException
+     */
+    @GetMapping("/tickets/{id}/rebuild")
+    public ResponseEntity<TicketDTO> rebuildTicketPdf(@PathVariable Long id)
+        throws DocumentException, IOException {
+        log.debug("REST request to rebuild Ticket : {}", id);
+
+        Optional<TicketDTO> ticketDTO = ticketService.findOne(id);
+        if (ticketDTO.isPresent()) {
+            ticketDTO = ticketService.regenerateTicketPdf(id);
+        }
         return ResponseUtil.wrapOrNotFound(ticketDTO);
     }
 

@@ -51,13 +51,15 @@ public class GuestResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/guests")
-    public ResponseEntity<GuestDTO> createGuest(@Valid @RequestBody GuestCreateDTO guestDTO) throws URISyntaxException, IOException, WriterException {
+    public ResponseEntity<GuestDTO> createGuest(@Valid @RequestBody GuestCreateDTO guestDTO)
+        throws URISyntaxException, IOException, WriterException {
         log.debug("REST request to save Guest : {}", guestDTO);
 
         GuestDTO result = guestService.save(guestDTO);
 
         return ResponseEntity.created(new URI("/api/guests/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false,
+                ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -71,7 +73,8 @@ public class GuestResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/guests")
-    public ResponseEntity<GuestDTO> updateGuest(@Valid @RequestBody GuestUpdateDTO guestUpdateTO) throws URISyntaxException {
+    public ResponseEntity<GuestDTO> updateGuest(
+        @Valid @RequestBody GuestUpdateDTO guestUpdateTO) throws URISyntaxException {
         log.debug("REST request to update Guest : {}", guestUpdateTO);
 
         if (guestUpdateTO.getId() == null) {
@@ -80,7 +83,8 @@ public class GuestResource {
 
         GuestDTO result = guestService.save(guestUpdateTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, guestUpdateTO.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false,
+                ENTITY_NAME, guestUpdateTO.getId().toString()))
             .body(result);
     }
 

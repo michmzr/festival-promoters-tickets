@@ -19,6 +19,7 @@ import {
   faLock,
   faPencilAlt,
   faPlus,
+  faRecycle,
   faRoad,
   faSave,
   faSearch,
@@ -73,6 +74,7 @@ export const fontAwesomeIcons = [
   faSearch,
   faTrashAlt,
   faDownload,
+  faRecycle,
   faFile,
   faFileImport,
   // jhipster-needle-add-icon-import

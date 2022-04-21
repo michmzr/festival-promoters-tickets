@@ -194,7 +194,9 @@ public class TicketServiceImpl implements TicketService {
     @Transactional(readOnly = true)
     public List<TicketDTO> findAllWhereGuestIsNull() {
         log.debug("Request to get all tickets where Guest is null");
-        return ticketRepository.findAll().stream()
+        return ticketRepository
+            .findAll()
+            .stream()
             .filter(ticket -> ticket.getGuest() == null)
             .map(ticketMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
