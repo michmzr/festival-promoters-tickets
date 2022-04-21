@@ -1,13 +1,13 @@
 package eu.cybershu.web.rest;
 
+import eu.cybershu.service.CountryQueryService;
 import eu.cybershu.service.CountryService;
-import eu.cybershu.web.rest.errors.BadRequestAlertException;
+import eu.cybershu.service.dto.CountryCriteria;
 import eu.cybershu.service.dto.CountryDTO;
-
+import eu.cybershu.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +20,10 @@ import java.util.Optional;
 /**
  * REST controller for managing {@link eu.cybershu.domain.Country}.
  */
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class CountryResource {
-
-    private final Logger log = LoggerFactory.getLogger(CountryResource.class);
-
     private static final String ENTITY_NAME = "country";
 
     @Value("${jhipster.clientApp.name}")
@@ -33,8 +31,11 @@ public class CountryResource {
 
     private final CountryService countryService;
 
-    public CountryResource(CountryService countryService) {
+    private final CountryQueryService countryQueryService;
+
+    public CountryResource(CountryService countryService, CountryQueryService countryQueryService) {
         this.countryService = countryService;
+        this.countryQueryService = countryQueryService;
     }
 
     /**
@@ -80,12 +81,26 @@ public class CountryResource {
     /**
      * {@code GET  /countries} : get all the countries.
      *
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of countries in body.
      */
     @GetMapping("/countries")
-    public List<CountryDTO> getAllCountries() {
-        log.debug("REST request to get all Countries");
-        return countryService.findAll();
+    public ResponseEntity<List<CountryDTO>> getAllCountries(CountryCriteria criteria) {
+        log.debug("REST request to get Countries by criteria: {}", criteria);
+        List<CountryDTO> entityList = countryQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
+    }
+
+    /**
+     * {@code GET  /countries/count} : count all the countries.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/countries/count")
+    public ResponseEntity<Long> countCountries(CountryCriteria criteria) {
+        log.debug("REST request to count Countries by criteria: {}", criteria);
+        return ResponseEntity.ok().body(countryQueryService.countByCriteria(criteria));
     }
 
     /**

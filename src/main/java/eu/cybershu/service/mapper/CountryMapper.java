@@ -1,10 +1,9 @@
 package eu.cybershu.service.mapper;
 
 
-import eu.cybershu.domain.*;
+import eu.cybershu.domain.Country;
 import eu.cybershu.service.dto.CountryDTO;
-
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
 
 /**
  * Mapper for the entity {@link Country} and its DTO {@link CountryDTO}.

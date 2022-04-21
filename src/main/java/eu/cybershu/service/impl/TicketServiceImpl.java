@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Service Implementation for managing {@link Ticket}.
@@ -41,6 +40,7 @@ public class TicketServiceImpl implements TicketService {
     private final String ticketDomainUrl;
 
     private final TicketRepository ticketRepository;
+
     private final TicketMapper ticketMapper;
     private final QRCodeService qrCodeService;
 
@@ -121,7 +121,6 @@ public class TicketServiceImpl implements TicketService {
         ticket.setEnabled(true);
 
         ticket = ticketRepository.save(ticket);
-
         return ticketMapper.toDto(ticket);
     }
 
@@ -195,8 +194,7 @@ public class TicketServiceImpl implements TicketService {
     @Transactional(readOnly = true)
     public List<TicketDTO> findAllWhereGuestIsNull() {
         log.debug("Request to get all tickets where Guest is null");
-        return StreamSupport
-            .stream(ticketRepository.findAll().spliterator(), false)
+        return ticketRepository.findAll().stream()
             .filter(ticket -> ticket.getGuest() == null)
             .map(ticketMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
