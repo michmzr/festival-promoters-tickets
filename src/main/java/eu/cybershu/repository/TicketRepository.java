@@ -2,6 +2,7 @@ package eu.cybershu.repository;
 
 import eu.cybershu.domain.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.util.UUID;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface TicketRepository extends JpaRepository<Ticket, Long> {
+public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecificationExecutor<Ticket> {
     @Modifying
     @Query("update Ticket t SET validatedAt = ?2 where t.id = ?1")
     int setValidationDate(Long id, Instant validatedAt);

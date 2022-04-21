@@ -75,7 +75,6 @@ class TicketVerificationServiceTest {
         assertThat(status.getMessage()).isNotBlank();
     }
 
-
     @Test
     void when_ticket_valid_expect_status_ok() {
         //given
@@ -109,8 +108,6 @@ class TicketVerificationServiceTest {
         assertThat(status.getTicketType()).isEqualTo(ticketTypeDTO);
         assertThat(status.getMessage()).isNotBlank();
     }
-
-    //todo bilet juz został skasowany
 
     private TicketTypeDTO createPass4days() {
         TicketTypeDTO ticketType = new TicketTypeDTO();

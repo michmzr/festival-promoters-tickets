@@ -42,10 +42,17 @@
                 </dd>
                 <dt><span>Tickets</span></dt>
                 <dd>
-<!--                    todo links-->
-                   <!-- <div *ngIf="guest.ticketId">
-                        <a [routerLink]="['/ticket', guest.ticketId, 'view']">{{ guest.ticketId }}</a>
-                    </div>-->
+                    <ul *ngIf="tickets">
+                        <li *ngFor="let ticket of tickets">
+                            <a [routerLink]="['/ticket',ticket.id, 'view']">
+                                #{{ ticket.id }}
+                            </a>
+                            <button (click)="downloadFile(ticket)" *ngIf="ticket.ticketFile" class="btn-link btn">
+                                <fa-icon icon="download"></fa-icon>
+                                Download
+                            </button>
+                        </li>
+                    </ul>
                 </dd>
             </dl>
 

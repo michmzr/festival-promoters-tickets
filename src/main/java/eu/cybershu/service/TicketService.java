@@ -1,6 +1,7 @@
 package eu.cybershu.service;
 
 import com.google.zxing.WriterException;
+import com.lowagie.text.DocumentException;
 import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
 
@@ -19,7 +20,7 @@ public interface TicketService {
      * @param ticketDTO the entity to save.
      * @return the persisted entity.
      */
-    TicketDTO create(TicketCreateDTO ticketDTO) throws WriterException, IOException;
+    TicketDTO create(TicketCreateDTO ticketDTO) throws WriterException, IOException, DocumentException;
 
     /**
      * Get all the tickets.
@@ -60,6 +61,14 @@ public interface TicketService {
      * @return
      */
     Optional<TicketDTO> findByUUID(String uuid);
+
+    /**
+     * Regenerates Ticket PDF
+     *
+     * @param id
+     * @return
+     */
+    Optional<TicketDTO> regenerateTicketPdf(Long id) throws DocumentException, IOException;
 
     /**
      * Validate ticket

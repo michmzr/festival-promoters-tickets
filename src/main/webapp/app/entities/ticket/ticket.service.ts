@@ -38,6 +38,12 @@ export class TicketService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
+  regenerateTicketPDF(id: number): Observable<EntityResponseType> {
+    return this.http
+      .get<ITicket>(`${this.resourceUrl}/${id}/rebuild`, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http

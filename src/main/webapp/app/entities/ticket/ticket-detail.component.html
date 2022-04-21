@@ -16,34 +16,37 @@
                 <dd>
                     <span>{{ ticket.ticketUrl }}</span>
                 </dd>
-                <dt><span>Ticket QR</span></dt>
-                <dd>
-                    <!--           <div *ngIf="ticket.ticketQR && qrFileName">
-                                   <a (click)="downloadFile(ticket.ticketQRContentType,ticket.ticketQR, qrFileName)"
-                                      class="btn btn-light  btn-sm btn-lg active">
-                                       <fa-icon icon="download"></fa-icon>&nbsp;<span>Download</span>
-                                   </a>
-                                   <a (click)="openFile(ticket.ticketQRContentType,ticket.ticketQR)">
-                                       <img [src]="qrImagePath" style="max-width: 100%;" alt="ticket image"/>
-                                   </a>
-                                   {{ ticket.ticketQRContentType }}, {{ byteSize(ticket.ticketQR) }}
-                               </div>-->
-                    <div *ngIf="qrImagePath">
-                        <a (click)="openQrFile()">
-                            <img [src]="qrImagePath" style="max-width: 50%;" alt="ticket image"/>
-                        </a>
+                <div *ngIf="ticket.enabled">
+                    <dt><span>Ticket QR</span></dt>
+                    <dd>
+                        <!--           <div *ngIf="ticket.ticketQR && qrFileName">
+                                       <a (click)="downloadFile(ticket.ticketQRContentType,ticket.ticketQR, qrFileName)"
+                                          class="btn btn-light  btn-sm btn-lg active">
+                                           <fa-icon icon="download"></fa-icon>&nbsp;<span>Download</span>
+                                       </a>
+                                       <a (click)="openFile(ticket.ticketQRContentType,ticket.ticketQR)">
+                                           <img [src]="qrImagePath" style="max-width: 100%;" alt="ticket image"/>
+                                       </a>
+                                       {{ ticket.ticketQRContentType }}, {{ byteSize(ticket.ticketQR) }}
+                                   </div>-->
+                        <div *ngIf="qrImagePath">
+                            <a (click)="openQrFile()">
+                                <img [src]="qrImagePath" alt="ticket image" style="max-width: 50%;"/>
+                            </a>
 
-                        <br/>
-                    </div>
-                </dd>
-                <dt *ngIf="ticket.enabled"><span>Ticket File</span></dt>
-                <dd>
-                    <div *ngIf="ticketImagePath">
-                        <a (click)="openTicketFile()">
-                            <img [src]="ticketImagePath" style="max-width: 100%;" alt="ticket image"/>
-                        </a>
-                    </div>
-                </dd>
+                            <br/>
+                        </div>
+                    </dd>
+                    <dt><span>Ticket File</span></dt>
+                    <dd>
+                        <div *ngIf="ticketImagePath">
+                            <a (click)="openTicketFile()">
+                                <!--                            TODO: OPEN AS FILE WITH NAME-->
+                                Click to download
+                            </a>
+                        </div>
+                    </dd>
+                </div>
                 <dt><span>Enabled</span></dt>
                 <dd>
                     <span>{{ ticket.enabled }}</span>
