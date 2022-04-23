@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.awt.image.BufferedImage;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class QRCodeService {
@@ -19,7 +20,10 @@ public class QRCodeService {
 
     public BufferedImage generateQRCode(String barcodeText) throws WriterException {
         QRCodeWriter barcodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT);
+        BitMatrix bitMatrix = barcodeWriter.encode(barcodeText,
+            BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT,
+            Map.of(EncodeHintType.MARGIN, 0)
+        );
 
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }

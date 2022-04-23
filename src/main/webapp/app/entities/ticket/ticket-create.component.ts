@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
-import {HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {FormBuilder, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
@@ -27,9 +27,9 @@ type SelectableEntity = ITicketType | IPromoCode;
 export class TicketCreateComponent implements OnInit {
   isSaving = false;
 
+  promoCodes: IPromoCode[] = [];
   guests: IGuest[] = [];
   ticketTypes: ITicketType[] = [];
-  promoCodes: IPromoCode[] = [];
   promotors: IPromotor[] = [];
 
   editForm = this.fb.group({
@@ -40,6 +40,7 @@ export class TicketCreateComponent implements OnInit {
     orderId: [],
     ticketPrice: []
   });
+
 
   constructor(
     protected dataUtils: JhiDataUtils,
@@ -93,7 +94,7 @@ export class TicketCreateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  protected paginateGuests(data: IGuest[] | null, headers: HttpHeaders): void {
+  protected paginateGuests(data: IGuest[] | null): void {
     if (data) {
       for (let i = 0; i < data.length; i++) {
         this.guests.push(data[i]);
@@ -134,7 +135,7 @@ export class TicketCreateComponent implements OnInit {
         size: 99999,
         sort: this.sortGuests(),
       })
-      .subscribe((res: HttpResponse<IGuest[]>) => this.paginateGuests(res.body, res.headers));
+      .subscribe((res: HttpResponse<IGuest[]>) => this.paginateGuests(res.body));
   }
 
   private loadPromotors(): void {
