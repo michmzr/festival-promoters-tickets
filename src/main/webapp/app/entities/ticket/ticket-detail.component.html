@@ -73,7 +73,7 @@
                         <a [routerLink]="['/promo-code', ticket.promoCodeId, 'view']">{{ ticket.promoCodeId }}</a>
                     </div>
                 </dd>
-                <dt><span>Price</span></dt>
+                <dt><span>Price (zł)</span></dt>
                 <dd>
                     {{ticket.ticketPrice}}
                 </dd>
@@ -84,8 +84,9 @@
 
                 <dt><span>Guest</span></dt>
                 <dd>
-                    <div *ngIf="ticket.guestId">
-                        <a [routerLink]="['/guest', ticket.guestId, 'view']">{{ ticket.guestId }}</a>
+                    <div *ngIf="ticket.guestId && guest">
+                        <a [routerLink]="['/guest', ticket.guestId, 'view']">#{{ ticket.guestId }} {{guest.name}}
+                            {{guest.lastName}}</a>
                     </div>
                 </dd>
             </dl>

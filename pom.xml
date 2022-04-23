@@ -5,7 +5,7 @@
 
     <groupId>eu.cybershu</groupId>
     <artifactId>organic-promo-tickets</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
     <packaging>jar</packaging>
     <name>Organic Promo Tickets</name>
 
@@ -55,7 +55,7 @@
         <javassist.version>3.24.0-GA</javassist.version>
         <!-- The liquibase version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
-        <liquibase.version>3.9.0</liquibase.version>
+        <liquibase.version>4.9.1</liquibase.version>
         <liquibase-hibernate5.version>3.8</liquibase-hibernate5.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jaxb-runtime.version>2.3.3</jaxb-runtime.version>
@@ -261,7 +261,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.8</version>
+            <version>1.9.0</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>

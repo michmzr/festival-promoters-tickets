@@ -9,7 +9,7 @@
         * {
             margin: 0;
             padding: 0;
-            text-indent: 0;
+            font-size: 12pt;
             font-family: 'Arial Unicode MS';
         }
 
@@ -26,17 +26,8 @@
             font-style: normal;
             font-weight: normal;
             text-decoration: none;
-            font-size: 10.5pt;
+            font-size: 12pt;
             margin: 0pt;
-        }
-
-        .s1 {
-            color: black;
-            font-style: normal;
-            font-weight: normal;
-            text-decoration: none;
-            font-size: 10pt;
-            vertical-align: 7pt;
         }
 
         h2 {
@@ -44,7 +35,7 @@
             font-style: normal;
             font-weight: bold;
             text-decoration: none;
-            font-size: 9.5pt;
+            font-size: 16pt;
         }
 
         .s2 {
@@ -60,7 +51,6 @@
             font-style: normal;
             font-weight: normal;
             text-decoration: underline;
-            font-size: 8pt;
         }
 
         .s3 {
@@ -68,7 +58,6 @@
             font-style: normal;
             font-weight: normal;
             text-decoration: none;
-            font-size: 8pt;
         }
 
         .column {
@@ -76,17 +65,19 @@
         }
 
         .event-info {
-            width: 200px
+            width: 200px;
+            padding-left: 6pt;
         }
 
         .event-qr {
             width: 450px;
             display: flex;
             float: right;
+            margin-right: 0 !important;
         }
 
         .event-qr > img {
-            text-align: center;
+            margin: 0 0 0 250px !important;
         }
 
         /* Clear floats after the columns */
@@ -100,21 +91,16 @@
 
 <body>
 <p style="padding-left: 6pt;text-indent: 0pt;text-align: left;"/>
-<p style="text-indent: 0pt;text-align: left;"><br/></p>
 
 <h1 style="padding-top: 6pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">Organic Festival 2022</h1>
 
 <div class="row">
     <div class="column event-info">
-        <p style="padding-top: 11pt;padding-left: 6pt;text-indent: 0pt;text-align: left;">7.07. – 10.07.2022</p>
-        <p style="padding-top: 7pt;padding-left: 6pt;text-indent: 0pt;line-height: 112%;text-align: left;">
-            <strong>Rodzaju biletu: </strong><span th:text="${ticket.typeDescription}"></span></p>
-        <p style="padding-top: 7pt;padding-left: 6pt;text-indent: 0pt;line-height: 112%;text-align: left;">
-            <strong>Zakupiony na : </strong><span th:text="${guest.name} + ' ' + ${guest.lastName}"></span></p>
-
-        <p style="padding-top: 8pt;padding-left: 6pt;text-indent: 0pt;line-height: 164%;text-align: left;">
-            <strong>Adres:</strong>
-            Ośrodek wczasowo-kolonijny Biała Biała 129/130, Sulejów</p>
+        <p>7.07. – 10.07.2022</p>
+        <p><strong>Rodzaju biletu:</strong><br/><span th:text="${ticket.typeDescription}"></span></p>
+        <p><strong>Zakupiony na:</strong><br/><span th:text="${guest.name} + ' ' + ${guest.lastName}"></span></p>
+        <p><strong>Adres:</strong><br/>
+            Ośrodek wczasowo-kolonijny "Biała" Sulejów<br/>Biała 129/130, Sulejów</p>
     </div>
     <div class="column event-qr">
         <img height="200" th:attr="src=${qrPath}" width="200"/>
@@ -170,19 +156,17 @@
 
 
 <h2 style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Sprzedawca</h2>
-<p class="s2" style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;line-height: 152%;text-align: left;">
-    Organic Event 1 LLC REGON : 2021-001034313</p>
-<p class="s2" style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Wystawiono: <span
-    th:text="${ticket.date}"></span></p>
-<p style="text-indent: 0pt;text-align: left;"><br/></p>
-<h2 style="padding-left: 6pt;text-indent: 0pt;text-align: left;">Obsluga klienta</h2>
-<p style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;text-align: left;"><a
+<p style="padding-top: 5pt;padding-left: 6pt;text-indent: 0pt;line-height: 152%;text-align: left;">Organic Event 1 LLC
+    REGON : 2021-001034313</p>
+<p style="padding-left: 6pt;t">Wystawiono: <span th:text="${ticket.date}"></span></p>
+
+<br/>
+<h2 style="padding-left: 6pt;">Obsluga klienta</h2>
+<p style="padding-left: 6pt;"><a
     href="http://organicfestival.info/">organicfestival.info</a>
 </p>
-<p style="padding-top: 4pt;padding-left: 6pt;text-indent: 0pt;text-align: left;"><a
+<p style="padding-left: 6pt;"><a
     class="s3" href="mailto:info@organicfestival.pl">info@organicfestival.pl</a></p>
-<p style="text-indent: 0pt;text-align: left;"><br/></p>
-<p class="s2" style="padding-top: 6pt;text-indent: 0pt;text-align: right;">1 / 1</p>
 </body>
 
 </html>

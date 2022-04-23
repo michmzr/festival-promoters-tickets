@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class TicketServiceImpl implements TicketService {
-    private static final String QRCODE_FORMAT = "image/jpg";
+    private static final String QRCODE_FORMAT = "jpg";
     private static final String TICKET_FILE_CONTENT_TYPE = "application/pdf";
 
     private final String ticketDomainUrl;
@@ -121,6 +121,7 @@ public class TicketServiceImpl implements TicketService {
         ticket.setEnabled(true);
 
         ticket = ticketRepository.save(ticket);
+
         return ticketMapper.toDto(ticket);
     }
 
@@ -130,10 +131,11 @@ public class TicketServiceImpl implements TicketService {
                                      Guest guest, Promotor promotor) throws DocumentException, IOException {
         log.info("Generating pdf ticket: uuid={}, ticketType={}, guest={}, promotor={}", uuid, ticketType, guest, promotor);
 
+        String format = QRCODE_FORMAT.contains("image") ? QRCODE_FORMAT : "image/" + QRCODE_FORMAT;
         TicketPDFData pdfData = TicketPDFData.builder()
             .uuid(uuid.toString())
             .qrFile(ticketQR)
-            .qrFileContentType(QRCODE_FORMAT)
+            .qrFileContentType(format)
             .ticketType(ticketType)
             .guest(guest)
             .promotor(promotor)
@@ -167,7 +169,8 @@ public class TicketServiceImpl implements TicketService {
             Ticket ticket = ticketOpt.get();
 
             ticket.setTicketFile(
-                generateTicketPdf(ticket.getUuid(), ticket.getTicketQR(), ticket.getTicketType(), ticket.getGuest(), ticket.getPromotor()));
+                generateTicketPdf(ticket.getUuid(), ticket.getTicketQR(),
+                    ticket.getTicketType(), ticket.getGuest(), ticket.getPromotor()));
             ticketRepository.save(ticket);
 
             return Optional.of(ticketMapper.toDto(ticket));

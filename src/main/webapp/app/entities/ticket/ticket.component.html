@@ -50,7 +50,8 @@
                 </td>
                 <td>
                     <div *ngIf="ticket.promoCodeId">
-                        <span>{{ ticket.promoCodeId }}</span>
+                        <a [routerLink]="['/promo-code',ticket.promoCodeId  , 'view']">
+                            <span>#{{ ticket.promoCodeId }}</span> </a>
                     </div>
                 </td>
                 <td class="text-right">
