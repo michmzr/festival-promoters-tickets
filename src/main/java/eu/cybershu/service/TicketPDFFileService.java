@@ -6,6 +6,7 @@ import eu.cybershu.service.dto.TicketPDFData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -82,8 +83,11 @@ public class TicketPDFFileService {
         ByteArrayOutputStream fileOutputStream = new ByteArrayOutputStream();
 
         ITextRenderer renderer = new ITextRenderer();
-        renderer.getFontResolver().addFont(
-            "fonts/arial-unicode-ms.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
+        String arialPath = new ClassPathResource("fonts/arial-unicode-ms.ttf").getPath();
+        log.debug("Arial font path: {}", arialPath);
+        renderer.getFontResolver().addFont(arialPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+
         renderer.setDocumentFromString(htmlContent);
         renderer.layout();
         renderer.createPDF(fileOutputStream, false);
