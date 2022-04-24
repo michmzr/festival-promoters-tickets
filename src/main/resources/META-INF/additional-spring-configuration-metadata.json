@@ -1,0 +1,19 @@
+{
+  "properties": [
+    {
+      "name": "application.tickets.domain",
+      "type": "java.lang.String",
+      "description": "Host url - ticket validation. Url is part of QR code url."
+    },
+    {
+      "name": "application.tickets.templateDir",
+      "type": "java.lang.String",
+      "description": "Path to directory with pdf template for ticket"
+    },
+    {
+      "name": "application.tickets.templateFileName",
+      "type": "java.lang.String",
+      "description": "Ticket pdf template file name (no extension)"
+    }
+  ]
+}

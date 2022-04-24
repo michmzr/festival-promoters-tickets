@@ -48,6 +48,14 @@
     },
     {
       "relationshipType": "one-to-one",
+      "otherEntityName": "promoCode",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "promoCode",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
       "otherEntityName": "guest",
       "otherEntityRelationshipName": "ticket",
       "relationshipName": "guest",
@@ -59,7 +67,7 @@
   "dto": "mapstruct",
   "pagination": "no",
   "service": "serviceImpl",
-  "jpaMetamodelFiltering": false,
+  "jpaMetamodelFiltering": true,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,

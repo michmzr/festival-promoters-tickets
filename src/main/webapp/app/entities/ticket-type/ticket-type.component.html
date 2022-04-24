@@ -25,6 +25,8 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Name</span></th>
                     <th scope="col" ><span>Notes</span></th>
+                    <th scope="col" ><span>Product id</span></th>
+                    <th scope="col" ><span>Product url</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -33,6 +35,8 @@
                     <td><a [routerLink]="['/ticket-type', ticketType.id, 'view']">{{ ticketType.id }}</a></td>
                     <td>{{ ticketType.name }}</td>
                     <td>{{ ticketType.notes }}</td>
+                    <td>{{ ticketType.productId }}</td>
+                    <td>{{ ticketType.productUrl }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

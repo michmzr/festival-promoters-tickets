@@ -1,0 +1,21 @@
+<div class="card {{cardCSSClass()}}" style="width: 32rem">
+    <div class="card-body">
+        <h5 class="card-title" *ngIf="importResult.processed">Zamówienie pomyślnie zaimportowane.</h5>
+        <h5 class="card-title" *ngIf="!importResult.processed">Błąd migracji zamówienia</h5>
+
+        Rekord: {{importResult.orderRecord | json}}
+    </div>
+
+    <ul class="list-group list-group-flush" *ngIf="importResult.messages">
+        <li *ngFor="let msg of importResult.messages; let i = index" class="list-group-item">
+            -> {{msg}}
+        </li>
+    </ul>
+
+    <div class="card-body" *ngIf="importResult.processed">
+        <a *ngIf="importResult.guest" [routerLink]="['/guest',  importResult!.guest!.id, 'view']" class="card-link"
+           target="_blank" class="btn btn-primary"> Gość #{{ importResult!.guest!.id }}</a>
+        <a *ngIf="importResult.ticket" [routerLink]="['/ticket', importResult!.ticket!.id , 'view']" class="card-link"
+           target="_blank" class="btn btn-primary"> Bilet #{{ importResult!.ticket!.id }}</a>
+    </div>
+</div>

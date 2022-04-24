@@ -9,9 +9,6 @@ export interface IGuest {
   notes?: string;
   createdAt?: Moment;
   enabled?: boolean;
-  ticketId?: number;
-  ticketTypeId?: number;
-  promotorId?: number;
 }
 
 export class Guest implements IGuest {
@@ -23,10 +20,7 @@ export class Guest implements IGuest {
     public phoneNumber?: string,
     public notes?: string,
     public createdAt?: Moment,
-    public enabled?: boolean,
-    public ticketId?: number,
-    public ticketTypeId?: number,
-    public promotorId?: number
+    public enabled?: boolean
   ) {
     this.enabled = this.enabled || false;
   }

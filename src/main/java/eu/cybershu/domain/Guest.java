@@ -1,10 +1,13 @@
 package eu.cybershu.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -12,6 +15,9 @@ import java.time.Instant;
  * A Guest.
  */
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "guest")
 public class Guest implements Serializable {
 
@@ -48,14 +54,6 @@ public class Guest implements Serializable {
     @NotNull
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
-
-    @OneToOne
-    @JoinColumn(unique = true)
-    private Ticket ticket;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = "guests", allowSetters = true)
-    private Promotor promotor;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -157,31 +155,6 @@ public class Guest implements Serializable {
         this.enabled = enabled;
     }
 
-    public Ticket getTicket() {
-        return ticket;
-    }
-
-    public Guest ticket(Ticket ticket) {
-        this.ticket = ticket;
-        return this;
-    }
-
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
-
-    public Promotor getPromotor() {
-        return promotor;
-    }
-
-    public Guest promotor(Promotor promotor) {
-        this.promotor = promotor;
-        return this;
-    }
-
-    public void setPromotor(Promotor promotor) {
-        this.promotor = promotor;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import './vendor';
 import { OrganicPromoTicketsSharedModule } from 'app/shared/shared.module';
 import { OrganicPromoTicketsCoreModule } from 'app/core/core.module';
@@ -13,10 +12,13 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TicketVerifyComponent } from './entities/ticket/ticket-verify/ticket-verify.component';
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     OrganicPromoTicketsSharedModule,
     OrganicPromoTicketsCoreModule,
     OrganicPromoTicketsHomeModule,
@@ -24,7 +26,7 @@ import { ErrorComponent } from './layouts/error/error.component';
     OrganicPromoTicketsEntityModule,
     OrganicPromoTicketsAppRoutingModule,
   ],
-  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
+  declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent, TicketVerifyComponent],
   bootstrap: [MainComponent],
 })
 export class OrganicPromoTicketsAppModule {}

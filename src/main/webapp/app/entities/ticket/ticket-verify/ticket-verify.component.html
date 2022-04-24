@@ -1,0 +1,25 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <jhi-alert-error></jhi-alert-error>
+
+        <div *ngIf="!checking">
+            <div *ngIf="verificationResult">
+                <div class="jumbotron jumbotron-fluid text-white text-center {{jumboStyle()}}">
+                    <div class="container">
+                        <p class="lead">{{verificationResult.message}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="verificationResult.guest">
+                    <dt class="col-sm-3">Gość:</dt>
+                    <dd class="col-sm-9">{{verificationResult.guest.name}} {{verificationResult.guest.lastName}}</dd>
+                </div>
+
+                <div *ngIf="verificationResult.ticketType">
+                    <dt class="col-sm-3">Rodzaj biletu:</dt>
+                    <dd class="col-sm-9">{{verificationResult.ticketType.name}}</dd>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

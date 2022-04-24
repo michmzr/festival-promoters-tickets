@@ -1,0 +1,70 @@
+entity Country {
+	countryName String
+}
+
+entity Promotor {
+	name String required,
+    lastName String required,
+    email String,
+    phoneNumber String ,
+    notes String maxlength(500),
+   createdAt Instant,
+   enabled Boolean required,
+}
+
+entity Guest {
+	name String required,
+    lastName String required,
+    email String required,
+    phoneNumber String ,
+    notes String maxlength(500),
+   createdAt Instant,
+   enabled Boolean required,
+}
+
+entity Ticket {
+   uuid UUID required,
+   ticketUrl String required,
+   ticketQR ImageBlob required,
+   ticketFile ImageBlob,
+   enabled Boolean required,
+   createdAt Instant required,
+   disabledAt Instant
+}
+
+entity PromoCode {
+   code String required  maxlength(30),
+   notes String maxlength(500),
+   enabled Boolean required,
+   createdAt Instant required,
+   disabledAt Instant
+}
+
+entity TicketType {
+	name String required maxlength(30),
+    notes String maxlength(500),
+}
+
+relationship OneToOne {
+	Guest to Ticket,
+    Ticket to TicketType,
+    Ticket to PromoCode
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Promotor to Guest,
+    Promotor to PromoCode
+}
+
+// Set pagination options
+paginate Promotor, Guest with infinite-scroll
+
+// Use Data Transfert Objects (DTO)
+dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl 
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

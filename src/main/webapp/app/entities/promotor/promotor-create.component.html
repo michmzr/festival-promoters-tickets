@@ -1,0 +1,81 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="createForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="createForm">
+            <h2 id="jhi-promotor-heading">Utwórz lub edytuj dane promotora</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!createForm.get('id')!.value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
+                    <div *ngIf="createForm.get('name')!.invalid && (createForm.get('name')!.dirty || createForm.get('name')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="createForm.get('name')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_lastName">Last Name</label>
+                    <input type="text" class="form-control" name="lastName" id="field_lastName"
+                           formControlName="lastName"/>
+                    <div *ngIf="createForm.get('lastName')!.invalid && (createForm.get('lastName')!.dirty || createForm.get('lastName')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="createForm.get('lastName')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_email">Email</label>
+                    <input type="text" class="form-control" name="email" id="field_email"
+                           formControlName="email"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_phoneNumber">Phone Number</label>
+                    <input type="text" class="form-control" name="phoneNumber" id="field_phoneNumber"
+                           formControlName="phoneNumber"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_notes">Notes</label>
+                    <input type="text" class="form-control" name="notes" id="field_notes"
+                           formControlName="notes"/>
+                    <div
+                        *ngIf="createForm.get('notes')!.invalid && (createForm.get('notes')!.dirty || createForm.get('notes')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="createForm.get('notes')?.errors?.maxlength">
+                            This field cannot be longer than 500 characters.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_notes">Przydziel kody promocyjne</label>
+                    <jhi-promotor-promo-code-form (codeAdded)="codeAdded($event)"
+                                                  (codeRemoved)="codeRemoved($event)"></jhi-promotor-promo-code-form>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="createForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

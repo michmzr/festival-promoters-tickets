@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, Routes, Router } from '@angular/router';
-import { Observable, of, EMPTY } from 'rxjs';
+import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router';
+import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
 import { Authority } from 'app/shared/constants/authority.constants';
@@ -11,6 +11,7 @@ import { PromotorService } from './promotor.service';
 import { PromotorComponent } from './promotor.component';
 import { PromotorDetailComponent } from './promotor-detail.component';
 import { PromotorUpdateComponent } from './promotor-update.component';
+import { PromotorCreateComponent } from './promotor-create.component';
 
 @Injectable({ providedIn: 'root' })
 export class PromotorResolve implements Resolve<IPromotor> {
@@ -58,13 +59,13 @@ export const promotorRoute: Routes = [
   },
   {
     path: 'new',
-    component: PromotorUpdateComponent,
+    component: PromotorCreateComponent,
     resolve: {
-      promotor: PromotorResolve,
+      // promotor: new PromotorCreate(),
     },
     data: {
       authorities: [Authority.USER],
-      pageTitle: 'Promotors',
+      pageTitle: 'Nowy promotor',
     },
     canActivate: [UserRouteAccessService],
   },

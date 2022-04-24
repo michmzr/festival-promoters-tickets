@@ -6,7 +6,6 @@ import eu.cybershu.repository.TicketTypeRepository;
 import eu.cybershu.service.TicketTypeService;
 import eu.cybershu.service.dto.TicketTypeDTO;
 import eu.cybershu.service.mapper.TicketTypeMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class TicketTypeResourceIT {
 
     /**
      * Create an entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -66,11 +66,13 @@ public class TicketTypeResourceIT {
         TicketType ticketType = new TicketType()
             .name(DEFAULT_NAME)
             .notes(DEFAULT_NOTES);
+
         return ticketType;
     }
+
     /**
      * Create an updated entity for this test.
-     *
+     * <p>
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
@@ -93,8 +95,8 @@ public class TicketTypeResourceIT {
         // Create the TicketType
         TicketTypeDTO ticketTypeDTO = ticketTypeMapper.toDto(ticketType);
         restTicketTypeMockMvc.perform(post("/api/ticket-types").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
             .andExpect(status().isCreated());
 
         // Validate the TicketType in the database
@@ -116,8 +118,8 @@ public class TicketTypeResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restTicketTypeMockMvc.perform(post("/api/ticket-types").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the TicketType in the database
@@ -138,8 +140,8 @@ public class TicketTypeResourceIT {
 
 
         restTicketTypeMockMvc.perform(post("/api/ticket-types").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
             .andExpect(status().isBadRequest());
 
         List<TicketType> ticketTypeList = ticketTypeRepository.findAll();
@@ -160,7 +162,7 @@ public class TicketTypeResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].notes").value(hasItem(DEFAULT_NOTES)));
     }
-    
+
     @Test
     @Transactional
     public void getTicketType() throws Exception {
@@ -175,6 +177,7 @@ public class TicketTypeResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES));
     }
+
     @Test
     @Transactional
     public void getNonExistingTicketType() throws Exception {
@@ -193,6 +196,7 @@ public class TicketTypeResourceIT {
 
         // Update the ticketType
         TicketType updatedTicketType = ticketTypeRepository.findById(ticketType.getId()).get();
+
         // Disconnect from session so that the updates on updatedTicketType are not directly saved in db
         em.detach(updatedTicketType);
         updatedTicketType
@@ -201,8 +205,8 @@ public class TicketTypeResourceIT {
         TicketTypeDTO ticketTypeDTO = ticketTypeMapper.toDto(updatedTicketType);
 
         restTicketTypeMockMvc.perform(put("/api/ticket-types").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
             .andExpect(status().isOk());
 
         // Validate the TicketType in the database
@@ -223,8 +227,8 @@ public class TicketTypeResourceIT {
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restTicketTypeMockMvc.perform(put("/api/ticket-types").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestUtil.convertObjectToJsonBytes(ticketTypeDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the TicketType in the database
@@ -242,7 +246,7 @@ public class TicketTypeResourceIT {
 
         // Delete the ticketType
         restTicketTypeMockMvc.perform(delete("/api/ticket-types/{id}", ticketType.getId()).with(csrf())
-            .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

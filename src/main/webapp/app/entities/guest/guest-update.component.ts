@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { Guest, IGuest } from 'app/shared/model/guest.model';
 import { GuestService } from './guest.service';
@@ -36,11 +35,7 @@ export class GuestUpdateComponent implements OnInit {
     email: [null, [Validators.required]],
     phoneNumber: [],
     notes: [null, [Validators.maxLength(500)]],
-    createdAt: [],
     enabled: [null, [Validators.required]],
-    ticketId: [],
-    ticketTypeId: [null, [Validators.required]],
-    promotorId: [],
   });
 
   constructor(
@@ -117,11 +112,7 @@ export class GuestUpdateComponent implements OnInit {
       email: guest.email,
       phoneNumber: guest.phoneNumber,
       notes: guest.notes,
-      createdAt: guest.createdAt ? guest.createdAt.format(DATE_TIME_FORMAT) : null,
       enabled: guest.enabled,
-      ticketId: guest.ticketId,
-      ticketTypeId: guest.ticketTypeId,
-      promotorId: guest.promotorId,
     });
   }
 
@@ -132,10 +123,6 @@ export class GuestUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const guest = this.createFromForm();
-
-    //todo remove console.debug
-    // eslint-disable-next-line
-    console.debug(guest);
 
     if (guest.id !== undefined) {
       this.subscribeToSaveResponse(this.guestService.update(guest));
@@ -153,11 +140,7 @@ export class GuestUpdateComponent implements OnInit {
       email: this.editForm.get(['email'])!.value,
       phoneNumber: this.editForm.get(['phoneNumber'])!.value,
       notes: this.editForm.get(['notes'])!.value,
-      createdAt: this.editForm.get(['createdAt'])!.value ? moment(this.editForm.get(['createdAt'])!.value, DATE_TIME_FORMAT) : undefined,
       enabled: this.editForm.get(['enabled'])!.value,
-      ticketId: this.editForm.get(['ticketId'])!.value,
-      ticketTypeId: this.editForm.get(['ticketTypeId'])!.value,
-      promotorId: this.editForm.get(['promotorId'])!.value,
     };
   }
 

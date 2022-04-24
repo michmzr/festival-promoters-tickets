@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="promoCode">
+            <h2><span>Kod promocyjny:</span> #{{promoCode.id}} "{{ promoCode.code }}"</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Code</span></dt>
+                <dd>
+                    <span>{{ promoCode.code }}</span>
+                </dd>
+                <dt><span>Notes</span></dt>
+                <dd>
+                    <span>{{ promoCode.notes }}</span>
+                </dd>
+                <dt><span>Enabled</span></dt>
+                <dd>
+                    <span>{{ promoCode.enabled }}</span>
+                </dd>
+                <dt><span>Created At</span></dt>
+                <dd>
+                    <span>{{ promoCode.createdAt }}</span>
+                </dd>
+                <dt><span>Disabled At</span></dt>
+                <dd>
+                    <span>{{ promoCode.disabledAt }}</span>
+                </dd>
+                <dt><span>Promotor</span></dt>
+                <dd>
+                    <div *ngIf="promoCode.promotorId">
+                        <a [routerLink]="['/promotor', promoCode.promotorId, 'view']">#{{ promoCode.promotorId }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/promo-code', promoCode.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

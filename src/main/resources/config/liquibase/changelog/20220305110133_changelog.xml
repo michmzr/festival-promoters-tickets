@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="michmzr (generated)" id="1646478098623-2">
+        <addColumn tableName="ticket">
+            <column name="guest_id" type="int8"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-3">
+        <addColumn tableName="ticket">
+            <column name="promotor_id" type="int8"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-4">
+        <addColumn tableName="ticket">
+            <column name="ticket_price" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-5">
+        <addForeignKeyConstraint baseColumnNames="promotor_id" baseTableName="ticket"
+                                 constraintName="FK73k8rhotwehg86pb14gpl5i1e" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="promotor"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-6">
+        <addForeignKeyConstraint baseColumnNames="guest_id" baseTableName="ticket"
+                                 constraintName="FKoaleu2yjep0dx2etshkaw4cv1" deferrable="false"
+                                 initiallyDeferred="false" referencedColumnNames="id" referencedTableName="guest"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-7">
+        <dropForeignKeyConstraint baseTableName="guest" constraintName="fk_guest_promotor_id"/>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-8">
+        <dropForeignKeyConstraint baseTableName="guest" constraintName="fk_guest_ticket_id"/>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-9">
+        <dropUniqueConstraint constraintName="ux_guest_ticket_id" tableName="guest"/>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-10">
+        <dropColumn columnName="promotor_id" tableName="guest"/>
+    </changeSet>
+    <changeSet author="michmzr (generated)" id="1646478098623-12">
+        <dropColumn columnName="ticket_id" tableName="guest"/>
+    </changeSet>
+<!--
+    <changeSet author="michmzr (generated)" id="1646478098623-1">
+        <alterSequence sequenceName="sequence_generator" incrementBy="1"/>
+    </changeSet>-->
+</databaseChangeLog>

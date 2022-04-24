@@ -1,10 +1,10 @@
 package eu.cybershu.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
@@ -13,7 +13,13 @@ import java.util.UUID;
  * A Ticket.
  */
 @Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "ticket")
+@ToString(of = {"id", "uuid", "ticketType", "orderId", "createdAt"})
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,20 +56,37 @@ public class Ticket implements Serializable {
     private Boolean enabled;
 
     @NotNull
+    @ManyToOne
+    private TicketType ticketType;
+
+    @Column(name = "ticket_price")
+    private String ticketPrice;
+
+    @NotNull
+    @Column(name = "order_id")
+    private String orderId;
+
+    @OneToOne
+    @JoinColumn
+    private PromoCode promoCode;
+
+    @OneToOne
+    @JoinColumn(nullable = true)
+    private Promotor promotor;
+
+    @OneToOne
+    @JsonIgnore
+    private Guest guest;
+
+    @Column(name = "validated_at")
+    private Instant validatedAt;
+
+    @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     @Column(name = "disabled_at")
     private Instant disabledAt;
-
-    @OneToOne
-//    @Column(name = "ticket_type_id")
-    @JoinColumn(unique = true)
-    private TicketType ticketType;
-
-    @OneToOne(mappedBy = "ticket")
-    @JsonIgnore
-    private Guest guest;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -204,6 +227,19 @@ public class Ticket implements Serializable {
         this.ticketType = ticketType;
     }
 
+    public PromoCode getPromoCode() {
+        return promoCode;
+    }
+
+    public Ticket promoCode(PromoCode promoCode) {
+        this.promoCode = promoCode;
+        return this;
+    }
+
+    public void setPromoCode(PromoCode promoCode) {
+        this.promoCode = promoCode;
+    }
+
     public Guest getGuest() {
         return guest;
     }
@@ -216,36 +252,27 @@ public class Ticket implements Serializable {
     public void setGuest(Guest guest) {
         this.guest = guest;
     }
+
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public String getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(String ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public Promotor getPromotor() {
+        return promotor;
+    }
+
+    public void setPromotor(Promotor promotor) {
+        this.promotor = promotor;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Ticket)) {
-            return false;
-        }
-        return id != null && id.equals(((Ticket) o).id);
-    }
-
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "Ticket{" +
-            "id=" + getId() +
-            ", uuid='" + getUuid() + "'" +
-            ", ticketUrl='" + getTicketUrl() + "'" +
-            ", ticketQRContentType='" + getTicketQRContentType() + "'" +
-            ", ticketFileContentType='" + getTicketFileContentType() + "'" +
-            ", enabled='" + isEnabled() + "'" +
-            ", createdAt='" + getCreatedAt() + "'" +
-            ", disabledAt='" + getDisabledAt() + "'" +
-            "}";
-    }
 }

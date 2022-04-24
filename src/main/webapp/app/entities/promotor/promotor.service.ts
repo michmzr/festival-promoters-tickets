@@ -6,7 +6,7 @@ import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { IPromotor } from 'app/shared/model/promotor.model';
+import { IPromotor, IPromotorCreate } from 'app/shared/model/promotor.model';
 
 type EntityResponseType = HttpResponse<IPromotor>;
 type EntityArrayResponseType = HttpResponse<IPromotor[]>;
@@ -17,14 +17,14 @@ export class PromotorService {
 
   constructor(protected http: HttpClient) {}
 
-  create(promotor: IPromotor): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(promotor);
+  create(promotor: IPromotorCreate): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClientForCreate(promotor);
     return this.http
       .post<IPromotor>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  update(promotor: IPromotor): Observable<EntityResponseType> {
+  update(promotor: IPromotorCreate): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(promotor);
     return this.http
       .put<IPromotor>(this.resourceUrl, copy, { observe: 'response' })
@@ -55,8 +55,13 @@ export class PromotorService {
     return copy;
   }
 
+  protected convertDateFromClientForCreate(promotor: IPromotorCreate): IPromotorCreate {
+    const copy: IPromotorCreate = Object.assign({}, promotor, {});
+    return copy;
+  }
+
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
-    if (res.body) {
+    if (res.body && res.body.createdAt) {
       res.body.createdAt = res.body.createdAt ? moment(res.body.createdAt) : undefined;
     }
     return res;
