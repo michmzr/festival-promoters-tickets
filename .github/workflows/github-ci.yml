@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   #Trigger the workflow on push from the any branch
   push:
+    - develop
+    - master
   pull_request:
 jobs:
   pipeline:
