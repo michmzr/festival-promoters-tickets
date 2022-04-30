@@ -1,4 +1,5 @@
 import {
+  faArchive,
   faArrowLeft,
   faAsterisk,
   faBan,
@@ -77,6 +78,7 @@ export const fontAwesomeIcons = [
   faRecycle,
   faFile,
   faFileImport,
+  faArchive,
   // jhipster-needle-add-icon-import
   faAsterisk,
 ];

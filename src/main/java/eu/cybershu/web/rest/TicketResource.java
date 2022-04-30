@@ -128,6 +128,21 @@ public class TicketResource {
     public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
         log.debug("REST request to delete Ticket : {}", id);
         ticketService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity.noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+    }
+
+    @PostMapping("/tickets/{id}/disable")
+    public ResponseEntity<Void> disableTicket(@PathVariable Long id) {
+        log.debug("REST request to disable Ticket : {}", id);
+        ticketService.disable(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/tickets/{id}/enable")
+    public ResponseEntity<Void> enableTicket(@PathVariable Long id) {
+        log.debug("REST request to enable Ticket : {}", id);
+        ticketService.enable(id);
+        return ResponseEntity.ok().build();
     }
 }

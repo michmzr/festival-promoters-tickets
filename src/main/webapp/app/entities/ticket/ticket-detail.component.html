@@ -19,16 +19,6 @@
                 <div *ngIf="ticket.enabled">
                     <dt><span>Ticket QR</span></dt>
                     <dd>
-                        <!--           <div *ngIf="ticket.ticketQR && qrFileName">
-                                       <a (click)="downloadFile(ticket.ticketQRContentType,ticket.ticketQR, qrFileName)"
-                                          class="btn btn-light  btn-sm btn-lg active">
-                                           <fa-icon icon="download"></fa-icon>&nbsp;<span>Download</span>
-                                       </a>
-                                       <a (click)="openFile(ticket.ticketQRContentType,ticket.ticketQR)">
-                                           <img [src]="qrImagePath" style="max-width: 100%;" alt="ticket image"/>
-                                       </a>
-                                       {{ ticket.ticketQRContentType }}, {{ byteSize(ticket.ticketQR) }}
-                                   </div>-->
                         <div *ngIf="qrImagePath">
                             <a (click)="openQrFile()">
                                 <img [src]="qrImagePath" alt="ticket image" style="max-width: 50%;"/>
@@ -41,7 +31,7 @@
                     <dd>
                         <div *ngIf="ticketImagePath">
                             <a (click)="openTicketFile()">
-                                <!--                            TODO: OPEN AS FILE WITH NAME-->
+                                <fa-icon icon="download"></fa-icon>
                                 Click to download
                             </a>
                         </div>
@@ -51,12 +41,8 @@
                 <dd>
                     <span>{{ ticket.enabled }}</span>
                 </dd>
-                <dt><span>Created At</span></dt>
-                <dd>
-                    <span>{{ ticket.createdAt }}</span>
-                </dd>
 
-                <dt *ngIf="!ticket.enabled"><span>Disabled At</span></dt>
+                <dt *ngIf="ticket.disabledAt"><span>Disabled At</span></dt>
                 <dd>
                     <span>{{ ticket.disabledAt | date:'medium' }}</span>
                 </dd>
@@ -71,6 +57,9 @@
                 <dd>
                     <div *ngIf="ticket.promoCodeId">
                         <a [routerLink]="['/promo-code', ticket.promoCodeId, 'view']">{{ ticket.promoCodeId }}</a>
+                    </div>
+                    <div *ngIf="!ticket.promoCodeId">
+                        <span>-</span>
                     </div>
                 </dd>
                 <dt><span>Price (zł)</span></dt>
@@ -88,6 +77,11 @@
                         <a [routerLink]="['/guest', ticket.guestId, 'view']">#{{ ticket.guestId }} {{guest.name}}
                             {{guest.lastName}}</a>
                     </div>
+                </dd>
+
+                <dt><span>Created At</span></dt>
+                <dd>
+                    <span>{{ ticket.createdAt  | date:'medium' }}</span>
                 </dd>
             </dl>
 

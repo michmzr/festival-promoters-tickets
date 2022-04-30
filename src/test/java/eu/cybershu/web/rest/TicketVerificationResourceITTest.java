@@ -8,7 +8,10 @@ import eu.cybershu.domain.TicketType;
 import eu.cybershu.repository.GuestRepository;
 import eu.cybershu.repository.TicketRepository;
 import eu.cybershu.repository.TicketTypeRepository;
-import eu.cybershu.service.dto.*;
+import eu.cybershu.service.dto.GuestCreateDTO;
+import eu.cybershu.service.dto.TicketCreateDTO;
+import eu.cybershu.service.dto.TicketVerificationStatus;
+import eu.cybershu.service.dto.VerificationStatus;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.RandomUtils;
 import org.assertj.core.api.SoftAssertions;
@@ -180,16 +183,6 @@ public class TicketVerificationResourceITTest {
             .guestId(guestId)
             .ticketTypeId(ticketTypeId)
             .orderId(orderId)
-            .build();
-    }
-
-    private TicketTypeDTO ticketTypeDTO(Long id, String name, String productUrl, String productId) {
-        return TicketTypeDTO
-            .builder()
-            .id(id)
-            .name(name)
-            .productUrl(productUrl)
-            .productId(productId)
             .build();
     }
 

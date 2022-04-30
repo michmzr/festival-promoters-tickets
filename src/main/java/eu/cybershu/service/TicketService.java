@@ -84,4 +84,18 @@ public interface TicketService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    /**
+     * Disable the "id" ticket
+     *
+     * @param id the id of the ticket
+     */
+    void disable(Long id);
+
+    /**
+     * Enable the "id" ticket
+     *
+     * @param id the id of the ticket
+     */
+    void enable(Long id);
 }
