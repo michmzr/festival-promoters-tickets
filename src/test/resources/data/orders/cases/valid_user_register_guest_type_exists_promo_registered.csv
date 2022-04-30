@@ -1,2 +1,3 @@
-Order ID,Customer Note     ,Coupon Code,Order Total,Customer Name,Shipping Last Name,User Email        ,Product Name    ,Product ID,Billing First Name,Billing Last Name
-373     ,Batman mnie poleca,BAT100     ,"300,00"   ,"Frozen"     ,                  ,frozen@youghurt.pl,"Karnet Janusza",729       ,Frozen            ,Youghurt
+Order ID,Customer Note     ,Coupon Code,Order Total,Order Discount,Customer Name,Shipping Last Name,User Email        ,Product Name    ,Product ID,Billing First Name,Billing Last Name
+373     ,Batman mnie poleca,BAT100     ,"300,00"   ,"5.60"        ,"Frozen"     ,                  ,frozen@youghurt.pl,"Karnet Janusza",729       ,Frozen            ,Youghurt
+

@@ -89,9 +89,7 @@ class OrdersImportServiceTest {
         OrderImportResult importResult = new OrderImportResult();
 
         importResult.setProcessed(true);
-        importResult.setOrderRecord(
-            OrderRecord.fromCSVRecord(csvRecord)
-        );
+        importResult.setOrderRecord(OrderRecord.fromCSVRecord(csvRecord));
         importResult.setValidation(ValidationResult.ok());
         importResult.setGuest(mock(GuestDTO.class));
         importResult.setTicket(mock(TicketDTO.class));

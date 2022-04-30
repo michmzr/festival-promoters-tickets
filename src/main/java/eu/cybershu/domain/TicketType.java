@@ -11,9 +11,9 @@ import java.io.Serializable;
 /**
  * A TicketType.
  */
-@ToString
 @Entity
 @EqualsAndHashCode
+@ToString
 @Table(name = "ticket_type")
 public class TicketType implements Serializable {
 

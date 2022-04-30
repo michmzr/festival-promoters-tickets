@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum OrderCSVFileFields {
-    ORDER_ID( "Order ID"),
+    ORDER_ID("Order ID"),
     CUSTOMER_NOTE("Customer Note"),
     COUPON_CODE("Coupon Code"),
     ORDER_TOTAL("Order Total"),
@@ -15,7 +15,8 @@ public enum OrderCSVFileFields {
     PRODUCT_NAME("Product Name"),
     PRODUCT_ID("Product ID"),
     BILLING_FIRST_NAME("Billing First Name"),
-    BILLING_LAST_NAME("Billing Last Name");
+    BILLING_LAST_NAME("Billing Last Name"),
+    DISCOUNT_PRICE("Order Discount");
 
     private final String fieldName;
 
@@ -24,7 +25,7 @@ public enum OrderCSVFileFields {
     }
 
     public static Set<String> getFieldNames() {
-        return  Arrays
+        return Arrays
             .stream(values())
             .map(OrderCSVFileFields::getFieldName)
             .collect(Collectors.toUnmodifiableSet());
