@@ -1,27 +1,26 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import {SERVER_API_URL} from 'app/app.constants';
-import {createRequestOption} from 'app/shared/util/request-util';
-import {ITicket, TicketCreate} from 'app/shared/model/ticket.model';
+import { SERVER_API_URL } from 'app/app.constants';
+import { createRequestOption } from 'app/shared/util/request-util';
+import { ITicket, TicketCreate } from 'app/shared/model/ticket.model';
 
 type EntityResponseType = HttpResponse<ITicket>;
 type EntityArrayResponseType = HttpResponse<ITicket[]>;
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TicketService {
   public resourceUrl = SERVER_API_URL + 'api/tickets';
 
-  constructor(protected http: HttpClient) {
-  }
+  constructor(protected http: HttpClient) {}
 
   create(ticket: TicketCreate): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(ticket);
     return this.http
-      .post<TicketCreate>(this.resourceUrl, copy, {observe: 'response'})
+      .post<TicketCreate>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
@@ -53,6 +52,18 @@ export class TicketService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  disable(id: number): Observable<Object> {
+    return this.http
+      .post<Object>(`${this.resourceUrl}/${id}/disable`, {}, { observe: 'response' })
+      .pipe(map((res: HttpResponse<any>) => res.body));
+  }
+
+  enable(id: number): Observable<Object> {
+    return this.http
+      .post<Object>(`${this.resourceUrl}/${id}/enable`, {}, { observe: 'response' })
+      .pipe(map((res: HttpResponse<any>) => res.body));
   }
 
   protected convertDateFromClient(ticket: ITicket): ITicket {

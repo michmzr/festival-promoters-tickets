@@ -1,0 +1,25 @@
+<form (ngSubmit)="confirmDisable(ticket?.id!)" *ngIf="ticket" name="disableForm">
+    <div class="modal-header">
+        <h4 class="modal-title">Confirm disable operation</h4>
+
+        <button (click)="cancel()" aria-hidden="true" class="close" data-dismiss="modal"
+                type="button">&times;
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+
+        <p id="jhi-delete-ticket-heading">Are you sure you want to disable this Ticket?</p>
+    </div>
+
+    <div class="modal-footer">
+        <button (click)="cancel()" class="btn btn-secondary" data-dismiss="modal" type="button">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+        </button>
+
+        <button class="btn btn-danger" id="jhi-confirm-delete-ticket" type="submit">
+            <fa-icon icon="archive"></fa-icon>&nbsp;<span>Disable</span>
+        </button>
+    </div>
+</form>

@@ -24,10 +24,6 @@ export class TicketVerifyService {
   }
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
-    /* if (res.body) {
-      res.body.createdAt = res.body.createdAt ? moment(res.body.createdAt) : undefined;
-      res.body.disabledAt = res.body.disabledAt ? moment(res.body.disabledAt) : undefined;
-    } */
     return res;
   }
 }

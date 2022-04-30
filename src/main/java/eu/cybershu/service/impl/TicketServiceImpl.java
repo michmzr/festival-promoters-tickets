@@ -236,4 +236,24 @@ public class TicketServiceImpl implements TicketService {
         log.debug("Request to delete Ticket : {}", id);
         ticketRepository.deleteById(id);
     }
+
+    @Override
+    public void disable(Long id) {
+        log.debug("Disabling ticket: {}", id);
+
+        Ticket ticket = ticketRepository.getOne(id);
+        ticket.enabled(false);
+        ticket.setDisabledAt(Instant.now());
+        ticketRepository.saveAndFlush(ticket);
+    }
+
+    @Override
+    public void enable(Long id) {
+        log.debug("Enabling ticket: {}", id);
+
+        Ticket ticket = ticketRepository.getOne(id);
+        ticket.setDisabledAt(null);
+        ticket.enabled(true);
+        ticketRepository.saveAndFlush(ticket);
+    }
 }

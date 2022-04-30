@@ -19,13 +19,13 @@
         <span>No tickets found</span>
     </div>
 
+
     <div class="table-responsive" id="entities" *ngIf="tickets && tickets.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
                 <th scope="col"><span>ID</span></th>
                 <th scope="col"><span>Uuid</span></th>
-                <th scope="col"><span>Ticket Url</span></th>
                 <th scope="col"><span>Enabled</span></th>
                 <th scope="col"><span>Created At</span></th>
                 <th scope="col"><span>Disabled At</span></th>
@@ -36,9 +36,8 @@
             </thead>
             <tbody>
             <tr *ngFor="let ticket of tickets ;trackBy: trackId">
-                <td><a [routerLink]="['/ticket', ticket.id, 'view']">{{ ticket.id }}</a></td>
+                <td><a [routerLink]="['/ticket', ticket.id, 'view']">#{{ ticket.id }}</a></td>
                 <td>{{ ticket.uuid }}</td>
-                <td>{{ ticket.ticketUrl }}</td>
                 <td>{{ ticket.enabled }}</td>
                 <td>{{ ticket.createdAt | date:'medium' }}</td>
                 <td>{{ ticket.disabledAt | date:'medium' }}</td>
@@ -55,7 +54,7 @@
                     </div>
                 </td>
                 <td class="text-right">
-                    <div class="btn-group">
+                    <div class="btn-group" role="group">
                         <button [routerLink]="['/ticket', ticket.id, 'view']"
                                 class="btn btn-info btn-sm"
                                 type="submit">
@@ -63,24 +62,43 @@
                             <span class="d-none d-md-inline">View</span>
                         </button>
 
-
-                        <button (click)="regenerateFile(ticket)" class="btn btn-info btn-sm">
-                            <fa-icon icon="recycle"></fa-icon>
-                            Regenerate
-                        </button>
-
                         <button (click)="downloadFile(ticket)" *ngIf="ticket.ticketFile"
                                 class="btn btn-info btn-sm">
                             <fa-icon icon="download"></fa-icon>
                             Download
                         </button>
-
-                        <button (click)="delete(ticket)" class="btn btn-danger btn-sm"
-                                type="submit">
-                            <fa-icon icon="times"></fa-icon>
-                            <span class="d-none d-md-inline">Delete</span>
-                        </button>
                     </div>
+
+                    <div ngbDropdown>
+                        <button class="btn btn-outline-primary btn-sm" ngbDropdownToggle type="button">Actions</button>
+                        <div ngbDropdownMenu>
+                            <button (click)="regenerateFile(ticket)"
+                                    class="btn btn-info btn-sm" ngbDropdownItem>
+                                <fa-icon icon="recycle"></fa-icon>
+                                Regenerate
+                            </button>
+
+                            <div class="dropdown-divider"></div>
+
+                            <button (click)="disable(ticket)" *ngIf="!ticket.disabledAt" class="dropdown-item"
+                                    ngbDropdownItem type="submit">
+                                <fa-icon icon="archive"></fa-icon>
+                                <span class="d-none d-md-inline">Disable</span>
+                            </button>
+
+                            <button (click)="enable(ticket)" *ngIf="ticket.disabledAt" class="dropdown-item"
+                                    ngbDropdownItem type="submit">
+                                <span class="d-none d-md-inline">Enable</span>
+                            </button>
+
+                            <button (click)="delete(ticket)" class="dropdown-item"
+                                    ngbDropdownItem type="submit">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </div>
+
                 </td>
             </tr>
             </tbody>
