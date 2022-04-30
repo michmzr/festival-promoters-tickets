@@ -108,6 +108,7 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketFile(generateTicketPdf(uuid, ticketQR, ticketType, guest, promotor));
         ticket.setTicketUrl(ticketUrl);
         ticket.setTicketPrice(ticketCreateDTO.getTicketPrice());
+        ticket.setTicketDiscount(ticketCreateDTO.getTicketDiscount());
         ticket.setOrderId(ticketCreateDTO.getOrderId());
 
         if (ticketCreateDTO.getPromoCodeId() != null) {

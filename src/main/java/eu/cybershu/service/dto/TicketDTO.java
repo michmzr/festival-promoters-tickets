@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -42,7 +43,8 @@ public class TicketDTO implements Serializable {
 
     private Instant validatedAt;
 
-    private String ticketPrice;
+    private BigDecimal ticketPrice;
+    private BigDecimal ticketDiscount;
 
     @NotNull
     private Long ticketTypeId;

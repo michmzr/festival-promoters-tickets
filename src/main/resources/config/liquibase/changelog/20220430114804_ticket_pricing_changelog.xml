@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <changeSet author="michmzr (generated)" id="1651319292390-2">
+        <addColumn tableName="ticket">
+            <column name="ticket_discount" type="numeric(6, 2)" defaultValue="0"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet author="michmzr (generated)" id="1651319292390-3">
+        <modifyDataType
+            columnName="ticket_price"
+            newDataType="numeric(6,2)"
+            tableName="ticket"/>
+    </changeSet>
+</databaseChangeLog>
