@@ -4,10 +4,12 @@ on:
   workflow_dispatch:
   #Trigger the workflow on push from the any branch
   push:
+    - develop
+    - master
   pull_request:
 jobs:
-  pipeline:
-    name: OrganicPromoTickets pipeline
+  start:
+    name: start
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
     timeout-minutes: 40
@@ -25,13 +27,39 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: '11.x'
+  test:
+    name: Testing
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
+    timeout-minutes: 40
+    env:
+      NODE_VERSION: 12.16.1
+      SPRING_OUTPUT_ANSI_ENABLED: DETECT
+      SPRING_JPA_SHOW_SQL: false
+      JHI_DISABLE_WEBPACK_LOGS: true
+      NG_CLI_ANALYTICS: false
+    steps:
       - name: Install node.js packages
         run: npm install
       - name: Run backend test
+        continue-on-error: true
         run: |
           chmod +x mvnw
           ./mvnw -ntp clean verify -P-webpack
       - name: Run frontend test
+        continue-on-error: true
         run: npm run test
+  deployment:
+    name: Deployment to heroku
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
+    timeout-minutes: 40
+    env:
+      NODE_VERSION: 12.16.1
+      SPRING_OUTPUT_ANSI_ENABLED: DETECT
+      SPRING_JPA_SHOW_SQL: false
+      JHI_DISABLE_WEBPACK_LOGS: true
+      NG_CLI_ANALYTICS: false
+    steps:
       - name: Package application
         run: ./mvnw -ntp package -Pprod -DskipTests
