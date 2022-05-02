@@ -60,7 +60,7 @@ public class TicketQueryService extends QueryService<Ticket> {
      */
     @Transactional(readOnly = true)
     public Page<TicketDTO> findByCriteria(TicketCriteria criteria, Pageable page) {
-        log.debug("find by criteria : {}, page: {}", criteria, page);
+        log.info("find by criteria : {}, page: {}", criteria, page);
         final Specification<Ticket> specification = createSpecification(criteria);
         return ticketRepository.findAll(specification, page)
             .map(ticketMapper::toDto);
@@ -74,7 +74,7 @@ public class TicketQueryService extends QueryService<Ticket> {
      */
     @Transactional(readOnly = true)
     public long countByCriteria(TicketCriteria criteria) {
-        log.debug("count by criteria : {}", criteria);
+        log.info("count by criteria : {}", criteria);
         final Specification<Ticket> specification = createSpecification(criteria);
         return ticketRepository.count(specification);
     }
@@ -117,6 +117,11 @@ public class TicketQueryService extends QueryService<Ticket> {
             if (criteria.getGuestId() != null) {
                 specification = specification.and(buildSpecification(criteria.getGuestId(),
                     root -> root.join(Ticket_.guest, JoinType.LEFT).get(Guest_.id)));
+            }
+
+            if (criteria.getPromotorId() != null) {
+                specification = specification.and(buildSpecification(criteria.getPromotorId(),
+                    root -> root.join(Ticket_.promotor, JoinType.LEFT).get(Promotor_.id)));
             }
         }
         return specification;
