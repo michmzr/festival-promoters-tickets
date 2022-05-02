@@ -1,22 +1,22 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
-import {HttpResponse} from '@angular/common/http';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {FormBuilder, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {JhiDataUtils, JhiEventManager} from 'ng-jhipster';
+import { FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { JhiDataUtils, JhiEventManager } from 'ng-jhipster';
 
-import {ITicket, TicketCreate} from 'app/shared/model/ticket.model';
-import {TicketService} from './ticket.service';
-import {ITicketType} from 'app/shared/model/ticket-type.model';
-import {TicketTypeService} from 'app/entities/ticket-type/ticket-type.service';
-import {IPromoCode} from 'app/shared/model/promo-code.model';
-import {PromoCodeService} from 'app/entities/promo-code/promo-code.service';
-import {IGuest} from "../../shared/model/guest.model";
-import {GuestService} from "../guest/guest.service";
-import {IPromotor} from "../../shared/model/promotor.model";
-import {PromotorService} from "../promotor/promotor.service";
+import { ITicket, TicketCreate } from 'app/shared/model/ticket.model';
+import { TicketService } from './ticket.service';
+import { ITicketType } from 'app/shared/model/ticket-type.model';
+import { TicketTypeService } from 'app/entities/ticket-type/ticket-type.service';
+import { IPromoCode } from 'app/shared/model/promo-code.model';
+import { PromoCodeService } from 'app/entities/promo-code/promo-code.service';
+import { IGuest } from '../../shared/model/guest.model';
+import { GuestService } from '../guest/guest.service';
+import { IPromotor } from '../../shared/model/promotor.model';
+import { PromotorService } from '../promotor/promotor.service';
 
 type SelectableEntity = ITicketType | IPromoCode;
 
@@ -37,10 +37,10 @@ export class TicketCreateComponent implements OnInit {
     ticketTypeId: [null, [Validators.required]],
     promoCodeId: [],
     promotorId: [],
-    orderId: [],
-    ticketPrice: []
+    orderId: [null, [Validators.required]],
+    ticketPrice: [null, [Validators.required]],
+    ticketDiscount: [0, [Validators.required]],
   });
-
 
   constructor(
     protected dataUtils: JhiDataUtils,
@@ -53,8 +53,7 @@ export class TicketCreateComponent implements OnInit {
     protected elementRef: ElementRef,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadTicketTypes();
@@ -104,7 +103,7 @@ export class TicketCreateComponent implements OnInit {
 
   private loadTicketTypes(): void {
     this.ticketTypeService
-      .query({filter: 'ticket-is-null'})
+      .query({ filter: 'ticket-is-null' })
       .pipe(
         map((res: HttpResponse<ITicketType[]>) => {
           return res.body || [];
@@ -139,7 +138,8 @@ export class TicketCreateComponent implements OnInit {
   }
 
   private loadPromotors(): void {
-    this.promotorsService.query()
+    this.promotorsService
+      .query()
       .pipe(
         map((res: HttpResponse<IPromotor[]>) => {
           return res.body || [];
@@ -151,6 +151,7 @@ export class TicketCreateComponent implements OnInit {
   }
 
   private createFromForm(): TicketCreate {
+    const ticketDiscountVal = this.editForm.get(['ticketDiscount'])!.value || 0;
     return {
       ...new TicketCreate(),
       guestId: this.editForm.get(['guestId'])!.value,
@@ -159,6 +160,7 @@ export class TicketCreateComponent implements OnInit {
       promotorId: this.editForm.get(['promotorId'])!.value,
       orderId: this.editForm.get(['orderId'])!.value,
       ticketPrice: this.editForm.get(['ticketPrice'])!.value,
+      ticketDiscount: ticketDiscountVal,
     };
   }
 

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,7 +63,7 @@ class OrderImportJobITTest {
 
         OrderRecord orderRecord = new OrderRecord("X", "Y",
             "email@email.com", "Karnet2",
-            productId, "3", promoCode, "4.23", "Note");
+            productId, "3", promoCode, BigDecimal.valueOf(200L), BigDecimal.valueOf(99.5), "Note");
 
         //when
         OrderImportResult importResult = orderImportJob.processRecord(orderRecord);
@@ -101,7 +102,7 @@ class OrderImportJobITTest {
         String productId = "2";
         OrderRecord orderRecord = new OrderRecord("X", "Y",
             "email@email.com", "Karnet2",
-            productId, "3", promoCode, "4.23", "Note");
+            productId, "3", promoCode, BigDecimal.valueOf(200L), BigDecimal.valueOf(99.5), "Note");
 
         //when
         OrderImportResult importResult = orderImportJob.processRecord(orderRecord);
@@ -137,10 +138,10 @@ class OrderImportJobITTest {
 
         String orderId = "3";
         GuestDTO guest = guestService.save(createGuest("X", "Y", "email@email.com"));
-        TicketDTO ticket = ticketService.create(ticketCreateDTO(guest.getId(), ticketType.getId(), orderId));
+        TicketDTO ticket = ticketService.create(ticketCreateDTO(guest.getId(), ticketType.getId(), orderId, 200.0, 99.5));
 
         OrderRecord orderRecord = new OrderRecord("X", "Y",
-            "email@email.com", "Karnet2", productId, orderId, "s", "4.23", "Note");
+            "email@email.com", "Karnet2", productId, orderId, "s", BigDecimal.valueOf(200L), BigDecimal.valueOf(99.5), "Note");
 
         //when
         OrderImportResult importResult = orderImportJob.processRecord(orderRecord);
@@ -192,12 +193,14 @@ class OrderImportJobITTest {
             .build();
     }
 
-    private TicketCreateDTO ticketCreateDTO(Long guestId, Long ticketTypeId, String orderId) {
+    private TicketCreateDTO ticketCreateDTO(Long guestId, Long ticketTypeId, String orderId, Double price, Double discountPln) {
         return TicketCreateDTO
             .builder()
             .guestId(guestId)
             .ticketTypeId(ticketTypeId)
             .orderId(orderId)
+            .ticketPrice(BigDecimal.valueOf(price))
+            .ticketDiscount(BigDecimal.valueOf(discountPln))
             .build();
     }
 

@@ -1,7 +1,7 @@
-import {Moment} from 'moment';
-import {IGuest} from './guest.model';
-import {ITicketType} from './ticket-type.model';
-import {IPromotor} from './promotor.model';
+import { Moment } from 'moment';
+import { IGuest } from './guest.model';
+import { ITicketType } from './ticket-type.model';
+import { IPromotor } from './promotor.model';
 
 export interface ITicket {
   id?: number;
@@ -17,7 +17,8 @@ export interface ITicket {
   disabledAt?: Moment;
   ticketTypeId?: number;
   promoCodeId?: number;
-  ticketPrice?: string;
+  ticketPrice?: number;
+  ticketDiscount?: number;
   guestId?: number;
   orderId?: string;
 }
@@ -36,7 +37,8 @@ export class Ticket implements ITicket {
     public createdAt?: Moment,
     public disabledAt?: Moment,
     public ticketTypeId?: number,
-    public ticketPrice?: string,
+    public ticketPrice?: number,
+    public ticketDiscount?: number,
     public promoCodeId?: number,
     public guestId?: number,
     public orderId?: string
@@ -48,13 +50,13 @@ export class Ticket implements ITicket {
 export class TicketCreate {
   constructor(
     public ticketTypeId?: number,
-    public ticketPrice?: string,
+    public ticketPrice?: number,
+    public ticketDiscount?: number,
     public promoCodeId?: number,
     public guestId?: number,
     public promotorId?: number,
     public orderId?: string
-  ) {
-  }
+  ) {}
 }
 
 export enum VerificationStatus {

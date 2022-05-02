@@ -29,7 +29,7 @@
 
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_orderId">Order Id</label>
+                    <label class="form-control-label" for="field_orderId">Order Id*</label>
                     <input class="form-control" formControlName="orderId" id="field_orderId" name="orderId"
                            type="text"/>
                     <label class="form-check-label" for="field_orderId">Any value for order identification</label>
@@ -45,11 +45,25 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_ticketPrice">Ticket price (zł)*</label>
                     <input class="form-control" formControlName="ticketPrice" id="field_ticketPrice" name="ticketPrice"
-                           type="text"/>
-                    <label class="form-check-label" for="field_ticketPrice">0 or -1 if uknown</label>
+                           type="number"/>
+                    <label class="form-check-label" for="field_ticketPrice">-1 if uknown</label>
                     <div
                         *ngIf="editForm.get('ticketPrice')!.invalid && (editForm.get('ticketPrice')!.dirty || editForm.get('ticketPrice')!.touched)">
                         <small *ngIf="editForm.get('ticketPrice')?.errors?.required"
+                               class="form-text text-danger">
+                            This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_ticketDiscount">Ticket discount (zł)*</label>
+                    <input class="form-control" formControlName="ticketDiscount" id="field_ticketDiscount"
+                           name="ticketDiscount"
+                           type="number" value="0"/>
+                    <div
+                        *ngIf="editForm.get('ticketDiscount')!.invalid && (editForm.get('ticketDiscount')!.dirty || editForm.get('ticketDiscount')!.touched)">
+                        <small *ngIf="editForm.get('ticketDiscount')?.errors?.required"
                                class="form-text text-danger">
                             This field is required.
                         </small>

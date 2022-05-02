@@ -6,7 +6,6 @@ import eu.cybershu.repository.PromotorRepository;
 import eu.cybershu.service.PromotorService;
 import eu.cybershu.service.dto.PromotorDTO;
 import eu.cybershu.service.mapper.PromotorMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -97,7 +97,7 @@ public class PromotorResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Promotor createUpdatedEntity(EntityManager em) {
-        Promotor promotor = new Promotor()
+        return new Promotor()
             .name(UPDATED_NAME)
             .lastName(UPDATED_LAST_NAME)
             .email(UPDATED_EMAIL)
@@ -105,7 +105,6 @@ public class PromotorResourceIT {
             .notes(UPDATED_NOTES)
             .createdAt(UPDATED_CREATED_AT)
             .enabled(UPDATED_ENABLED);
-        return promotor;
     }
 
     @BeforeEach
@@ -237,7 +236,7 @@ public class PromotorResourceIT {
             .andExpect(jsonPath("$.[*].createdAt").value(hasItem(DEFAULT_CREATED_AT.toString())))
             .andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getPromotor() throws Exception {

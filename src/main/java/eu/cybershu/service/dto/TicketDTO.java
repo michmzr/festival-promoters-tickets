@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -33,22 +34,35 @@ public class TicketDTO implements Serializable {
     private byte[] ticketFile;
 
     private String ticketFileContentType;
+
     @NotNull
     private Boolean enabled;
 
     private Instant createdAt;
-
     private Instant disabledAt;
-
     private Instant validatedAt;
 
-    private String ticketPrice;
+    /**
+     * Ticket price paid by guest
+     */
+    private BigDecimal ticketPrice;
+
+    /**
+     * Ticket discount in PLN
+     */
+    private BigDecimal ticketDiscount;
 
     @NotNull
     private Long ticketTypeId;
 
+    /**
+     * Promo code used for getting discount - it identifies promotor
+     */
     private Long promoCodeId;
 
+    /**
+     * Order id - any string which can represent order number
+     */
     @NotNull
     private String orderId;
 

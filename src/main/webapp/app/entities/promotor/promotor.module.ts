@@ -10,6 +10,7 @@ import { promotorRoute } from './promotor.route';
 import { PromotorCreateComponent } from './promotor-create.component';
 import { PromotorPromoNewCodesFormComponent } from './promo-code/promotor-promo-new-codes-form.component';
 import { PromotorPromoCodeComponent } from './promo-code/promotor-promo-code.component';
+import { PromotorTicketsRaportComponent } from './promotor-tickets-raport.component';
 
 @NgModule({
   imports: [OrganicPromoTicketsSharedModule, RouterModule.forChild(promotorRoute)],
@@ -21,6 +22,7 @@ import { PromotorPromoCodeComponent } from './promo-code/promotor-promo-code.com
     PromotorDeleteDialogComponent,
     PromotorPromoNewCodesFormComponent,
     PromotorPromoCodeComponent,
+    PromotorTicketsRaportComponent,
   ],
   entryComponents: [PromotorDeleteDialogComponent],
 })

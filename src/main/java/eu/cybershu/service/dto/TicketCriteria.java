@@ -35,6 +35,9 @@ public class TicketCriteria implements Serializable, Criteria {
 
     private LongFilter promoCodeId;
 
+
+    private LongFilter promotorId;
+
     private LongFilter guestId;
 
     public TicketCriteria() {
@@ -49,6 +52,7 @@ public class TicketCriteria implements Serializable, Criteria {
         this.disabledAt = other.disabledAt == null ? null : other.disabledAt.copy();
         this.ticketTypeId = other.ticketTypeId == null ? null : other.ticketTypeId.copy();
         this.promoCodeId = other.promoCodeId == null ? null : other.promoCodeId.copy();
+        this.promotorId = other.promotorId == null ? null : other.promotorId.copy();
         this.guestId = other.guestId == null ? null : other.guestId.copy();
     }
 
@@ -129,6 +133,13 @@ public class TicketCriteria implements Serializable, Criteria {
         this.guestId = guestId;
     }
 
+    public LongFilter getPromotorId() {
+        return promotorId;
+    }
+
+    public void setPromotorId(LongFilter promotorId) {
+        this.promotorId = promotorId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -148,6 +159,7 @@ public class TicketCriteria implements Serializable, Criteria {
                 Objects.equals(disabledAt, that.disabledAt) &&
                 Objects.equals(ticketTypeId, that.ticketTypeId) &&
                 Objects.equals(promoCodeId, that.promoCodeId) &&
+                Objects.equals(promotorId, that.promotorId) &&
                 Objects.equals(guestId, that.guestId);
     }
 
@@ -162,6 +174,7 @@ public class TicketCriteria implements Serializable, Criteria {
             disabledAt,
             ticketTypeId,
             promoCodeId,
+            promotorId,
             guestId
         );
     }
@@ -178,6 +191,7 @@ public class TicketCriteria implements Serializable, Criteria {
             (disabledAt != null ? "disabledAt=" + disabledAt + ", " : "") +
             (ticketTypeId != null ? "ticketTypeId=" + ticketTypeId + ", " : "") +
             (promoCodeId != null ? "promoCodeId=" + promoCodeId + ", " : "") +
+            (promotorId != null ? "promotorId=" + promotorId + ", " : "") +
             (guestId != null ? "guestId=" + guestId + ", " : "") +
             "}";
     }

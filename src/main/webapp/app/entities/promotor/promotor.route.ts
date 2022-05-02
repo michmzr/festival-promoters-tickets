@@ -12,6 +12,7 @@ import { PromotorComponent } from './promotor.component';
 import { PromotorDetailComponent } from './promotor-detail.component';
 import { PromotorUpdateComponent } from './promotor-update.component';
 import { PromotorCreateComponent } from './promotor-create.component';
+import { PromotorTicketsRaportComponent } from './promotor-tickets-raport.component';
 
 @Injectable({ providedIn: 'root' })
 export class PromotorResolve implements Resolve<IPromotor> {
@@ -78,6 +79,18 @@ export const promotorRoute: Routes = [
     data: {
       authorities: [Authority.USER],
       pageTitle: 'Promotors',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: ':id/raport',
+    component: PromotorTicketsRaportComponent,
+    resolve: {
+      promotor: PromotorResolve,
+    },
+    data: {
+      authorities: [Authority.USER],
+      pageTitle: 'Promotor tickets raport',
     },
     canActivate: [UserRouteAccessService],
   },

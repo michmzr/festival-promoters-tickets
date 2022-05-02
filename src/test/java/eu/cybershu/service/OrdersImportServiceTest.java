@@ -2,11 +2,9 @@ package eu.cybershu.service;
 
 import eu.cybershu.service.dto.*;
 import lombok.SneakyThrows;
-import org.apache.commons.csv.CSVRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
@@ -36,13 +34,11 @@ class OrdersImportServiceTest {
         MultipartFile inputFile = loadFile("data/orders/woocommerce_valid_file01.csv");
 
         //when
-        given(orderImportJob.processRecord(any())).willAnswer(new Answer<OrderImportResult>() {
-            @Override
-            public OrderImportResult answer(InvocationOnMock invocation) throws Throwable {
+        given(orderImportJob.processRecord(any()))
+            .willAnswer((Answer<OrderImportResult>) invocation -> {
                 Object[] args = invocation.getArguments();
-                return mockImported((CSVRecord) args[0]);
-            }
-        });
+                return mockImported((OrderRecord) args[0]);
+            });
         OrdersImportResult result = ordersImportService.loadRecords(inputFile);
 
         //then
@@ -69,7 +65,7 @@ class OrdersImportServiceTest {
         //then
         verifyNoInteractions(orderImportJob);
 
-        assertThat(result.getResults()).isEmpty();
+        assertThat(result.getResults()).hasSize(0);
         assertThat(result.getImported()).isEqualTo(0);
         assertThat(result.getFailed()).isEqualTo(2);
 
@@ -85,13 +81,11 @@ class OrdersImportServiceTest {
         return new MockMultipartFile(path, fileInputStream);
     }
 
-    OrderImportResult mockImported(CSVRecord csvRecord) {
+    OrderImportResult mockImported(OrderRecord orderRecord) {
         OrderImportResult importResult = new OrderImportResult();
 
         importResult.setProcessed(true);
-        importResult.setOrderRecord(
-            OrderRecord.fromCSVRecord(csvRecord)
-        );
+        importResult.setOrderRecord(orderRecord);
         importResult.setValidation(ValidationResult.ok());
         importResult.setGuest(mock(GuestDTO.class));
         importResult.setTicket(mock(TicketDTO.class));

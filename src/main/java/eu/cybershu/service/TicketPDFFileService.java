@@ -35,7 +35,7 @@ public class TicketPDFFileService {
     public TicketPDFFileService(
         @Value("${application.tickets.templateDir:/templates/ticket}")
             String templatesDir,
-        @Value("${application.tickets.templateFileName:ticket-pdf-template}")
+        @Value("${application.tickets.templateFileName:/ticket-pdf-template}")
             String templateFileName) {
         this.templatesDir = templatesDir;
         this.templateFileName = templateFileName;

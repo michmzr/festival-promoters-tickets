@@ -19,7 +19,6 @@
         <span>No tickets found</span>
     </div>
 
-
     <div class="table-responsive" id="entities" *ngIf="tickets && tickets.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
@@ -30,6 +29,9 @@
                 <th scope="col"><span>Created At</span></th>
                 <th scope="col"><span>Disabled At</span></th>
                 <th scope="col"><span>Ticket Type</span></th>
+                <th scope="col"><span>Ticket price (PLN) paid by guest</span></th>
+                <th scope="col"><span>Ticket discount (PLN)</span></th>
+                <th scope="col"><span>Full ticket price without discount</span></th>
                 <th scope="col"><span>Promo Code</span></th>
                 <th scope="col"></th>
             </tr>
@@ -46,6 +48,11 @@
                         <a [routerLink]="['/ticket-type', ticket.ticketTypeId , 'view']">
                             {{ ticketTypeDesc(ticket.ticketTypeId) }}</a>
                     </div>
+                </td>
+                <td>{{ticket.ticketPrice}} zł</td>
+                <td>{{ticket.ticketDiscount}} zł</td>
+                <td>{{(ticket.ticketPrice ? ticket.ticketPrice : 0) + (ticket.ticketDiscount ? ticket.ticketDiscount :
+                    0)}} zł
                 </td>
                 <td>
                     <div *ngIf="ticket.promoCodeId">

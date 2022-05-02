@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "ticketType", "created_at"})
 @Table(name = "ticket")
 @ToString(of = {"id", "uuid", "ticketType", "orderId", "createdAt"})
 public class Ticket implements Serializable {
@@ -59,8 +61,17 @@ public class Ticket implements Serializable {
     @ManyToOne
     private TicketType ticketType;
 
-    @Column(name = "ticket_price")
-    private String ticketPrice;
+    /**
+     * Ticket price paid by guest in PLN
+     */
+    @Column(name = "ticket_price", precision = 6, scale = 2)
+    private BigDecimal ticketPrice;
+
+    /**
+     * Discount value in PLN
+     */
+    @Column(name = "ticket_discount", precision = 6, scale = 2)
+    private BigDecimal ticketDiscount = new BigDecimal(0);
 
     @NotNull
     @Column(name = "order_id")
@@ -71,7 +82,7 @@ public class Ticket implements Serializable {
     private PromoCode promoCode;
 
     @OneToOne
-    @JoinColumn(nullable = true)
+    @JoinColumn
     private Promotor promotor;
 
     @OneToOne
@@ -258,12 +269,26 @@ public class Ticket implements Serializable {
         return enabled;
     }
 
-    public String getTicketPrice() {
+    public BigDecimal getTicketPrice() {
         return ticketPrice;
     }
 
     public void setTicketPrice(String ticketPrice) {
+        this.ticketPrice = new BigDecimal(ticketPrice);
+    }
+
+    public void setTicketPrice(BigDecimal ticketPrice) {
         this.ticketPrice = ticketPrice;
+    }
+
+    public Ticket ticketPrice(String ticketPrice) {
+        this.ticketPrice = BigDecimal.valueOf(Double.parseDouble(ticketPrice));
+        return this;
+    }
+
+    public Ticket ticketPrice(Double ticketPrice) {
+        this.ticketPrice = BigDecimal.valueOf(ticketPrice);
+        return this;
     }
 
     public Promotor getPromotor() {
@@ -272,6 +297,51 @@ public class Ticket implements Serializable {
 
     public void setPromotor(Promotor promotor) {
         this.promotor = promotor;
+    }
+
+
+    public BigDecimal getTicketDiscount() {
+        return ticketDiscount;
+    }
+
+    public void setTicketDiscount(BigDecimal ticketDiscount) {
+        this.ticketDiscount = ticketDiscount;
+    }
+
+    public Ticket ticketDiscount(BigDecimal ticketDiscount) {
+        this.ticketDiscount = ticketDiscount;
+        return this;
+    }
+
+    public Ticket ticketDiscount(String ticketDiscount) {
+        this.ticketDiscount = BigDecimal.valueOf(Double.parseDouble(ticketDiscount));
+        return this;
+    }
+
+    public Ticket ticketDiscount(Double ticketDiscount) {
+        this.ticketDiscount = BigDecimal.valueOf(ticketDiscount);
+        return this;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Ticket orderId(String orderId) {
+        this.orderId = orderId;
+        return this;
+    }
+
+    public Instant getValidatedAt() {
+        return validatedAt;
+    }
+
+    public void setValidatedAt(Instant validatedAt) {
+        this.validatedAt = validatedAt;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Slf4j
 @Data
@@ -20,8 +20,10 @@ import javax.validation.constraints.NotNull;
 public class OrderRecord {
     @NotNull
     private String guestName;
+
     @NotNull
     private String guestLastName;
+
     @NotNull
     @Email
     private String guestEmail;
@@ -36,13 +38,15 @@ public class OrderRecord {
 
     private String couponCode;
 
-    @NotEmpty
-    private String price;
+    @NotNull
+    private BigDecimal price;
+
+    @NotNull
+    private BigDecimal discountPln = BigDecimal.ZERO;
 
     private String note;
 
     public static OrderRecord fromCSVRecord(CSVRecord csvRecord) {
-
         return OrderRecord
             .builder()
             .guestName(getOrDefault(csvRecord, OrderCSVFileFields.BILLING_FIRST_NAME.getFieldName(), ""))
@@ -52,9 +56,15 @@ public class OrderRecord {
             .productName(csvRecord.get(OrderCSVFileFields.PRODUCT_NAME.getFieldName()))
             .orderId(csvRecord.get(OrderCSVFileFields.ORDER_ID.getFieldName()))
             .couponCode(getOrDefault(csvRecord, OrderCSVFileFields.COUPON_CODE.getFieldName(), null))
-            .price(csvRecord.get(OrderCSVFileFields.ORDER_TOTAL.getFieldName()))
+            .price(stringToBigDecimal(csvRecord.get(OrderCSVFileFields.ORDER_TOTAL.getFieldName())))
+            .discountPln(stringToBigDecimal(csvRecord.get(OrderCSVFileFields.DISCOUNT_PRICE.getFieldName())))
             .note(csvRecord.get(OrderCSVFileFields.CUSTOMER_NOTE.getFieldName()))
             .build();
+    }
+
+    private static BigDecimal stringToBigDecimal(String val) {
+        val = val.replace(",", ".");
+        return BigDecimal.valueOf(Double.valueOf(val));
     }
 
     static String getOrDefault(CSVRecord csvRecord, String fieldName, String defaultValue) {
@@ -64,5 +74,4 @@ public class OrderRecord {
             return defaultValue;
         }
     }
-
 }

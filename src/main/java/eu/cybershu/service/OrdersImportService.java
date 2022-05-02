@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,17 +52,25 @@ public class OrdersImportService {
                 long imported = 0;
                 long failed = 0;
                 for (CSVRecord csvRecord : csvRecords) {
-                    OrderImportResult importResult = orderImportJob.processRecord(
-                        OrderRecord.fromCSVRecord(csvRecord));
+                    OrderImportResult importResult;
+
+                    try {
+                        importResult = orderImportJob.processRecord(
+                            OrderRecord.fromCSVRecord(csvRecord));
+                    } catch (IllegalArgumentException e) {
+                        log.error("Catched IAE when importing line: {}", csvRecord, e);
+                        importResult = OrderImportResult.builder()
+                            .messages(Set.of(e.getMessage()))
+                            .build();
+                    }
 
                     ordersImportResult
                         .getResults().add(importResult);
+                    log.debug("-> import result: {}", importResult);
 
                     if (importResult.success()) {
                         imported++;
-                    }
-
-                    if (importResult.failed()) {
+                    } else {
                         failed++;
                     }
                 }
@@ -74,7 +83,7 @@ public class OrdersImportService {
                 ordersImportResult.setImported(0L);
                 ordersImportResult.setFailed((long) csvParser.getRecords().size());
                 ordersImportResult.setErrors(headerValidation.messages);
-                ordersImportResult.setResults(Collections.emptySet());
+                ordersImportResult.setResults(Collections.emptyList());
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV file: " + e.getMessage());
@@ -84,10 +93,9 @@ public class OrdersImportService {
     }
 
     private ValidationResult validateHeader(CSVParser csvParser) {
-
         List<String> fileHeaderNames = csvParser.getHeaderNames();
 
-        if (expectedColumns.containsAll(fileHeaderNames)) {
+        if (fileHeaderNames.containsAll(expectedColumns)) {
             return ValidationResult.ok();
         } else {
             ValidationResult validationResult = new ValidationResult();
