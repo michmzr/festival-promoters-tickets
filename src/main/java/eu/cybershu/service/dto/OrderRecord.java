@@ -57,13 +57,14 @@ public class OrderRecord {
             .orderId(csvRecord.get(OrderCSVFileFields.ORDER_ID.getFieldName()))
             .couponCode(getOrDefault(csvRecord, OrderCSVFileFields.COUPON_CODE.getFieldName(), null))
             .price(stringToBigDecimal(csvRecord.get(OrderCSVFileFields.ORDER_TOTAL.getFieldName())))
-            .discountPln(stringToBigDecimal(OrderCSVFileFields.DISCOUNT_PRICE.getFieldName()))
+            .discountPln(stringToBigDecimal(csvRecord.get(OrderCSVFileFields.DISCOUNT_PRICE.getFieldName())))
             .note(csvRecord.get(OrderCSVFileFields.CUSTOMER_NOTE.getFieldName()))
             .build();
     }
 
     private static BigDecimal stringToBigDecimal(String val) {
-        return BigDecimal.valueOf(Double.parseDouble(val));
+        val = val.replace(",", ".");
+        return BigDecimal.valueOf(Double.valueOf(val));
     }
 
     static String getOrDefault(CSVRecord csvRecord, String fieldName, String defaultValue) {
@@ -72,9 +73,5 @@ public class OrderRecord {
         } else {
             return defaultValue;
         }
-    }
-
-    public BigDecimal getOrderDiscount() {
-        return null;
     }
 }

@@ -273,25 +273,6 @@ public class TicketResourceIT {
         assertThat(ticketList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Test
-    @Transactional
-    public void checkCreatedAtIsRequired() throws Exception {
-        int databaseSizeBeforeTest = ticketRepository.findAll().size();
-        // set the field null
-        ticket.setCreatedAt(null);
-
-        // Create the Ticket, which fails.
-        TicketDTO ticketDTO = ticketMapper.toDto(ticket);
-
-
-        restTicketMockMvc.perform(post("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeTest);
-    }
 
     @Test
     @Transactional
@@ -360,33 +341,6 @@ public class TicketResourceIT {
 
         defaultTicketShouldBeFound("id.lessThanOrEqual=" + id);
         defaultTicketShouldNotBeFound("id.lessThan=" + id);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllTicketsByUuidIsEqualToSomething() throws Exception {
-        // Initialize the database
-        ticketRepository.saveAndFlush(ticket);
-
-        // Get all the ticketList where uuid equals to DEFAULT_UUID
-        defaultTicketShouldBeFound("uuid.equals=" + DEFAULT_UUID);
-
-        // Get all the ticketList where uuid equals to UPDATED_UUID
-        defaultTicketShouldNotBeFound("uuid.equals=" + UPDATED_UUID);
-    }
-
-    @Test
-    @Transactional
-    public void getAllTicketsByUuidIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        ticketRepository.saveAndFlush(ticket);
-
-        // Get all the ticketList where uuid not equals to DEFAULT_UUID
-        defaultTicketShouldNotBeFound("uuid.notEquals=" + DEFAULT_UUID);
-
-        // Get all the ticketList where uuid not equals to UPDATED_UUID
-        defaultTicketShouldBeFound("uuid.notEquals=" + UPDATED_UUID);
     }
 
     @Test
@@ -760,56 +714,6 @@ public class TicketResourceIT {
         // Get the ticket
         restTicketMockMvc.perform(get("/api/tickets/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Transactional
-    public void updateTicket() throws Exception {
-        // Initialize the database
-        ticketRepository.saveAndFlush(ticket);
-
-        int databaseSizeBeforeUpdate = ticketRepository.findAll().size();
-
-        // Update the ticket
-        Ticket updatedTicket = ticketRepository.findById(ticket.getId()).get();
-        // Disconnect from session so that the updates on updatedTicket are not directly saved in db
-        em.detach(updatedTicket);
-        updatedTicket
-            .uuid(UPDATED_UUID)
-            .orderId(UPDATED_TICKET_ORDER_ID)
-            .ticketPrice(UPDATED_TICKET_PRICE)
-            .ticketDiscount(UPDATED_TICKET_DISCOUNT)
-            .ticketUrl(UPDATED_TICKET_URL)
-            .ticketQR(UPDATED_TICKET_QR)
-            .ticketQRContentType(UPDATED_TICKET_QR_CONTENT_TYPE)
-            .ticketFile(UPDATED_TICKET_FILE)
-            .ticketFileContentType(UPDATED_TICKET_FILE_CONTENT_TYPE)
-            .enabled(UPDATED_ENABLED)
-            .createdAt(UPDATED_CREATED_AT)
-            .disabledAt(UPDATED_DISABLED_AT);
-        TicketDTO ticketDTO = ticketMapper.toDto(updatedTicket);
-
-        restTicketMockMvc.perform(put("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isOk());
-
-        // Validate the Ticket in the database
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeUpdate);
-        Ticket testTicket = ticketList.get(ticketList.size() - 1);
-        assertThat(testTicket.getUuid()).isEqualTo(UPDATED_UUID);
-        assertThat(testTicket.getOrderId()).isEqualTo(UPDATED_TICKET_ORDER_ID);
-        assertThat(testTicket.getTicketPrice()).isEqualTo(UPDATED_TICKET_PRICE);
-        assertThat(testTicket.getTicketDiscount()).isEqualTo(UPDATED_TICKET_DISCOUNT);
-        assertThat(testTicket.getTicketUrl()).isEqualTo(UPDATED_TICKET_URL);
-        assertThat(testTicket.getTicketQR()).isEqualTo(UPDATED_TICKET_QR);
-        assertThat(testTicket.getTicketQRContentType()).isEqualTo(UPDATED_TICKET_QR_CONTENT_TYPE);
-        assertThat(testTicket.getTicketFile()).isEqualTo(UPDATED_TICKET_FILE);
-        assertThat(testTicket.getTicketFileContentType()).isEqualTo(UPDATED_TICKET_FILE_CONTENT_TYPE);
-        assertThat(testTicket.isEnabled()).isEqualTo(UPDATED_ENABLED);
-        assertThat(testTicket.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testTicket.getDisabledAt()).isEqualTo(UPDATED_DISABLED_AT);
     }
 
     @Test

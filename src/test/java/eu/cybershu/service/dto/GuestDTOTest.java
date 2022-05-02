@@ -1,6 +1,8 @@
 package eu.cybershu.service.dto;
 
 import eu.cybershu.web.rest.TestUtil;
+import lombok.RequiredArgsConstructor;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +24,26 @@ public class GuestDTOTest {
         assertThat(guestDTO1).isNotEqualTo(guestDTO2);
         guestDTO1.setId(null);
         assertThat(guestDTO1).isNotEqualTo(guestDTO2);
+    }
+
+    @RequiredArgsConstructor(staticName = "assertThat")
+    public static class GuestDTOAssert {
+        private final GuestDTO actual;
+
+        public GuestDTOAssert hasName(String name) {
+            Assertions.assertThat(actual.getName()).isEqualTo(name);
+            return this;
+        }
+
+        public GuestDTOAssert hasLastName(String lastName) {
+            Assertions.assertThat(actual.getLastName()).isEqualTo(lastName);
+            return this;
+        }
+
+        public GuestDTOAssert hasEmail(String email) {
+            Assertions.assertThat(actual.getEmail()).isEqualTo(email);
+            return this;
+        }
     }
 }
 

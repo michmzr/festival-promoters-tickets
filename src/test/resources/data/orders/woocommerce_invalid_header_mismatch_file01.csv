@@ -1,3 +1,3 @@
-Order ID,Coupon Code,User Email,Product Name,Product ID
-371,,janusz-znizka-100-zl,michmzr@gmail.com,"Karnet Janusza",370
-368,,p2e56r5r,355
+Order ID,User Email          ,Product Name     ,Product ID
+371     ,janusz-znizka-100-zl,michmzr@gmail.com,Karnet Janusza
+368     ,p2e56r5r            ,355              ,

@@ -34,23 +34,35 @@ public class TicketDTO implements Serializable {
     private byte[] ticketFile;
 
     private String ticketFileContentType;
+
     @NotNull
     private Boolean enabled;
 
     private Instant createdAt;
-
     private Instant disabledAt;
-
     private Instant validatedAt;
 
+    /**
+     * Ticket price paid by guest
+     */
     private BigDecimal ticketPrice;
+
+    /**
+     * Ticket discount in PLN
+     */
     private BigDecimal ticketDiscount;
 
     @NotNull
     private Long ticketTypeId;
 
+    /**
+     * Promo code used for getting discount - it identifies promotor
+     */
     private Long promoCodeId;
 
+    /**
+     * Order id - any string which can represent order number
+     */
     @NotNull
     private String orderId;
 

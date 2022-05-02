@@ -75,7 +75,7 @@ public class OrderImportJob {
         ticketCreateDTO.setGuestId(guestDTO.getId());
         ticketCreateDTO.setOrderId(orderRecord.getOrderId());
         ticketCreateDTO.setTicketPrice(orderRecord.getPrice());
-        ticketCreateDTO.setTicketDiscount(orderRecord.getOrderDiscount());
+        ticketCreateDTO.setTicketDiscount(orderRecord.getDiscountPln());
 
         //PromoCode
         String promoCode = orderRecord.getCouponCode();

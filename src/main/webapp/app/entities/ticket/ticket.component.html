@@ -30,8 +30,9 @@
                 <th scope="col"><span>Created At</span></th>
                 <th scope="col"><span>Disabled At</span></th>
                 <th scope="col"><span>Ticket Type</span></th>
-                <th scope="col"><span>Ticket price (PLN)</span></th>
+                <th scope="col"><span>Ticket price (PLN) paid by guest</span></th>
                 <th scope="col"><span>Ticket discount (PLN)</span></th>
+                <th scope="col"><span>Full ticket price without discount</span></th>
                 <th scope="col"><span>Promo Code</span></th>
                 <th scope="col"></th>
             </tr>
@@ -49,9 +50,9 @@
                             {{ ticketTypeDesc(ticket.ticketTypeId) }}</a>
                     </div>
                 </td>
-                <td>{{ticket.ticketPrice}}</td>
-                <td>{{ticket.ticketDiscount}}</td>
-                <td></td>
+                <td>{{ticket.ticketPrice}} zł</td>
+                <td>{{ticket.ticketDiscount}} zł</td>
+                <td>{{ticket.ticketPrice + ticket.ticketDiscount}} zł</td>
                 <td>
                     <div *ngIf="ticket.promoCodeId">
                         <a [routerLink]="['/promo-code',ticket.promoCodeId  , 'view']">
