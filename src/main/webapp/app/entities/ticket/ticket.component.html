@@ -19,7 +19,6 @@
         <span>No tickets found</span>
     </div>
 
-
     <div class="table-responsive" id="entities" *ngIf="tickets && tickets.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
@@ -52,7 +51,9 @@
                 </td>
                 <td>{{ticket.ticketPrice}} zł</td>
                 <td>{{ticket.ticketDiscount}} zł</td>
-                <td>{{ticket.ticketPrice + ticket.ticketDiscount}} zł</td>
+                <td>{{(ticket.ticketPrice ? ticket.ticketPrice : 0) + (ticket.ticketDiscount ? ticket.ticketDiscount :
+                    0)}} zł
+                </td>
                 <td>
                     <div *ngIf="ticket.promoCodeId">
                         <a [routerLink]="['/promo-code',ticket.promoCodeId  , 'view']">

@@ -5,6 +5,15 @@
 
             <hr>
 
+            <div>
+                <button [routerLink]="['/promotor', promotor.id, 'raport']"
+                        class="btn btn-primary btn-sm"
+                        type="submit">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline">Tickets raport</span>
+                </button>
+            </div>
+
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">

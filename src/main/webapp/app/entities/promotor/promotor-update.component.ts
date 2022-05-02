@@ -10,10 +10,6 @@ import { PromotorService } from './promotor.service';
 import { IPromoCode } from '../../shared/model/promo-code.model';
 import { PromoCodeService } from '../promo-code/promo-code.service';
 
-export interface Fruit {
-  name: string;
-}
-
 @Component({
   selector: 'jhi-promotor-update',
   templateUrl: './promotor-update.component.html',

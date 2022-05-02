@@ -1,0 +1,74 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="promotor">
+            <h2 id="page-heading">
+                <span>{{promotor.name}} {{promotor.lastName}} {{promotor.email}} tickets raport</span>
+            </h2>
+
+            <hr/>
+
+            <p>Promotor all codes:</p>
+            <ul>
+                <li *ngFor="let promo of promotor.promoCodes; let i = index">
+                    <jhi-promotor-promo-code [promoCode]="promo"></jhi-promotor-promo-code>
+                </li>
+            </ul>
+
+            <div *ngIf="tickets && tickets.length > 0" class="table-responsive" id="entities">
+                <table aria-describedby="page-heading" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col"><span>ID</span></th>
+                        <th scope="col"><span>Uuid</span></th>
+                        <th scope="col"><span>Enabled</span></th>
+                        <th scope="col"><span>Created At</span></th>
+                        <th scope="col"><span>Disabled At</span></th>
+                        <th scope="col"><span>Ticket Type</span></th>
+                        <th scope="col"><span>Ticket price (PLN) paid by guest</span></th>
+                        <th scope="col"><span>Ticket discount (PLN)</span></th>
+                        <th scope="col"><span>Full ticket price without discount</span></th>
+                        <th scope="col"><span>Promo Code</span></th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let ticket of tickets">
+                        <td><a [routerLink]="['/ticket', ticket.id, 'view']">#{{ ticket.id }}</a></td>
+                        <td>{{ ticket.uuid }}</td>
+                        <td>{{ ticket.enabled }}</td>
+                        <td>{{ ticket.createdAt | date:'medium' }}</td>
+                        <td>{{ ticket.disabledAt | date:'medium' }}</td>
+                        <td>
+                            <div *ngIf="ticket.ticketTypeId">
+                                <a [routerLink]="['/ticket-type', ticket.ticketTypeId , 'view']">
+                                    {{ ticketTypeDesc(ticket.ticketTypeId) }}</a>
+                            </div>
+                        </td>
+                        <td>{{ticket.ticketPrice}} zł</td>
+                        <td>{{ticket.ticketDiscount}} zł</td>
+                        <td>{{(ticket.ticketPrice ? ticket.ticketPrice : 0) + (ticket.ticketDiscount ?
+                            ticket.ticketDiscount : 0)}} zł
+                        </td>
+                        <td>
+                            <div *ngIf="ticket.promoCodeId">
+                                <a [routerLink]="['/promo-code',ticket.promoCodeId  , 'view']">
+                                    <span>#{{ ticket.promoCodeId }}</span> </a>
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <div class="btn-group" role="group">
+                                <button [routerLink]="['/ticket', ticket.id, 'view']"
+                                        class="btn btn-info btn-sm"
+                                        type="submit">
+                                    <fa-icon icon="eye"></fa-icon>
+                                    <span class="d-none d-md-inline">View</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
