@@ -68,6 +68,7 @@ jobs:
           delay: 30
           justlogin: true
       - run: heroku auth:whoami
-      - run: heroku deploy:jar ./target/organic-promo-tickets.jar -a organic-promo-tickets
+      - run: heroku apps --json
+      - run: heroku deploy:jar ./target/organic-promo-tickets.jar -a ${{ secrets.HEROKU_APP_NAME}}
 
 
