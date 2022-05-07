@@ -4,6 +4,7 @@ import com.google.zxing.WriterException;
 import com.lowagie.text.DocumentException;
 import eu.cybershu.domain.*;
 import eu.cybershu.repository.*;
+import eu.cybershu.service.GuestService;
 import eu.cybershu.service.QRCodeService;
 import eu.cybershu.service.TicketPDFFileService;
 import eu.cybershu.service.TicketService;
@@ -45,6 +46,7 @@ public class TicketServiceImpl implements TicketService {
     private final QRCodeService qrCodeService;
 
     private final GuestRepository guestRepository;
+    private final GuestService guestService;
     private final TicketTypeRepository ticketTypeRepository;
     private final PromotorRepository promotorRepository;
     private final PromoCodeRepository promoCodeRepository;
@@ -56,7 +58,7 @@ public class TicketServiceImpl implements TicketService {
                              QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository,
                              @Value("${application.tickets.domain}") String ticketDomainUrl,
 
-                             GuestRepository guestRepository, TicketPDFFileService ticketPDFFileService) {
+                             GuestRepository guestRepository, GuestService guestService, TicketPDFFileService ticketPDFFileService) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
         this.ticketTypeRepository = ticketTypeRepository;
@@ -65,6 +67,7 @@ public class TicketServiceImpl implements TicketService {
         this.promoCodeRepository = promoCodeRepository;
         this.ticketDomainUrl = ticketDomainUrl;
         this.guestRepository = guestRepository;
+        this.guestService = guestService;
         this.ticketPDFFileService = ticketPDFFileService;
     }
 
@@ -82,21 +85,26 @@ public class TicketServiceImpl implements TicketService {
 
         Ticket ticket = ticketMapper.toEntity(ticketCreateDTO);
 
+        //ticket type
         TicketType ticketType = ticketTypeRepository.getOne(ticketCreateDTO.getTicketTypeId());
         log.debug("Ticket type: {}", ticketType);
         ticket.setTicketType(ticketType);
 
+        //promotor or artist
+        //todo
         Promotor promotor = null;
         if (ticketCreateDTO.getPromotorId() != null) {
             promotor = promotorRepository.getOne(ticketCreateDTO.getPromotorId());
             log.debug("Promotor {}", promotor);
             ticket.setPromotor(promotor);
         }
+        ticket.setArtistName(ticketCreateDTO.getArtistName());
 
         Long guestId = ticketCreateDTO.getGuestId();
         Guest guest = guestRepository.getOne(guestId);
         ticket.setGuest(guest);
 
+        //other fields
         UUID uuid = UUID.randomUUID();
         String ticketUrl = ticketUrl(uuid);
         byte[] ticketQR = generateQrCode(ticketUrl);
@@ -117,6 +125,7 @@ public class TicketServiceImpl implements TicketService {
 
             ticket.setPromoCode(promoCode);
         }
+
 
         ticket.setCreatedAt(Instant.now());
         ticket.setEnabled(true);

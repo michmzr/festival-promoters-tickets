@@ -68,4 +68,6 @@ public class TicketDTO implements Serializable {
 
     @NotNull
     private Long guestId;
+
+    private String artistName;
 }

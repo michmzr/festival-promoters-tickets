@@ -21,6 +21,7 @@ export interface ITicket {
   ticketDiscount?: number;
   guestId?: number;
   orderId?: string;
+  artistName?: string;
 }
 
 export class Ticket implements ITicket {
@@ -40,6 +41,7 @@ export class Ticket implements ITicket {
     public ticketPrice?: number,
     public ticketDiscount?: number,
     public promoCodeId?: number,
+    public artistName?: string,
     public guestId?: number,
     public orderId?: string
   ) {
@@ -55,7 +57,8 @@ export class TicketCreate {
     public promoCodeId?: number,
     public guestId?: number,
     public promotorId?: number,
-    public orderId?: string
+    public orderId?: string,
+    public artistName?: string
   ) {}
 }
 
@@ -72,14 +75,4 @@ export interface ITicketVerificationStatus {
   ticketType?: ITicketType;
   promotor?: IPromotor;
   message?: String;
-}
-
-export class TicketVerificationStatus implements ITicketVerificationStatus {
-  constructor(
-    public status: VerificationStatus,
-    public guest?: IGuest,
-    public ticketType?: ITicketType,
-    public promotor?: IPromotor,
-    public message?: String
-  ) {}
 }

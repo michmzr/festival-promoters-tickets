@@ -24,6 +24,8 @@ public class TicketCreateDTO implements Serializable {
     private Long promotorId;
     private Long promoCodeId;
 
+    private String artistName;
+
     @NotNull
     private Long guestId;
 

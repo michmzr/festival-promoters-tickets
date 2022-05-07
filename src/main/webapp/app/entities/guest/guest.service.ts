@@ -44,6 +44,13 @@ export class GuestService {
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
+  findOrCreate(guest: IGuest): Observable<EntityResponseType> {
+    const copy = this.convertDateFromClient(guest);
+    return this.http
+      .post<IGuest>(`${this.resourceUrl}/findOrCreate`, copy, { observe: 'response' })
+      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }

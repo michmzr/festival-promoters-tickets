@@ -53,6 +53,13 @@
                             {{ticketType.name}}</a>
                     </div>
                 </dd>
+                <dt><span>Artist</span></dt>
+                <dd>
+                    <span *ngIf="ticket.artistName">
+                        {{ticket.artistName}}
+                    </span>
+                    <span *ngIf="!ticket.artistName">-</span>
+                </dd>
                 <dt><span>Promo Code</span></dt>
                 <dd>
                     <div *ngIf="ticket.promoCodeId">

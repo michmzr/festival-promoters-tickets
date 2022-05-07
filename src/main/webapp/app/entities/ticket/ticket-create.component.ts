@@ -13,7 +13,7 @@ import { ITicketType } from 'app/shared/model/ticket-type.model';
 import { TicketTypeService } from 'app/entities/ticket-type/ticket-type.service';
 import { IPromoCode } from 'app/shared/model/promo-code.model';
 import { PromoCodeService } from 'app/entities/promo-code/promo-code.service';
-import { IGuest } from '../../shared/model/guest.model';
+import { Guest, IGuest } from '../../shared/model/guest.model';
 import { GuestService } from '../guest/guest.service';
 import { IPromotor } from '../../shared/model/promotor.model';
 import { PromotorService } from '../promotor/promotor.service';
@@ -28,18 +28,30 @@ export class TicketCreateComponent implements OnInit {
   isSaving = false;
 
   promoCodes: IPromoCode[] = [];
+
+  newGuest!: IGuest;
   guests: IGuest[] = [];
+
   ticketTypes: ITicketType[] = [];
+
   promotors: IPromotor[] = [];
+
+  selectedSource: String = 'promotor';
 
   editForm = this.fb.group({
     guestId: [null, [Validators.required]],
+    newGuest: {
+      name: [null, [Validators.required]],
+      lastName: [null, [Validators.required]],
+      email: [null, [Validators.required]],
+    },
     ticketTypeId: [null, [Validators.required]],
     promoCodeId: [],
     promotorId: [],
     orderId: [null, [Validators.required]],
     ticketPrice: [null, [Validators.required]],
     ticketDiscount: [0, [Validators.required]],
+    artistName: [],
   });
 
   constructor(
@@ -68,9 +80,10 @@ export class TicketCreateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const ticket = this.createFromForm();
 
-    this.subscribeToSaveResponse(this.ticketService.create(ticket));
+    this.createFromForm().then(ticketCreate => {
+      this.subscribeToSaveResponse(this.ticketService.create(ticketCreate));
+    });
   }
 
   trackById(index: number, item: SelectableEntity): any {
@@ -127,6 +140,10 @@ export class TicketCreateComponent implements OnInit {
       });
   }
 
+  guestDetails(g: IGuest): string {
+    return `#${g.id} ${g.name} ${g.lastName} ${g.email}`;
+  }
+
   private loadGuests(): void {
     this.guestService
       .query({
@@ -150,18 +167,24 @@ export class TicketCreateComponent implements OnInit {
       });
   }
 
-  private createFromForm(): TicketCreate {
-    const ticketDiscountVal = this.editForm.get(['ticketDiscount'])!.value || 0;
-    return {
-      ...new TicketCreate(),
-      guestId: this.editForm.get(['guestId'])!.value,
-      ticketTypeId: this.editForm.get(['ticketTypeId'])!.value,
-      promoCodeId: this.editForm.get(['promoCodeId'])!.value,
-      promotorId: this.editForm.get(['promotorId'])!.value,
-      orderId: this.editForm.get(['orderId'])!.value,
-      ticketPrice: this.editForm.get(['ticketPrice'])!.value,
-      ticketDiscount: ticketDiscountVal,
-    };
+  changedSelectedSource(): void {
+    console.info('updated');
+  }
+
+  private createFromForm(): Promise<TicketCreate> {
+    return this.useGuest().then(ticketGuestId => {
+      return {
+        ...new TicketCreate(),
+        guestId: ticketGuestId,
+        ticketTypeId: this.editForm.get(['ticketTypeId'])!.value,
+        promoCodeId: this.editForm.get(['promoCodeId'])!.value,
+        promotorId: this.editForm.get(['promotorId'])!.value,
+        orderId: this.editForm.get(['orderId'])!.value,
+        ticketPrice: this.editForm.get(['ticketPrice'])!.value,
+        ticketDiscount: this.editForm.get(['ticketDiscount'])!.value || 0,
+        artistName: this.editForm.get(['artistName'])!.value,
+      };
+    });
   }
 
   private sortGuests(): string[] {
@@ -174,5 +197,24 @@ export class TicketCreateComponent implements OnInit {
       result.push('id');
     }
     return result;
+  }
+
+  private useGuest(): Promise<number> {
+    if (this.newGuest != null) {
+      return this.guestService
+        .findOrCreate({
+          ...new Guest(),
+          name: this.editForm.get(['newGuest.name'])!.value,
+          lastName: this.editForm.get(['newGuest.lastName'])!.value,
+          email: this.editForm.get(['newGuest.email'])!.value,
+        })
+        .toPromise()
+        .then(res => res.body)
+        .then(g => (g?.id ? g.id : this.editForm.get(['guestId'])!.value));
+    } else {
+      return new Promise<number>(() => {
+        return this.editForm.get(['guestId'])!.value;
+      });
+    }
   }
 }
