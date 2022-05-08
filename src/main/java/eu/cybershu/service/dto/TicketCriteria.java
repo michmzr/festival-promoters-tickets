@@ -2,9 +2,10 @@ package eu.cybershu.service.dto;
 
 import io.github.jhipster.service.Criteria;
 import io.github.jhipster.service.filter.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * Criteria class for the {@link eu.cybershu.domain.Ticket} entity. This class is used
@@ -15,6 +16,8 @@ import java.util.Objects;
  * As Spring is unable to properly convert the types, unless specific {@link Filter} class are used, we need to use
  * fix type specific filters.
  */
+@Data
+@EqualsAndHashCode
 public class TicketCriteria implements Serializable, Criteria {
 
     private static final long serialVersionUID = 1L;
@@ -35,10 +38,11 @@ public class TicketCriteria implements Serializable, Criteria {
 
     private LongFilter promoCodeId;
 
-
     private LongFilter promotorId;
 
     private LongFilter guestId;
+
+    private StringFilter artistName;
 
     public TicketCriteria() {
     }
@@ -60,140 +64,4 @@ public class TicketCriteria implements Serializable, Criteria {
     public TicketCriteria copy() {
         return new TicketCriteria(this);
     }
-
-    public LongFilter getId() {
-        return id;
-    }
-
-    public void setId(LongFilter id) {
-        this.id = id;
-    }
-
-    public UUIDFilter getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUIDFilter uuid) {
-        this.uuid = uuid;
-    }
-
-    public StringFilter getTicketUrl() {
-        return ticketUrl;
-    }
-
-    public void setTicketUrl(StringFilter ticketUrl) {
-        this.ticketUrl = ticketUrl;
-    }
-
-    public BooleanFilter getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(BooleanFilter enabled) {
-        this.enabled = enabled;
-    }
-
-    public InstantFilter getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(InstantFilter createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public InstantFilter getDisabledAt() {
-        return disabledAt;
-    }
-
-    public void setDisabledAt(InstantFilter disabledAt) {
-        this.disabledAt = disabledAt;
-    }
-
-    public LongFilter getTicketTypeId() {
-        return ticketTypeId;
-    }
-
-    public void setTicketTypeId(LongFilter ticketTypeId) {
-        this.ticketTypeId = ticketTypeId;
-    }
-
-    public LongFilter getPromoCodeId() {
-        return promoCodeId;
-    }
-
-    public void setPromoCodeId(LongFilter promoCodeId) {
-        this.promoCodeId = promoCodeId;
-    }
-
-    public LongFilter getGuestId() {
-        return guestId;
-    }
-
-    public void setGuestId(LongFilter guestId) {
-        this.guestId = guestId;
-    }
-
-    public LongFilter getPromotorId() {
-        return promotorId;
-    }
-
-    public void setPromotorId(LongFilter promotorId) {
-        this.promotorId = promotorId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final TicketCriteria that = (TicketCriteria) o;
-        return
-            Objects.equals(id, that.id) &&
-                Objects.equals(uuid, that.uuid) &&
-                Objects.equals(ticketUrl, that.ticketUrl) &&
-                Objects.equals(enabled, that.enabled) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(disabledAt, that.disabledAt) &&
-                Objects.equals(ticketTypeId, that.ticketTypeId) &&
-                Objects.equals(promoCodeId, that.promoCodeId) &&
-                Objects.equals(promotorId, that.promotorId) &&
-                Objects.equals(guestId, that.guestId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-            id,
-            uuid,
-            ticketUrl,
-            enabled,
-            createdAt,
-            disabledAt,
-            ticketTypeId,
-            promoCodeId,
-            promotorId,
-            guestId
-        );
-    }
-
-    // prettier-ignore
-    @Override
-    public String toString() {
-        return "TicketCriteria{" +
-            (id != null ? "id=" + id + ", " : "") +
-            (uuid != null ? "uuid=" + uuid + ", " : "") +
-            (ticketUrl != null ? "ticketUrl=" + ticketUrl + ", " : "") +
-            (enabled != null ? "enabled=" + enabled + ", " : "") +
-            (createdAt != null ? "createdAt=" + createdAt + ", " : "") +
-            (disabledAt != null ? "disabledAt=" + disabledAt + ", " : "") +
-            (ticketTypeId != null ? "ticketTypeId=" + ticketTypeId + ", " : "") +
-            (promoCodeId != null ? "promoCodeId=" + promoCodeId + ", " : "") +
-            (promotorId != null ? "promotorId=" + promotorId + ", " : "") +
-            (guestId != null ? "guestId=" + guestId + ", " : "") +
-            "}";
-    }
-
 }

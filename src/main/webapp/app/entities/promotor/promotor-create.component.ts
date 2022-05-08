@@ -29,12 +29,6 @@ export class PromotorCreateComponent implements OnInit {
   constructor(protected promotorService: PromotorService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
   ngOnInit(): void {
-    /*  this.activatedRoute.data.subscribe(({ promotor }) => {
-      if (!promotor.id) {
-        promotor.createdAt = moment().startOf('day');
-      }
-
-    });*/
     this.createFromForm();
   }
 
@@ -85,9 +79,7 @@ export class PromotorCreateComponent implements OnInit {
 
   codeRemoved(code: string): void {
     console.info(`code ${code} removed`);
-
     const index = this.newPromoCodes.indexOf(code);
-
     if (index >= 0) {
       this.newPromoCodes.splice(index, 1);
     }

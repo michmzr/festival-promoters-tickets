@@ -25,6 +25,7 @@ import { NgModule } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatCommonModule } from '@angular/material/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatRadioModule } from '@angular/material/radio';
 
 // import {MatExpansionPanel} from "@angular/material/expansion";
 
@@ -37,7 +38,25 @@ import { MatToolbarModule } from '@angular/material/toolbar';
       },
     },
   ],
-  imports: [MatCommonModule, MatFormFieldModule, MatInputModule, MatChipsModule, MatIconModule, MatToolbarModule, MatTooltipModule],
-  exports: [MatCommonModule, MatFormFieldModule, MatInputModule, MatChipsModule, MatIconModule, MatToolbarModule, MatTooltipModule],
+  imports: [
+    MatCommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatChipsModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatRadioModule,
+  ],
+  exports: [
+    MatCommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatChipsModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatRadioModule,
+  ],
 })
 export class JhMaterialModule {}

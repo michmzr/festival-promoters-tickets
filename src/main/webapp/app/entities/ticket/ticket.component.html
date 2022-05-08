@@ -32,6 +32,7 @@
                 <th scope="col"><span>Ticket price (PLN) paid by guest</span></th>
                 <th scope="col"><span>Ticket discount (PLN)</span></th>
                 <th scope="col"><span>Full ticket price without discount</span></th>
+                <th scope="col"><span>Artist</span></th>
                 <th scope="col"><span>Promo Code</span></th>
                 <th scope="col"></th>
             </tr>
@@ -55,9 +56,15 @@
                     0)}} zł
                 </td>
                 <td>
+                    <span *ngIf="ticket.artistName">
+                        {{ticket.artistName}}
+                    </span>
+                    <span *ngIf="!ticket.artistName">-</span>
+                </td>
+                <td>
                     <div *ngIf="ticket.promoCodeId">
-                        <a [routerLink]="['/promo-code',ticket.promoCodeId  , 'view']">
-                            <span>#{{ ticket.promoCodeId }}</span> </a>
+                        <a [routerLink]="['/promo-code',ticket.promoCodeId, 'view']">
+                            <span>{{promoCodeText(ticket.promoCodeId) }}</span> </a>
                     </div>
                 </td>
                 <td class="text-right">

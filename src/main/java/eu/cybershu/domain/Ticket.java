@@ -19,9 +19,9 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "ticketType", "created_at"})
 @Table(name = "ticket")
-@ToString(of = {"id", "uuid", "ticketType", "orderId", "createdAt"})
+@ToString(of = {"id", "uuid", "ticketType", "orderId", "artistName", "ticketPrice", "ticketDiscount", "createdAt"})
+@EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "ticketType", "created_at", "artistName", "ticketPrice"})
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -85,6 +85,8 @@ public class Ticket implements Serializable {
     @JoinColumn
     private Promotor promotor;
 
+    private String artistName;
+
     @OneToOne
     @JsonIgnore
     private Guest guest;
@@ -100,29 +102,10 @@ public class Ticket implements Serializable {
     private Instant disabledAt;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public UUID getUuid() {
-        return uuid;
-    }
 
     public Ticket uuid(UUID uuid) {
         this.uuid = uuid;
         return this;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getTicketUrl() {
-        return ticketUrl;
     }
 
     public Ticket ticketUrl(String ticketUrl) {
@@ -130,25 +113,9 @@ public class Ticket implements Serializable {
         return this;
     }
 
-    public void setTicketUrl(String ticketUrl) {
-        this.ticketUrl = ticketUrl;
-    }
-
-    public byte[] getTicketQR() {
-        return ticketQR;
-    }
-
     public Ticket ticketQR(byte[] ticketQR) {
         this.ticketQR = ticketQR;
         return this;
-    }
-
-    public void setTicketQR(byte[] ticketQR) {
-        this.ticketQR = ticketQR;
-    }
-
-    public String getTicketQRContentType() {
-        return ticketQRContentType;
     }
 
     public Ticket ticketQRContentType(String ticketQRContentType) {
@@ -156,25 +123,9 @@ public class Ticket implements Serializable {
         return this;
     }
 
-    public void setTicketQRContentType(String ticketQRContentType) {
-        this.ticketQRContentType = ticketQRContentType;
-    }
-
-    public byte[] getTicketFile() {
-        return ticketFile;
-    }
-
     public Ticket ticketFile(byte[] ticketFile) {
         this.ticketFile = ticketFile;
         return this;
-    }
-
-    public void setTicketFile(byte[] ticketFile) {
-        this.ticketFile = ticketFile;
-    }
-
-    public String getTicketFileContentType() {
-        return ticketFileContentType;
     }
 
     public Ticket ticketFileContentType(String ticketFileContentType) {
@@ -182,25 +133,9 @@ public class Ticket implements Serializable {
         return this;
     }
 
-    public void setTicketFileContentType(String ticketFileContentType) {
-        this.ticketFileContentType = ticketFileContentType;
-    }
-
-    public Boolean isEnabled() {
-        return enabled;
-    }
-
     public Ticket enabled(Boolean enabled) {
         this.enabled = enabled;
         return this;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
     }
 
     public Ticket createdAt(Instant createdAt) {
@@ -208,25 +143,9 @@ public class Ticket implements Serializable {
         return this;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getDisabledAt() {
-        return disabledAt;
-    }
-
     public Ticket disabledAt(Instant disabledAt) {
         this.disabledAt = disabledAt;
         return this;
-    }
-
-    public void setDisabledAt(Instant disabledAt) {
-        this.disabledAt = disabledAt;
-    }
-
-    public TicketType getTicketType() {
-        return ticketType;
     }
 
     public Ticket ticketType(TicketType ticketType) {
@@ -234,51 +153,14 @@ public class Ticket implements Serializable {
         return this;
     }
 
-    public void setTicketType(TicketType ticketType) {
-        this.ticketType = ticketType;
-    }
-
-    public PromoCode getPromoCode() {
-        return promoCode;
-    }
-
     public Ticket promoCode(PromoCode promoCode) {
         this.promoCode = promoCode;
         return this;
     }
 
-    public void setPromoCode(PromoCode promoCode) {
-        this.promoCode = promoCode;
-    }
-
-    public Guest getGuest() {
-        return guest;
-    }
-
     public Ticket guest(Guest guest) {
         this.guest = guest;
         return this;
-    }
-
-    public void setGuest(Guest guest) {
-        this.guest = guest;
-    }
-
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public BigDecimal getTicketPrice() {
-        return ticketPrice;
-    }
-
-    public void setTicketPrice(String ticketPrice) {
-        this.ticketPrice = new BigDecimal(ticketPrice);
-    }
-
-    public void setTicketPrice(BigDecimal ticketPrice) {
-        this.ticketPrice = ticketPrice;
     }
 
     public Ticket ticketPrice(String ticketPrice) {
@@ -289,23 +171,6 @@ public class Ticket implements Serializable {
     public Ticket ticketPrice(Double ticketPrice) {
         this.ticketPrice = BigDecimal.valueOf(ticketPrice);
         return this;
-    }
-
-    public Promotor getPromotor() {
-        return promotor;
-    }
-
-    public void setPromotor(Promotor promotor) {
-        this.promotor = promotor;
-    }
-
-
-    public BigDecimal getTicketDiscount() {
-        return ticketDiscount;
-    }
-
-    public void setTicketDiscount(BigDecimal ticketDiscount) {
-        this.ticketDiscount = ticketDiscount;
     }
 
     public Ticket ticketDiscount(BigDecimal ticketDiscount) {
@@ -323,25 +188,13 @@ public class Ticket implements Serializable {
         return this;
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
     public Ticket orderId(String orderId) {
         this.orderId = orderId;
         return this;
     }
 
-    public Instant getValidatedAt() {
-        return validatedAt;
-    }
-
-    public void setValidatedAt(Instant validatedAt) {
-        this.validatedAt = validatedAt;
+    public Boolean isEnabled() {
+        return enabled;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

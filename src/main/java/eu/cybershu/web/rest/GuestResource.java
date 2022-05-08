@@ -115,6 +115,34 @@ public class GuestResource {
         return ResponseUtil.wrapOrNotFound(guestDTO);
     }
 
+
+    /**
+     * {@code POST  /findOrCreate} : get guest or create and get if not exists
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the guestDTO, or with status {@code 201 (Created)} and body the guest.
+     */
+    @PostMapping("/guests/findOrCreate")
+    public ResponseEntity<GuestDTO> findOrCreate(@Valid @RequestBody GuestCreateDTO guestCreateDTO) throws URISyntaxException, IOException, WriterException {
+        log.debug("REST request to get or create Guest : {}", guestCreateDTO);
+
+        String email = guestCreateDTO.getEmail();
+
+        Optional<GuestDTO> existsGuestOpt = guestService.findByEmail(email);
+        log.debug("Guest '{}' in system: {}", email, existsGuestOpt);
+        if (existsGuestOpt.isPresent()) {
+            log.info("Guest was found. Returing {}", existsGuestOpt.get());
+            return ResponseUtil.wrapOrNotFound(existsGuestOpt);
+        } else {
+            log.info("Not found guest with email '{}', registering new one", email);
+            GuestDTO result = guestService.save(guestCreateDTO);
+
+            return ResponseEntity.created(new URI("/api/guests/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, false,
+                    ENTITY_NAME, result.getId().toString()))
+                .body(result);
+        }
+    }
+
     /**
      * {@code DELETE  /guests/:id} : delete the "id" guest.
      *

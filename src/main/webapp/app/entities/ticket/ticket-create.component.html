@@ -1,94 +1,225 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form (ngSubmit)="save()" [formGroup]="editForm" name="editForm" novalidate role="form">
-            <h2 id="jhi-ticket-heading">Create a Ticket</h2>
+        <div *ngIf="isSaving">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status" style="width: 5rem; height: 5rem;">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
 
+        <form (ngSubmit)="save()" *ngIf="!isSaving" [formGroup]="editForm" name="editForm" novalidate role="form">
+            <h2 id="jhi-ticket-heading">Create a Ticket</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
 
-                <div *ngIf="guests" class="form-group">
-                    <label class="form-control-label" for="field_guestId">Guest</label>
-                    <select class="form-control" formControlName="guestId" id="field_guestId" name="guest">
-                        <option [ngValue]="null"></option>
-                        <option *ngFor="let g of guests; trackBy: trackById"
-                                [ngValue]="g.id">#{{ g.id }} {{g | json}}
-                        </option>
-                    </select>
+                <p><strong>Errors:</strong></p>
+                <ul>
+                    <li *ngFor="let e of getFormValidationErrors()">
+                        {{e | json}}
+                    </li>
+                </ul>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Select guest or register new</h5>
+
+                        <div class="row">
+                            <div class="col">
+                                <mat-radio-group
+                                    (change)="onGuestTypeChanged()" [(ngModel)]="selectedGuestType"
+                                    formControlName="selectedGuestType" required="true">
+                                    <mat-radio-button value="{{GUEST_TYPE_EXISTING}}">
+                                        Select existing guest
+                                    </mat-radio-button>
+                                    <mat-radio-button value="{{GUEST_TYPE_NEW}}">
+                                        Register new user
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <div *ngIf="selectedGuestType === GUEST_TYPE_EXISTING" class="row">
+                            <div class="col">
+                                <div *ngIf="guests" class="form-group">
+                                    <label class="form-control-label" for="field_guestId">Guest</label>
+                                    <select class="form-control" formControlName="guestId" id="field_guestId"
+                                            name="guestId">
+                                        <option [ngValue]="null"></option>
+                                        <option *ngFor="let g of guests; trackBy: trackById"
+                                                [ngValue]="g.id">{{guestDetails(g)}}
+                                        </option>
+                                    </select>
+                                    <label class="form-check-label" for="field_orderId">Select from dropdown to assign
+                                        already registered guest to new ticket</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="selectedGuestType === GUEST_TYPE_NEW" class="row">
+                            <div class="col">
+                                <input aria-label="First name" class="form-control"
+                                       formControlName="newGuestName" id="field_newGuestName"
+                                       name="newGuestName"
+                                       placeholder="First name" type="text">
+                            </div>
+                            <div class="col">
+                                <input aria-label="Last name" class="form-control"
+                                       formControlName="newGuestLastName"
+                                       id="field_newGuestLastName"
+                                       name="newGuestLastName"
+                                       placeholder="Last name" type="text">
+                            </div>
+                            <div class="col">
+                                <input aria-label="Email" class="form-control"
+                                       formControlName="newGuestEmail" id="field_newGuestEmail"
+                                       name="newGuestEmail"
+                                       placeholder="Email" type="email">
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+                <br/>
 
-                <div *ngIf="ticketTypes" class="form-group">
-                    <label class="form-control-label" for="field_ticketType">Ticket Type*</label>
-                    <select class="form-control" formControlName="ticketTypeId" id="field_ticketType" name="ticketType">
-                        <option [ngValue]="null"></option>
-                        <option *ngFor="let ticketTypeOption of ticketTypes; trackBy: trackById"
-                                [ngValue]="ticketTypeOption.id">
-                            #{{ ticketTypeOption.id }} {{ ticketTypeOption?.name }}
-                        </option>
-                    </select>
-                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div *ngIf="ticketTypes" class="form-group">
+                            <label class="form-control-label" for="field_ticketType">Ticket Type*</label>
+                            <select class="form-control" formControlName="ticketTypeId" id="field_ticketType"
+                                    name="ticketType">
+                                <option [ngValue]="null"></option>
+                                <option *ngFor="let ticketTypeOption of ticketTypes; trackBy: trackById"
+                                        [ngValue]="ticketTypeOption.id">
+                                    #{{ ticketTypeOption.id }} {{ ticketTypeOption?.name }}
+                                </option>
+                            </select>
+                        </div>
 
+                        <div class="form-group">
+                            <label class="form-control-label" for="field_orderId">Order Id*</label>
+                            <input class="form-control" formControlName="orderId" id="field_orderId" name="orderId"
+                                   type="text"/>
+                            <label class="form-check-label" for="field_orderId">Any value for order
+                                identification</label>
+                            <div
+                                *ngIf="fieldInvalid('orderId')">
+                                <small *ngIf="editForm.get('orderId')?.errors?.required"
+                                       class="form-text text-danger">
+                                    This field is required.
+                                </small>
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" for="field_orderId">Order Id*</label>
-                    <input class="form-control" formControlName="orderId" id="field_orderId" name="orderId"
-                           type="text"/>
-                    <label class="form-check-label" for="field_orderId">Any value for order identification</label>
-                    <div
-                        *ngIf="editForm.get('orderId')!.invalid && (editForm.get('orderId')!.dirty || editForm.get('orderId')!.touched)">
-                        <small *ngIf="editForm.get('orderId')?.errors?.required"
-                               class="form-text text-danger">
-                            This field is required.
-                        </small>
+                        <br/>
+
+                        <div class="form-group">
+                            <label class="form-control-label" for="field_ticketPrice">Ticket price (zł)*</label>
+                            <input class="form-control" formControlName="ticketPrice" id="field_ticketPrice"
+                                   name="ticketPrice" type="number"/>
+                            <label class="form-check-label" for="field_ticketPrice">-1 if uknown</label>
+                            <div *ngIf="fieldInvalid('ticketPrice')">
+                                <small *ngIf="editForm.get('ticketPrice')?.errors?.required"
+                                       class="form-text text-danger">
+                                    This field is required.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-control-label" for="field_ticketDiscount">Ticket discount (zł)*</label>
+                            <input class="form-control" formControlName="ticketDiscount" id="field_ticketDiscount"
+                                   name="ticketDiscount"
+                                   type="number" value="0"/>
+                            <div
+                                *ngIf="fieldInvalid('ticketDiscount')">
+                                <small *ngIf="editForm.get('ticketDiscount')?.errors?.required"
+                                       class="form-text text-danger">
+                                    This field is required.
+                                </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" for="field_ticketPrice">Ticket price (zł)*</label>
-                    <input class="form-control" formControlName="ticketPrice" id="field_ticketPrice" name="ticketPrice"
-                           type="number"/>
-                    <label class="form-check-label" for="field_ticketPrice">-1 if uknown</label>
-                    <div
-                        *ngIf="editForm.get('ticketPrice')!.invalid && (editForm.get('ticketPrice')!.dirty || editForm.get('ticketPrice')!.touched)">
-                        <small *ngIf="editForm.get('ticketPrice')?.errors?.required"
-                               class="form-text text-danger">
-                            This field is required.
-                        </small>
+                <br/>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <mat-radio-group
+                                    (change)="changedSelectedSource()" [(ngModel)]="selectedSource"
+                                    formControlName="selectedSource" required="true">
+                                    <mat-radio-button value="promotor">
+                                        Promotor
+                                    </mat-radio-button>
+                                    <mat-radio-button value="artist">
+                                        Artist
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <div *ngIf="selectedSource==='promotor'">
+                            <div *ngIf="promotors" class="form-group">
+                                <label class="form-control-label" for="field_promotorId">Promotor</label>
+                                <select (change)="onPromotorChanged()" class="form-control" formControlName="promotorId"
+                                        id="field_promotorId"
+                                        name="promotorId">
+                                    <option [ngValue]="null"></option>
+                                    <option *ngFor="let p of promotors; let i = index" [ngValue]="p.id">
+                                        #{{ p.id }} {{p.name}} {{p.lastName}}
+                                    </option>
+                                </select>
+                                <div
+                                    *ngIf="fieldInvalid('promotorId')">
+                                    <small *ngIf="editForm.get('promotorId')?.errors?.required"
+                                           class="form-text text-danger">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div *ngIf="promotorCodes && promotorCodes.length > 0" class="form-group">
+                                <label class="form-control-label" for="field_promoCode">Promo Code</label>
+                                <select class="form-control" formControlName="promoCodeId" id="field_promoCode"
+                                        name="promoCode">
+                                    <option [ngValue]="null"></option>
+                                    <option *ngFor="let promoCodeOption of promotorCodes; let i = index"
+                                            [ngValue]="promoCodeOption.id">
+                                        {{ promoCodeOption.id }} "{{ promoCodeOption.code }}"
+                                    </option>
+                                </select>
+                                <div
+                                    *ngIf="fieldInvalid('promoCodeId')">
+                                    <small *ngIf="editForm.get('promoCodeId')?.errors?.required"
+                                           class="form-text text-danger">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="selectedSource==='artist'">
+                            <div class="form-group">
+                                <label class="form-control-label" for="field_artistName">Artist name</label>
+                                <input class="form-control" formControlName="artistName" id="field_artistName"
+                                       name="orderId" type="text"/>
+                                <label class="form-check-label" for="field_artistName">Artist name who sold ticket
+                                    (optional)</label>
+                                <div
+                                    *ngIf="fieldInvalid('artistName')">
+                                    <small *ngIf="editForm.get('artistName')?.errors?.required"
+                                           class="form-text text-danger">
+                                        This field is required.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_ticketDiscount">Ticket discount (zł)*</label>
-                    <input class="form-control" formControlName="ticketDiscount" id="field_ticketDiscount"
-                           name="ticketDiscount"
-                           type="number" value="0"/>
-                    <div
-                        *ngIf="editForm.get('ticketDiscount')!.invalid && (editForm.get('ticketDiscount')!.dirty || editForm.get('ticketDiscount')!.touched)">
-                        <small *ngIf="editForm.get('ticketDiscount')?.errors?.required"
-                               class="form-text text-danger">
-                            This field is required.
-                        </small>
-                    </div>
-                </div>
-
-                <div *ngIf="promotors" class="form-group">
-                    <label class="form-control-label" for="field_promotorId">Promotor</label>
-                    <select class="form-control" formControlName="promotorId" id="field_promotorId" name="promotorId">
-                        <option [ngValue]="null"></option>
-                        <option *ngFor="let p of promotors; let i = index" [ngValue]="p.id">
-                            #{{ p.id }} {{p.name}} {{p.lastName}}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_promoCode">Promo Code</label>
-                    <select class="form-control" formControlName="promoCodeId" id="field_promoCode" name="promoCode">
-                        <option [ngValue]="null"></option>
-                        <option *ngFor="let promoCodeOption of promoCodes; let i = index"
-                                [ngValue]="promoCodeOption.id">
-                            {{ promoCodeOption.id }} "{{ promoCodeOption.code }}"
-                        </option>
-                    </select>
                 </div>
             </div>
 

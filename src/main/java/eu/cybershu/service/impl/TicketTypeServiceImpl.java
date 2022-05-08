@@ -33,10 +33,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
     public TicketTypeDTO save(TicketTypeDTO ticketTypeDTO) {
         log.debug("Request to save TicketType : {}", ticketTypeDTO);
         TicketType ticketType = ticketTypeMapper.toEntity(ticketTypeDTO);
-
-        //todo unikalny productID
-        //todo unikalny productUrl
-
         ticketType = ticketTypeRepository.save(ticketType);
         log.info("Saved ticket type: {}", ticketType);
 

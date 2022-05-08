@@ -123,6 +123,10 @@ public class TicketQueryService extends QueryService<Ticket> {
                 specification = specification.and(buildSpecification(criteria.getPromotorId(),
                     root -> root.join(Ticket_.promotor, JoinType.LEFT).get(Promotor_.id)));
             }
+
+            if (criteria.getArtistName() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getArtistName(), Ticket_.artistName));
+            }
         }
         return specification;
     }

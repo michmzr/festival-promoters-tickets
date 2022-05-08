@@ -92,8 +92,6 @@ export class PromotorTicketsRaportComponent {
       });
 
       this.promoCodes = promoCodesProcess;
-
-      console.log(`promo codes: {}`, this.promoCodes);
     }
   }
 

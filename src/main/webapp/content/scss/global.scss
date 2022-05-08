@@ -166,4 +166,21 @@ ui bootstrap tweaks
   white-space: nowrap;
 }
 
+/* Forms */
+input.ng-pristine {
+  border-color: #ffc107;
+}
+
+.ng-invalid {
+  border-color: #dc3545;
+}
+
+.ng-valid.ng-dirty {
+  border-color: #28a745;
+}
+
+.ng-valid.ng-touched {
+  border-color: #28a745;
+}
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */
