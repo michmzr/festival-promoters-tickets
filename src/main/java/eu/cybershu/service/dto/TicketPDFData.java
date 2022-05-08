@@ -14,5 +14,6 @@ public class TicketPDFData {
     private final String qrFileContentType;
     private final TicketType ticketType;
     private final Guest guest;
+    private final String artistName;
     private final Promotor promotor;
 }

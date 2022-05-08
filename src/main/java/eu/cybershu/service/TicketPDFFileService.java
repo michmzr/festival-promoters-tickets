@@ -19,10 +19,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.emptyMap;
 
@@ -45,6 +42,7 @@ public class TicketPDFFileService {
         return Base64.getEncoder().encodeToString(fileContent);
     }
 
+
     public byte[] generateTicketPDFFile(TicketPDFData ticketPDFData) throws DocumentException, IOException {
         log.info("Generating ticket from data....");
 
@@ -64,11 +62,17 @@ public class TicketPDFFileService {
         String issueDate = formatter.format(instant);
         fileTicketData.put("date", issueDate);
 
+        String promotorName = null;
+        if (ticketPDFData.getPromotor() != null) {
+            promotorName = ticketPDFData.getPromotor().getName() + " " + ticketPDFData.getPromotor().getLastName();
+        }
+
         var fileData = Map.of(
             "qrPath", qrPath,
             "ticket", fileTicketData,
             "guest", ticketPDFData.getGuest(),
-            "promotor", ObjectUtils.defaultIfNull(ticketPDFData.getPromotor(), emptyMap()),
+            "artistName", ObjectUtils.defaultIfNull(ticketPDFData.getArtistName(), ""),
+            "promotorName", ObjectUtils.defaultIfNull(promotorName, ""),
             "ticketType", ObjectUtils.defaultIfNull(ticketPDFData.getTicketType(), emptyMap())
         );
 
@@ -84,9 +88,18 @@ public class TicketPDFFileService {
 
         ITextRenderer renderer = new ITextRenderer();
 
-        String arialPath = new ClassPathResource("fonts/arial-unicode-ms.ttf").getPath();
-        log.debug("Arial font path: {}", arialPath);
-        renderer.getFontResolver().addFont(arialPath, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        List.of(
+            "fonts/arial-unicode-ms.ttf",
+            "fonts/lucida-sans-unicode.ttf",
+            "fonts/Tahoma_regular.ttf",
+            "fonts/tahoma.ttf"
+        ).forEach((font) -> {
+            try {
+                renderer.getFontResolver().addFont(new ClassPathResource(font).getPath(), BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            } catch (DocumentException | IOException e) {
+                log.error("Catched exception when loading font: " + font + " msg: " + e.getMessage(), e);
+            }
+        });
 
         renderer.setDocumentFromString(htmlContent);
         renderer.layout();
