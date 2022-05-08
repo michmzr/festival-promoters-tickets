@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -17,37 +17,50 @@ import { Guest, IGuest } from '../../shared/model/guest.model';
 import { GuestService } from '../guest/guest.service';
 import { IPromotor } from '../../shared/model/promotor.model';
 import { PromotorService } from '../promotor/promotor.service';
+import FormUtils from '../../shared/form/form-util';
 
-type SelectableEntity = ITicketType | IPromoCode;
+type SelectableEntity = ITicketType | IPromoCode | IGuest;
 
 @Component({
   selector: 'jhi-ticket-create',
   templateUrl: './ticket-create.component.html',
 })
 export class TicketCreateComponent implements OnInit {
-  isSaving = false;
+  SOURCE_ARTIST = 'artist';
+  SOURCE_PROMOTOR = 'promotor';
 
-  promoCodes: IPromoCode[] = [];
+  GUEST_TYPE_NEW = 'register';
+  GUEST_TYPE_EXISTING = 'existing';
+
+  isSaving = false;
 
   newGuest!: IGuest;
   guests: IGuest[] = [];
+  selectedGuestType: string = this.GUEST_TYPE_NEW;
 
   ticketTypes: ITicketType[] = [];
 
   promotors: IPromotor[] = [];
+  promoCodes: IPromoCode[] = [];
+  promotorCodes: IPromoCode[] = [];
 
-  selectedSource: String = 'promotor';
+  selectedSource: String = this.SOURCE_PROMOTOR;
 
   editForm = this.fb.group({
-    guestId: [null, [Validators.required]],
-    newGuest: {
-      name: [null, [Validators.required]],
-      lastName: [null, [Validators.required]],
-      email: [null, [Validators.required]],
-    },
-    ticketTypeId: [null, [Validators.required]],
-    promoCodeId: [],
+    guestId: [null],
+
+    newGuestName: [],
+    newGuestLastName: [],
+    newGuestEmail: [],
+
+    ticketTypeId: [null, Validators.required],
+
+    selectedSource: [this.SOURCE_ARTIST, Validators.required],
+    selectedGuestType: [this.GUEST_TYPE_NEW, [Validators.required]],
+
     promotorId: [],
+    promoCodeId: [],
+
     orderId: [null, [Validators.required]],
     ticketPrice: [null, [Validators.required]],
     ticketDiscount: [0, [Validators.required]],
@@ -72,6 +85,10 @@ export class TicketCreateComponent implements OnInit {
     this.loadPromotors();
     this.loadGuests();
     this.loadPromoCodes();
+
+    this.changedSelectedSource();
+    this.onPromotorChanged();
+    this.onGuestTypeChanged();
   }
 
   previousState(): void {
@@ -82,12 +99,90 @@ export class TicketCreateComponent implements OnInit {
     this.isSaving = true;
 
     this.createFromForm().then(ticketCreate => {
+      console.info('Creating new ticket');
       this.subscribeToSaveResponse(this.ticketService.create(ticketCreate));
+      this.isSaving = false;
     });
   }
 
   trackById(index: number, item: SelectableEntity): any {
     return item.id;
+  }
+
+  guestDetails(g: IGuest): string {
+    return `#${g.id} ${g.name} ${g.lastName} ${g.email}`;
+  }
+
+  onPromotorChanged(): void {
+    const promotorId = this.editForm.get(['promotorId'])!.value;
+    let promoCodesFromPromotor: IPromoCode[] = [];
+
+    if (promotorId) {
+      promoCodesFromPromotor = this.promoCodes.filter(p => p.promotorId === promotorId);
+    }
+
+    this.promotorCodes = promoCodesFromPromotor;
+  }
+
+  onGuestTypeChanged(): void {
+    this.selectedGuestType = this.editForm.get(['selectedGuestType'])!.value;
+    console.info('guest type:' + this.selectedGuestType);
+
+    if (this.selectedGuestType === this.GUEST_TYPE_EXISTING) {
+      this.editForm.controls.guestId.setValidators([Validators.required]);
+      this.changeNewGuestFieldsValidators(null);
+    }
+
+    if (this.selectedGuestType === this.GUEST_TYPE_NEW) {
+      this.editForm.controls.guestId.clearValidators();
+      this.changeNewGuestFieldsValidators([Validators.required]);
+    }
+
+    this.editForm.controls.guestId.updateValueAndValidity();
+  }
+
+  changedSelectedSource(): void {
+    this.selectedSource = this.editForm.get(['selectedSource'])!.value;
+
+    if (this.selectedSource === this.SOURCE_PROMOTOR) {
+      this.editForm.controls.promotorId.setValidators([Validators.required]);
+      this.editForm.controls.promoCodeId.setValidators([Validators.required]);
+
+      this.editForm.controls.artistName.clearValidators();
+    }
+
+    if (this.selectedSource === this.SOURCE_ARTIST) {
+      this.editForm.controls.artistName.setValidators([Validators.required]);
+      this.editForm.controls.promotorId.clearValidators();
+      this.editForm.controls.promoCodeId.clearValidators();
+    }
+
+    this.editForm.controls.promotorId.updateValueAndValidity();
+    this.editForm.controls.promoCodeId.updateValueAndValidity();
+    this.editForm.controls.artistName.updateValueAndValidity();
+  }
+
+  getFormValidationErrors(): object[] {
+    const formErrors: object[] = [];
+
+    Object.keys(this.editForm.controls).forEach(key => {
+      const controlErrors = this.editForm.get(key)?.errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          formErrors.push({
+            field: key,
+            errorType: keyError,
+            value: controlErrors[keyError],
+          });
+        });
+      }
+    });
+
+    return formErrors;
+  }
+
+  fieldInvalid(fieldName: string): boolean {
+    return FormUtils.fieldInvalid(this.editForm, fieldName);
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<ITicket>>): void {
@@ -140,10 +235,6 @@ export class TicketCreateComponent implements OnInit {
       });
   }
 
-  guestDetails(g: IGuest): string {
-    return `#${g.id} ${g.name} ${g.lastName} ${g.email}`;
-  }
-
   private loadGuests(): void {
     this.guestService
       .query({
@@ -167,10 +258,6 @@ export class TicketCreateComponent implements OnInit {
       });
   }
 
-  changedSelectedSource(): void {
-    console.info('updated');
-  }
-
   private createFromForm(): Promise<TicketCreate> {
     return this.useGuest().then(ticketGuestId => {
       return {
@@ -187,6 +274,44 @@ export class TicketCreateComponent implements OnInit {
     });
   }
 
+  private useGuest(): Promise<number> {
+    const newGuest = {
+      ...new Guest(),
+      name: this.editForm.get(['newGuestName'])!.value,
+      lastName: this.editForm.get(['newGuestLastName'])!.value,
+      email: this.editForm.get(['newGuestEmail'])!.value,
+    };
+    const selectedGuestId = this.editForm.get(['guestId'])!.value;
+
+    if (this.selectedGuestType === this.GUEST_TYPE_EXISTING) {
+      return Promise.resolve(selectedGuestId);
+    } else {
+      return this.guestService
+        .findOrCreate(newGuest)
+        .toPromise()
+        .then(res => res.body)
+        .then(g => (g?.id ? g.id : selectedGuestId));
+    }
+  }
+
+  private changeNewGuestFieldsValidators(newGuestFieldsValidators: ValidatorFn | ValidatorFn[] | null): void {
+    if (newGuestFieldsValidators === null || newGuestFieldsValidators.length === 0) {
+      this.editForm.controls.newGuestName.clearValidators();
+      this.editForm.controls.newGuestLastName.clearValidators();
+      this.editForm.controls.newGuestEmail.clearValidators();
+    } else {
+      this.editForm.controls.newGuestName.setValidators(newGuestFieldsValidators);
+      this.editForm.controls.newGuestLastName.setValidators(newGuestFieldsValidators);
+      this.editForm.controls.newGuestEmail.setValidators(newGuestFieldsValidators);
+    }
+
+    this.editForm.controls.newGuestName.updateValueAndValidity();
+    this.editForm.controls.newGuestLastName.updateValueAndValidity();
+    this.editForm.controls.newGuestEmail.updateValueAndValidity();
+
+    this.editForm.updateValueAndValidity();
+  }
+
   private sortGuests(): string[] {
     const predicate = 'id';
     const ascending = 'asc';
@@ -197,24 +322,5 @@ export class TicketCreateComponent implements OnInit {
       result.push('id');
     }
     return result;
-  }
-
-  private useGuest(): Promise<number> {
-    if (this.newGuest != null) {
-      return this.guestService
-        .findOrCreate({
-          ...new Guest(),
-          name: this.editForm.get(['newGuest.name'])!.value,
-          lastName: this.editForm.get(['newGuest.lastName'])!.value,
-          email: this.editForm.get(['newGuest.email'])!.value,
-        })
-        .toPromise()
-        .then(res => res.body)
-        .then(g => (g?.id ? g.id : this.editForm.get(['guestId'])!.value));
-    } else {
-      return new Promise<number>(() => {
-        return this.editForm.get(['guestId'])!.value;
-      });
-    }
   }
 }

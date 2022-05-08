@@ -10,6 +10,9 @@ import { TicketDeleteDialogComponent } from './ticket-delete-dialog.component';
 import { ITicketType } from '../../shared/model/ticket-type.model';
 import { TicketTypeService } from '../ticket-type/ticket-type.service';
 import { TicketDisableDialogComponent } from './ticket-disable-dialog.component';
+import { IPromoCode } from '../../shared/model/promo-code.model';
+import { PromoCodeService } from '../promo-code/promo-code.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'jhi-ticket',
@@ -18,21 +21,39 @@ import { TicketDisableDialogComponent } from './ticket-disable-dialog.component'
 export class TicketComponent implements OnInit, OnDestroy {
   tickets: ITicket[] = [];
   ticketTypes: ITicketType[] = [];
+  promoCodes: Map<number, IPromoCode> = new Map<number, IPromoCode>();
   eventSubscriber?: Subscription;
   alerts: JhiAlert[] = [];
 
   constructor(
     protected ticketService: TicketService,
     protected ticketTypeService: TicketTypeService,
+    protected promoCodeService: PromoCodeService,
     protected dataUtils: JhiDataUtils,
     protected alertService: JhiAlertService,
     protected eventManager: JhiEventManager,
     protected modalService: NgbModal
   ) {}
 
+  ngOnInit(): void {
+    this.loadAll();
+    this.registerChangeInTickets();
+  }
+
   loadAll(): void {
-    this.loadTickets();
     this.loadTicketTypes();
+    this.loadPromoCodes();
+
+    this.loadTickets();
+  }
+
+  promoCodeText(id: number): string {
+    if (this.promoCodes.has(id)) {
+      const promo = this.promoCodes.get(id);
+      return `#${promo?.id} "${promo?.code}"`;
+    } else {
+      return `#${id}`;
+    }
   }
 
   disable(ticket: ITicket): void {
@@ -48,11 +69,6 @@ export class TicketComponent implements OnInit, OnDestroy {
         this.alertService.success(`Ticket #${id} is enabled again. Can be used by guest.`);
       });
     }
-  }
-
-  ngOnInit(): void {
-    this.loadAll();
-    this.registerChangeInTickets();
   }
 
   ngOnDestroy(): void {
@@ -79,6 +95,23 @@ export class TicketComponent implements OnInit, OnDestroy {
         this.alertService.success('PDF został wygenerowany ponownie');
       }
     });
+  }
+
+  private loadPromoCodes(): void {
+    this.promoCodeService
+      .query()
+      .pipe(
+        map((res: HttpResponse<IPromoCode[]>) => {
+          return res.body || [];
+        })
+      )
+      .subscribe((resBody: IPromoCode[]) => {
+        const promoMap: Map<number, IPromoCode> = new Map<number, IPromoCode>();
+        resBody.forEach(promo => {
+          promoMap.set(promo.id as number, promo);
+        });
+        this.promoCodes = promoMap;
+      });
   }
 
   trackId(index: number, item: ITicket): number {
