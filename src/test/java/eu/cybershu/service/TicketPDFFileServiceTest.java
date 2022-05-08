@@ -1,6 +1,7 @@
 package eu.cybershu.service;
 
 import eu.cybershu.domain.Guest;
+import eu.cybershu.domain.Promotor;
 import eu.cybershu.domain.TicketType;
 import eu.cybershu.service.dto.TicketPDFData;
 import lombok.SneakyThrows;
@@ -22,12 +23,12 @@ class TicketPDFFileServiceTest {
     private final String templateDir = "/templates/ticket/";
     private final String templateFileName = "ticket-pdf-template";
 
-    TicketPDFFileService ticketPDFFileService = new TicketPDFFileService(
+    private TicketPDFFileService ticketPDFFileService = new TicketPDFFileService(
         templateDir, templateFileName);
 
     @Test
     @SneakyThrows
-    void givenDataExpectGeneratedPDFFile(@TempDir File tempDir) {
+    void givenArtistDataExpectGeneratedPDFFile(@TempDir File tempDir) {
         //given
         TicketPDFData pdfData = TicketPDFData
             .builder()
@@ -37,18 +38,53 @@ class TicketPDFFileServiceTest {
             .ticketType(ticket4Days())
             .guest(guest())
             .ticketType(ticket4Days())
+            .artistName("Szure i Bure")
             .build();
 
         //when
         var ticketBytes = ticketPDFFileService.generateTicketPDFFile(pdfData);
 
         //then
-        String outputFile = tempDir.getAbsolutePath() + "files/ticket_generated.pdf";
+        String outputFile = tempDir.getAbsolutePath() + "files/ticket_generated_artist.pdf";
         File file = new File(outputFile);
-        FileUtils.writeByteArrayToFile(
-            file, ticketBytes);
+        FileUtils.writeByteArrayToFile(file, ticketBytes);
 
         assertThat(file).isFile();
+    }
+
+    @Test
+    @SneakyThrows
+    void givenPromotorExpectGeneratedPDFFile(@TempDir File tempDir) {
+        //given
+        TicketPDFData pdfData = TicketPDFData
+            .builder()
+            .uuid(UUID.randomUUID().toString())
+            .qrFile(qrFile())
+            .qrFileContentType("image/png")
+            .ticketType(ticket4Days())
+            .guest(guest())
+            .ticketType(ticket4Days())
+            .promotor(promotor())
+            .artistName(null)
+            .build();
+
+        //when
+        var ticketBytes = ticketPDFFileService.generateTicketPDFFile(pdfData);
+
+        //then
+        String outputFile = tempDir.getAbsolutePath() + "files/ticket_generated_promotor.pdf";
+        File file = new File(outputFile);
+        FileUtils.writeByteArrayToFile(file, ticketBytes);
+
+        assertThat(file).isFile();
+    }
+
+    private Promotor promotor() {
+        Promotor promotor = new Promotor();
+        promotor.setName("Rene");
+        promotor.setLastName("Kozyglusz");
+        promotor.setEmail("rene@kozyglusz.fr");
+        return promotor;
     }
 
     private Guest guest() {
@@ -68,7 +104,7 @@ class TicketPDFFileServiceTest {
     private TicketType ticket4Days() {
         var ticketType = new TicketType();
         ticketType.setId(2L);
-        ticketType.setName("Karnet 4 dniowy");
+        ticketType.setName("Karnet Organic Festival Dzieci Kwiaty 2022 - 4 dni w naturze");
         ticketType.setProductId("345");
         ticketType.setProductUrl("http://organic/bilet-4-dni.html");
         return ticketType;

@@ -91,7 +91,6 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketType(ticketType);
 
         //promotor or artist
-        //todo
         Promotor promotor = null;
         if (ticketCreateDTO.getPromotorId() != null) {
             promotor = promotorRepository.getOne(ticketCreateDTO.getPromotorId());
@@ -113,7 +112,7 @@ public class TicketServiceImpl implements TicketService {
         ticket.setTicketQR(ticketQR);
         ticket.setTicketQRContentType(QRCODE_FORMAT);
         ticket.setTicketFileContentType(TICKET_FILE_CONTENT_TYPE);
-        ticket.setTicketFile(generateTicketPdf(uuid, ticketQR, ticketType, guest, promotor));
+        ticket.setTicketFile(generateTicketPdf(uuid, ticketQR, ticketType, guest, ticketCreateDTO.getArtistName(), promotor));
         ticket.setTicketUrl(ticketUrl);
         ticket.setTicketPrice(ticketCreateDTO.getTicketPrice());
         ticket.setTicketDiscount(ticketCreateDTO.getTicketDiscount());
@@ -138,7 +137,9 @@ public class TicketServiceImpl implements TicketService {
     private byte[] generateTicketPdf(UUID uuid,
                                      byte[] ticketQR,
                                      TicketType ticketType,
-                                     Guest guest, Promotor promotor) throws DocumentException, IOException {
+                                     Guest guest,
+                                     String artistName,
+                                     Promotor promotor) throws DocumentException, IOException {
         log.info("Generating pdf ticket: uuid={}, ticketType={}, guest={}, promotor={}", uuid, ticketType, guest, promotor);
 
         String format = QRCODE_FORMAT.contains("image") ? QRCODE_FORMAT : "image/" + QRCODE_FORMAT;
@@ -148,6 +149,7 @@ public class TicketServiceImpl implements TicketService {
             .qrFileContentType(format)
             .ticketType(ticketType)
             .guest(guest)
+            .artistName(artistName)
             .promotor(promotor)
             .build();
 
@@ -180,7 +182,9 @@ public class TicketServiceImpl implements TicketService {
 
             ticket.setTicketFile(
                 generateTicketPdf(ticket.getUuid(), ticket.getTicketQR(),
-                    ticket.getTicketType(), ticket.getGuest(), ticket.getPromotor()));
+                    ticket.getTicketType(), ticket.getGuest(),
+                    ticket.getArtistName(),
+                    ticket.getPromotor()));
             ticketRepository.save(ticket);
 
             return Optional.of(ticketMapper.toDto(ticket));
