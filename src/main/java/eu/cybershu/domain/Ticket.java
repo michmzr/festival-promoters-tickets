@@ -21,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "ticket")
 @ToString(of = {"id", "uuid", "ticketType", "orderId", "artistName", "ticketPrice", "ticketDiscount", "createdAt"})
-@EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "ticketType", "created_at", "artistName", "ticketPrice"})
+@EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "ticketType", "artistName", "ticketPrice"})
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;

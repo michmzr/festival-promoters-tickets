@@ -73,12 +73,12 @@ export class PromotorCreateComponent implements OnInit {
   }
 
   codeAdded(code: string): void {
-    console.info(`code ${code} added`);
+    console.info(`code '${code}' added`);
     this.newPromoCodes.push(code);
   }
 
   codeRemoved(code: string): void {
-    console.info(`code ${code} removed`);
+    console.info(`code '${code}' removed`);
     const index = this.newPromoCodes.indexOf(code);
     if (index >= 0) {
       this.newPromoCodes.splice(index, 1);
