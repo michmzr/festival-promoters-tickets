@@ -51,7 +51,7 @@ jobs:
         with:
           files: "./target/test-results/**/*.xml"
       - name: Package application
-        run: ./mvnw -ntp package -Pprod-heroku -DskipTests
+        run: ./mvnw -ntp package -Pprod-heroku,tls -DskipTests
       - name: Deploy to Heroku
         # You may pin to the exact commit or the version.
         # uses: AkhileshNS/heroku-deploy@79ef2ae4ff9b897010907016b268fd0f88561820
