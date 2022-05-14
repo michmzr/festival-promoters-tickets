@@ -6,8 +6,6 @@ import eu.cybershu.domain.PromoCode;
 import eu.cybershu.domain.Ticket;
 import eu.cybershu.domain.TicketType;
 import eu.cybershu.repository.TicketRepository;
-import eu.cybershu.service.TicketQueryService;
-import eu.cybershu.service.TicketService;
 import eu.cybershu.service.dto.TicketDTO;
 import eu.cybershu.service.mapper.TicketMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
+import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -48,25 +48,18 @@ public class TicketResourceIT {
     private static final String UPDATED_TICKET_URL = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_TICKET_QR = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_TICKET_QR = TestUtil.createByteArray(1, "1");
-    private static final String DEFAULT_TICKET_QR_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_TICKET_QR_CONTENT_TYPE = "image/png";
+    private static final String DEFAULT_TICKET_QR_CONTENT_TYPE = "jpg";
 
     private static final byte[] DEFAULT_TICKET_FILE = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_TICKET_FILE = TestUtil.createByteArray(1, "1");
-    private static final String DEFAULT_TICKET_FILE_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_TICKET_FILE_CONTENT_TYPE = "image/png";
+    private static final String DEFAULT_TICKET_FILE_CONTENT_TYPE = "application/pdf";
 
     private static final String DEFAULT_TICKET_ORDER_ID = "Xj3Ssi";
-    private static final String UPDATED_TICKET_ORDER_ID = "Xj3Ssi8";
 
-    private static final String DEFAULT_TICKET_PRICE = "199.99";
-    private static final String UPDATED_TICKET_PRICE = "11.45";
+    private static final Double DEFAULT_TICKET_PRICE = 199.99d;
 
-    private static final String DEFAULT_TICKET_DISCOUNT = "199.99";
-    private static final String UPDATED_TICKET_DISCOUNT = "11.45";
+    private static final Double DEFAULT_TICKET_DISCOUNT = 199.99d;
 
-    private static final Boolean DEFAULT_ENABLED = false;
+    private static final Boolean DEFAULT_ENABLED = true;
     private static final Boolean UPDATED_ENABLED = true;
 
     private static final Instant DEFAULT_CREATED_AT = Instant.ofEpochMilli(0L);
@@ -74,6 +67,7 @@ public class TicketResourceIT {
 
     private static final Instant DEFAULT_DISABLED_AT = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_DISABLED_AT = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final String DEFAULT_ARTIST_NAME = "Szan8Ds";
 
 
     @Autowired
@@ -83,21 +77,12 @@ public class TicketResourceIT {
     private TicketMapper ticketMapper;
 
     @Autowired
-    private TicketService ticketService;
-
-    @Autowired
-    private TicketQueryService ticketQueryService;
-
-    @Autowired
     private EntityManager em;
 
     @Autowired
     private MockMvc restTicketMockMvc;
 
     private Ticket ticket;
-
-    private TicketType ticketType;
-    private Guest guest;
 
     /**
      * Create an entity for this test.
@@ -128,35 +113,6 @@ public class TicketResourceIT {
             .guest(guest)
             .disabledAt(DEFAULT_DISABLED_AT);
     }
-    /**
-     * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
-     */
-    public static Ticket createUpdatedEntity(EntityManager em) {
-        TicketType ticketType = TicketTypeResourceIT.createEntity(em);
-        em.persist(ticketType);
-
-        Guest guest = GuestResourceIT.createEntity(em);
-        em.persist(guest);
-
-        return new Ticket()
-            .uuid(UPDATED_UUID)
-            .ticketUrl(UPDATED_TICKET_URL)
-            .ticketQR(UPDATED_TICKET_QR)
-            .ticketQRContentType(UPDATED_TICKET_QR_CONTENT_TYPE)
-            .ticketFile(UPDATED_TICKET_FILE)
-            .ticketFileContentType(UPDATED_TICKET_FILE_CONTENT_TYPE)
-            .ticketPrice(UPDATED_TICKET_PRICE)
-            .ticketDiscount(UPDATED_TICKET_DISCOUNT)
-            .orderId(UPDATED_TICKET_ORDER_ID)
-            .enabled(UPDATED_ENABLED)
-            .ticketType(ticketType)
-            .guest(guest)
-            .createdAt(UPDATED_CREATED_AT)
-            .disabledAt(UPDATED_DISABLED_AT);
-    }
 
     @BeforeEach
     public void initTest() {
@@ -167,8 +123,11 @@ public class TicketResourceIT {
     @Transactional
     public void createTicket() throws Exception {
         int databaseSizeBeforeCreate = ticketRepository.findAll().size();
+
         // Create the Ticket
         TicketDTO ticketDTO = ticketMapper.toDto(ticket);
+        ticketDTO.setArtistName(DEFAULT_ARTIST_NAME);
+
         restTicketMockMvc.perform(post("/api/tickets").with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
@@ -178,101 +137,20 @@ public class TicketResourceIT {
         List<Ticket> ticketList = ticketRepository.findAll();
         assertThat(ticketList).hasSize(databaseSizeBeforeCreate + 1);
         Ticket testTicket = ticketList.get(ticketList.size() - 1);
-        assertThat(testTicket.getUuid()).isEqualTo(DEFAULT_UUID);
-        assertThat(testTicket.getTicketUrl()).isEqualTo(DEFAULT_TICKET_URL);
-        assertThat(testTicket.getTicketQR()).isEqualTo(DEFAULT_TICKET_QR);
+        assertThat(new URI(testTicket.getTicketUrl())).isNotNull();
+        assertThat(testTicket.getTicketQR()).isNotEmpty();
         assertThat(testTicket.getTicketQRContentType()).isEqualTo(DEFAULT_TICKET_QR_CONTENT_TYPE);
-        assertThat(testTicket.getTicketFile()).isEqualTo(DEFAULT_TICKET_FILE);
+        assertThat(testTicket.getTicketFile()).isNotEmpty();
         assertThat(testTicket.getTicketFileContentType()).isEqualTo(DEFAULT_TICKET_FILE_CONTENT_TYPE);
         assertThat(testTicket.isEnabled()).isEqualTo(DEFAULT_ENABLED);
         assertThat(testTicket.getOrderId()).isEqualTo(DEFAULT_TICKET_ORDER_ID);
-        assertThat(testTicket.getTicketPrice()).isEqualTo(DEFAULT_TICKET_PRICE);
-        assertThat(testTicket.getTicketDiscount()).isEqualTo(DEFAULT_TICKET_DISCOUNT);
-        assertThat(testTicket.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testTicket.getDisabledAt()).isEqualTo(DEFAULT_DISABLED_AT);
+        assertThat(testTicket.getGuest().getId()).isEqualTo(ticketDTO.getGuestId());
+        assertThat(testTicket.getArtistName()).isEqualTo(DEFAULT_ARTIST_NAME);
+        assertThat(testTicket.getTicketPrice()).isEqualTo(BigDecimal.valueOf(DEFAULT_TICKET_PRICE));
+        assertThat(testTicket.getTicketDiscount()).isEqualTo(BigDecimal.valueOf(DEFAULT_TICKET_DISCOUNT));
+        assertThat(testTicket.getCreatedAt()).isNotNull();
+        assertThat(testTicket.getDisabledAt()).isNull();
     }
-
-    @Test
-    @Transactional
-    public void createTicketWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = ticketRepository.findAll().size();
-
-        // Create the Ticket with an existing ID
-        ticket.setId(1L);
-        TicketDTO ticketDTO = ticketMapper.toDto(ticket);
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restTicketMockMvc.perform(post("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isBadRequest());
-
-        // Validate the Ticket in the database
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeCreate);
-    }
-
-
-    @Test
-    @Transactional
-    public void checkUuidIsRequired() throws Exception {
-        int databaseSizeBeforeTest = ticketRepository.findAll().size();
-        // set the field null
-        ticket.setUuid(null);
-
-        // Create the Ticket, which fails.
-        TicketDTO ticketDTO = ticketMapper.toDto(ticket);
-
-
-        restTicketMockMvc.perform(post("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkTicketUrlIsRequired() throws Exception {
-        int databaseSizeBeforeTest = ticketRepository.findAll().size();
-        // set the field null
-        ticket.setTicketUrl(null);
-
-        // Create the Ticket, which fails.
-        TicketDTO ticketDTO = ticketMapper.toDto(ticket);
-
-
-        restTicketMockMvc.perform(post("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkEnabledIsRequired() throws Exception {
-        int databaseSizeBeforeTest = ticketRepository.findAll().size();
-        // set the field null
-        ticket.setEnabled(null);
-
-        // Create the Ticket, which fails.
-        TicketDTO ticketDTO = ticketMapper.toDto(ticket);
-
-
-        restTicketMockMvc.perform(post("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeTest);
-    }
-
 
     @Test
     @Transactional
@@ -312,9 +190,9 @@ public class TicketResourceIT {
             .andExpect(jsonPath("$.id").value(ticket.getId().intValue()))
             .andExpect(jsonPath("$.uuid").value(DEFAULT_UUID.toString()))
             .andExpect(jsonPath("$.ticketUrl").value(DEFAULT_TICKET_URL))
-            .andExpect(jsonPath("$.orderId").value(hasItem(DEFAULT_TICKET_ORDER_ID)))
-            .andExpect(jsonPath("$.ticketPrice").value(hasItem(DEFAULT_TICKET_PRICE)))
-            .andExpect(jsonPath("$.ticketDiscount").value(hasItem(DEFAULT_TICKET_DISCOUNT)))
+            .andExpect(jsonPath("$.orderId").value(DEFAULT_TICKET_ORDER_ID))
+            .andExpect(jsonPath("$.ticketPrice").value(DEFAULT_TICKET_PRICE))
+            .andExpect(jsonPath("$.ticketDiscount").value(DEFAULT_TICKET_DISCOUNT))
             .andExpect(jsonPath("$.ticketQRContentType").value(DEFAULT_TICKET_QR_CONTENT_TYPE))
             .andExpect(jsonPath("$.ticketQR").value(Base64Utils.encodeToString(DEFAULT_TICKET_QR)))
             .andExpect(jsonPath("$.ticketFileContentType").value(DEFAULT_TICKET_FILE_CONTENT_TYPE))
@@ -714,25 +592,6 @@ public class TicketResourceIT {
         // Get the ticket
         restTicketMockMvc.perform(get("/api/tickets/{id}", Long.MAX_VALUE))
             .andExpect(status().isNotFound());
-    }
-
-    @Test
-    @Transactional
-    public void updateNonExistingTicket() throws Exception {
-        int databaseSizeBeforeUpdate = ticketRepository.findAll().size();
-
-        // Create the Ticket
-        TicketDTO ticketDTO = ticketMapper.toDto(ticket);
-
-        // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restTicketMockMvc.perform(put("/api/tickets").with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(TestUtil.convertObjectToJsonBytes(ticketDTO)))
-            .andExpect(status().isBadRequest());
-
-        // Validate the Ticket in the database
-        List<Ticket> ticketList = ticketRepository.findAll();
-        assertThat(ticketList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test

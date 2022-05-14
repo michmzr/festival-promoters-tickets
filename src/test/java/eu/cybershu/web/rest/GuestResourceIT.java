@@ -133,30 +133,7 @@ public class GuestResourceIT {
         assertThat(testGuest.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testGuest.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
         assertThat(testGuest.getNotes()).isEqualTo(DEFAULT_NOTES);
-        assertThat(testGuest.getCreatedAt()).isEqualTo(DEFAULT_CREATED_AT);
-        assertThat(testGuest.isEnabled()).isEqualTo(DEFAULT_ENABLED);
     }
-
-    @Test
-    @Transactional
-    public void createGuestWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = guestRepository.findAll().size();
-
-        // Create the Guest with an existing ID
-        guest.setId(1L);
-        GuestDTO guestDTO = guestMapper.toDto(guest);
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restGuestMockMvc.perform(post("/api/guests").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(guestDTO)))
-            .andExpect(status().isBadRequest());
-
-        // Validate the Guest in the database
-        List<Guest> guestList = guestRepository.findAll();
-        assertThat(guestList).hasSize(databaseSizeBeforeCreate);
-    }
-
 
     @Test
     @Transactional
@@ -220,26 +197,6 @@ public class GuestResourceIT {
 
     @Test
     @Transactional
-    public void checkEnabledIsRequired() throws Exception {
-        int databaseSizeBeforeTest = guestRepository.findAll().size();
-        // set the field null
-        guest.setEnabled(null);
-
-        // Create the Guest, which fails.
-        GuestDTO guestDTO = guestMapper.toDto(guest);
-
-
-        restGuestMockMvc.perform(post("/api/guests").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(guestDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Guest> guestList = guestRepository.findAll();
-        assertThat(guestList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllGuests() throws Exception {
         // Initialize the database
         guestRepository.saveAndFlush(guest);
@@ -275,7 +232,7 @@ public class GuestResourceIT {
             .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
             .andExpect(jsonPath("$.notes").value(DEFAULT_NOTES))
             .andExpect(jsonPath("$.createdAt").value(DEFAULT_CREATED_AT.toString()))
-            .andExpect(jsonPath("$.enabled").value(DEFAULT_ENABLED.booleanValue()));
+            .andExpect(jsonPath("$.enabled").value(DEFAULT_ENABLED));
     }
     @Test
     @Transactional
@@ -321,8 +278,6 @@ public class GuestResourceIT {
         assertThat(testGuest.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testGuest.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
         assertThat(testGuest.getNotes()).isEqualTo(UPDATED_NOTES);
-        assertThat(testGuest.getCreatedAt()).isEqualTo(UPDATED_CREATED_AT);
-        assertThat(testGuest.isEnabled()).isEqualTo(UPDATED_ENABLED);
     }
 
     @Test

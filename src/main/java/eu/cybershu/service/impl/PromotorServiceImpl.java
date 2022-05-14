@@ -46,7 +46,8 @@ public class PromotorServiceImpl implements PromotorService {
         promotor.setName(promotorDTO.getName());
         promotor.setLastName(promotorDTO.getLastName());
         promotor.setEmail(promotorDTO.getEmail());
-        promotor.setPhoneNumber(promotor.getPhoneNumber());
+        promotor.setPhoneNumber(promotorDTO.getPhoneNumber());
+        promotor.setNotes(promotorDTO.getNotes());
 
         Set<PromoCode> newPromoCodes = createPromoCodes(promotorDTO.getNewPromoCodes(), promotor);
         promoCodeRepository.saveAll(newPromoCodes);
@@ -66,9 +67,10 @@ public class PromotorServiceImpl implements PromotorService {
         promotor.setEmail(promotorDTO.getEmail());
         promotor.setEnabled(true);
         promotor.setCreatedAt(Instant.now());
-        promotor.setPhoneNumber(promotor.getPhoneNumber());
+        promotor.setPhoneNumber(promotorDTO.getPhoneNumber());
+        promotor.setNotes(promotorDTO.getNotes());
 
-        log.info("Creating promotor {}", promotor);
+        log.info("Creating promotor {} ....", promotor);
         promotor = promotorRepository.save(promotor);
 
         Set<PromoCode> promoCodes =

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { PromoCodeService } from '../../promo-code/promo-code.service';
 
@@ -13,7 +13,7 @@ export class PromotorPromoNewCodesFormComponent implements OnInit {
   promoCodes: string[] = [];
 
   addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  readonly separatorKeysCodes = [ENTER, COMMA, TAB, SPACE] as const;
 
   @Output()
   codeAdded: EventEmitter<string> = new EventEmitter<string>();
@@ -25,7 +25,13 @@ export class PromotorPromoNewCodesFormComponent implements OnInit {
   ngOnInit(): void {}
 
   add(event: MatChipInputEvent): void {
-    const code = (event.value || '').trim();
+    this.promoCodeSubmitted(event.value);
+    // Clear the input code
+    event.input.value = '';
+  }
+
+  private promoCodeSubmitted(code: string): void {
+    code = (code || '').trim();
 
     if (code) {
       if (this.promoCodes.filter(x => x.toLowerCase().includes(code.toLowerCase())).length > 0) {
@@ -49,9 +55,6 @@ export class PromotorPromoNewCodesFormComponent implements OnInit {
         }
       );
     }
-
-    // Clear the input code
-    event.input.value = '';
   }
 
   setPromoError(error: string): void {
