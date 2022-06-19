@@ -7,7 +7,7 @@ import * as moment from 'moment';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { ITicket, TicketCreate, TicketListingItem } from 'app/shared/model/ticket.model';
-import { SyncRequestClient } from 'ts-sync-request/dist';
+import { SyncRequestClient, SyncRequestOptions } from 'ts-sync-request/dist';
 
 type EntityResponseType = HttpResponse<ITicket>;
 type EntityArrayResponseType = HttpResponse<TicketListingItem[]>;
@@ -39,7 +39,13 @@ export class TicketService {
   }
 
   findSync(id: number): ITicket {
-    return new SyncRequestClient().get<ITicket>(`${this.resourceUrl}/${id}`);
+    const options: SyncRequestOptions = <SyncRequestOptions>{
+      timeout: true,
+      retry: true,
+    };
+
+    const url = `${this.resourceUrl}/${id}`;
+    return new SyncRequestClient(options).get<ITicket>(url);
   }
 
   regenerateTicketPDF(id: number): Observable<EntityResponseType> {

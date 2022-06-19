@@ -121,7 +121,7 @@ jhipster:
 # More documentation is available at:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
-server.tomcat.max-threads: 10
+server.tomcat.max-threads: 4
 
 application:
   tickets:
