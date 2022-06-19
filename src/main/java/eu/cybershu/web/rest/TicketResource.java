@@ -7,6 +7,7 @@ import eu.cybershu.service.TicketService;
 import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketCriteria;
 import eu.cybershu.service.dto.TicketDTO;
+import eu.cybershu.service.dto.TicketListingItemDTO;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -61,15 +62,15 @@ public class TicketResource {
     }
 
     /**
-     * {@code GET  /tickets} : get all the tickets.
+     * {@code GET  /tickets} : get all the tickets by criteria.
      *
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of tickets in body.
      */
     @GetMapping("/tickets")
-    public ResponseEntity<List<TicketDTO>> getAllTickets(TicketCriteria criteria) {
+    public ResponseEntity<List<TicketListingItemDTO>> getAllTickets(TicketCriteria criteria) {
         log.debug("REST request to get Tickets by criteria: {}", criteria);
-        List<TicketDTO> entityList = ticketQueryService.findByCriteria(criteria);
+        var entityList = ticketQueryService.findByCriteria(criteria);
         return ResponseEntity.ok().body(entityList);
     }
 

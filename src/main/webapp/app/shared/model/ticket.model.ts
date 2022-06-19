@@ -49,6 +49,27 @@ export class Ticket implements ITicket {
   }
 }
 
+export class TicketListingItem implements ITicket {
+  constructor(
+    public id?: number,
+    public name?: string,
+    public uuid?: string,
+    public ticketUrl?: string,
+    public enabled?: boolean,
+    public createdAt?: Moment,
+    public disabledAt?: Moment,
+    public ticketTypeId?: number,
+    public ticketPrice?: number,
+    public ticketDiscount?: number,
+    public promoCodeId?: number,
+    public artistName?: string,
+    public guestId?: number,
+    public orderId?: string
+  ) {
+    this.enabled = this.enabled || false;
+  }
+}
+
 export class TicketCreate {
   constructor(
     public ticketTypeId?: number,

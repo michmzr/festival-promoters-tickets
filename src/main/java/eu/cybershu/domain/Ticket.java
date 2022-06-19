@@ -24,7 +24,7 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "ticketType", "artistName", "ticketPrice"})
 public class Ticket implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")

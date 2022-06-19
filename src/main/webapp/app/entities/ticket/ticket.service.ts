@@ -6,10 +6,11 @@ import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { ITicket, TicketCreate } from 'app/shared/model/ticket.model';
+import { ITicket, TicketCreate, TicketListingItem } from 'app/shared/model/ticket.model';
+import { SyncRequestClient } from 'ts-sync-request/dist';
 
 type EntityResponseType = HttpResponse<ITicket>;
-type EntityArrayResponseType = HttpResponse<ITicket[]>;
+type EntityArrayResponseType = HttpResponse<TicketListingItem[]>;
 
 @Injectable({ providedIn: 'root' })
 export class TicketService {
@@ -35,6 +36,10 @@ export class TicketService {
     return this.http
       .get<ITicket>(`${this.resourceUrl}/${id}`, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+  }
+
+  findSync(id: number): ITicket {
+    return new SyncRequestClient().get<ITicket>(`${this.resourceUrl}/${id}`);
   }
 
   regenerateTicketPDF(id: number): Observable<EntityResponseType> {
