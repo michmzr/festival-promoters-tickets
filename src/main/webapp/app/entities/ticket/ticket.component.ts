@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { JhiAlert, JhiAlertService, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ITicket, Ticket } from 'app/shared/model/ticket.model';
+import { ITicket, TicketListingItem } from 'app/shared/model/ticket.model';
 import { TicketService } from './ticket.service';
 import { TicketDeleteDialogComponent } from './ticket-delete-dialog.component';
 import { ITicketType } from '../../shared/model/ticket-type.model';
@@ -19,11 +19,12 @@ import { map } from 'rxjs/operators';
   templateUrl: './ticket.component.html',
 })
 export class TicketComponent implements OnInit, OnDestroy {
-  tickets: ITicket[] = [];
+  tickets: TicketListingItem[] = [];
   ticketTypes: ITicketType[] = [];
   promoCodes: Map<number, IPromoCode> = new Map<number, IPromoCode>();
   eventSubscriber?: Subscription;
   alerts: JhiAlert[] = [];
+  isLoading: Boolean = true;
 
   constructor(
     protected ticketService: TicketService,
@@ -45,6 +46,10 @@ export class TicketComponent implements OnInit, OnDestroy {
     this.loadPromoCodes();
 
     this.loadTickets();
+  }
+
+  getTicket(id: number): ITicket {
+    return this.ticketService.findSync(id);
   }
 
   promoCodeText(id: number): string {
@@ -127,13 +132,18 @@ export class TicketComponent implements OnInit, OnDestroy {
     return this.dataUtils.openFile(contentType, base64String);
   }
 
-  downloadFile(ticket: Ticket): void {
-    const fileName = 'bilet_' + ticket.uuid + '.pdf';
-    return this.dataUtils.downloadFile(
-      ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
-      ticket.ticketFile,
-      fileName
-    );
+  downloadFile(ticketItem: TicketListingItem): void {
+    if (ticketItem.id) {
+      const fileName = 'bilet_' + ticketItem.uuid + '.pdf';
+      // @ts-ignore
+      const ticket = this.getTicket(ticketItem.id);
+
+      return this.dataUtils.downloadFile(
+        ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
+        ticket.ticketFile,
+        fileName
+      );
+    }
   }
 
   registerChangeInTickets(): void {
@@ -155,12 +165,13 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   private loadTickets(): void {
-    this.ticketService.query().subscribe((res: HttpResponse<ITicket[]>) => {
+    this.ticketService.query().subscribe((res: HttpResponse<TicketListingItem[]>) => {
       if (res.body) {
         this.tickets = res.body.sort((a, b) => (a.id && b.id && a.id < b.id ? -1 : 1));
       } else {
         this.tickets = [];
       }
+      this.isLoading = false;
     });
   }
 }
