@@ -48,7 +48,7 @@ export class TicketComponent implements OnInit, OnDestroy {
       last: 0,
     };
     this.predicate = 'id';
-    this.ascending = true;
+    this.ascending = false;
     this.tickets = [];
   }
 
@@ -153,9 +153,13 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   downloadFile(ticketItem: TicketListingItem): void {
     if (ticketItem.id) {
+      this.isLoading = true;
+
       const fileName = 'bilet_' + ticketItem.uuid + '.pdf';
       // @ts-ignore
       const ticket = this.getTicket(ticketItem.id);
+
+      this.isLoading = false;
 
       return this.dataUtils.downloadFile(
         ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
