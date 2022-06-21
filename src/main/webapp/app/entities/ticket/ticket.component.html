@@ -45,7 +45,8 @@
                 <th scope="col"></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)"
+                   [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let ticket of tickets ;trackBy: trackId">
                 <td><a [routerLink]="['/ticket', ticket.id, 'view']">#{{ ticket.id }}</a></td>
                 <td>{{ ticket.uuid }}</td>

@@ -1,12 +1,15 @@
 package eu.cybershu.service.dto;
 
-import lombok.*;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * A DTO for the {@link eu.cybershu.domain.Ticket} entity.
@@ -34,7 +37,6 @@ public class TicketListingItemDTO implements Serializable {
 
     private Instant createdAt;
     private Instant disabledAt;
-    private Instant validatedAt;
 
     /**
      * Ticket price paid by guest

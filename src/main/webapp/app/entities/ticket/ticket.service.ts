@@ -38,6 +38,12 @@ export class TicketService {
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
+  findSync(id: number): ITicket {
+    const url = `${this.resourceUrl}/${id}`;
+
+    return new SyncRequestClient().get<ITicket>(url);
+  }
+
   regenerateTicketPDF(id: number): Observable<EntityResponseType> {
     return this.http
       .get<ITicket>(`${this.resourceUrl}/${id}/rebuild`, { observe: 'response' })

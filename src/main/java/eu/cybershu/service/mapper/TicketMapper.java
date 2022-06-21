@@ -12,7 +12,6 @@ import org.mapstruct.Mapping;
  */
 @Mapper(componentModel = "spring", uses = {TicketTypeMapper.class, PromoCodeMapper.class})
 public interface TicketMapper extends EntityMapper<TicketDTO, Ticket> {
-
     @Mapping(source = "ticketType.id", target = "ticketTypeId")
     @Mapping(source = "promoCode.id", target = "promoCodeId")
     @Mapping(source = "guest.id", target = "guestId")

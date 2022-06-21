@@ -42,7 +42,7 @@ jobs:
         run: |
           chmod +x mvnw
           ./mvnw -ntp clean verify -P-webpack
-      #      - name: Run frontend test
+      #      - name: Run frontend test todo restore
       #        continue-on-error: true
       #        run: npm run test
       - name: Publish Unit Test Results

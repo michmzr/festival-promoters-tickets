@@ -4,10 +4,12 @@ import com.google.zxing.WriterException;
 import com.lowagie.text.DocumentException;
 import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
-
+import eu.cybershu.service.dto.TicketListingItemDTO;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Service Interface for managing {@link eu.cybershu.domain.Ticket}.
@@ -20,7 +22,8 @@ public interface TicketService {
      * @param ticketDTO the entity to save.
      * @return the persisted entity.
      */
-    TicketDTO create(TicketCreateDTO ticketDTO) throws WriterException, IOException, DocumentException;
+    TicketDTO create(TicketCreateDTO ticketDTO)
+        throws WriterException, IOException, DocumentException;
 
     /**
      * Get all the tickets.
@@ -28,6 +31,15 @@ public interface TicketService {
      * @return the list of entities.
      */
     List<TicketDTO> findAll();
+
+
+    /**
+     * Get all the tickets.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<TicketListingItemDTO> findAll(Pageable pageable);
 
     /**
      * Get all the TicketDTO where Guest is {@code null}.

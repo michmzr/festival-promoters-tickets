@@ -2,22 +2,26 @@ package eu.cybershu.service.impl;
 
 import com.google.zxing.WriterException;
 import com.lowagie.text.DocumentException;
-import eu.cybershu.domain.*;
-import eu.cybershu.repository.*;
+import eu.cybershu.domain.Guest;
+import eu.cybershu.domain.PromoCode;
+import eu.cybershu.domain.Promotor;
+import eu.cybershu.domain.Ticket;
+import eu.cybershu.domain.TicketType;
+import eu.cybershu.repository.GuestRepository;
+import eu.cybershu.repository.PromoCodeRepository;
+import eu.cybershu.repository.PromotorRepository;
+import eu.cybershu.repository.TicketRepository;
+import eu.cybershu.repository.TicketTypeRepository;
 import eu.cybershu.service.GuestService;
 import eu.cybershu.service.QRCodeService;
 import eu.cybershu.service.TicketPDFFileService;
 import eu.cybershu.service.TicketService;
 import eu.cybershu.service.dto.TicketCreateDTO;
 import eu.cybershu.service.dto.TicketDTO;
+import eu.cybershu.service.dto.TicketListingItemDTO;
 import eu.cybershu.service.dto.TicketPDFData;
+import eu.cybershu.service.mapper.TicketListingMapper;
 import eu.cybershu.service.mapper.TicketMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,6 +31,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service Implementation for managing {@link Ticket}.
@@ -35,6 +46,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class TicketServiceImpl implements TicketService {
+
     private static final String QRCODE_FORMAT = "jpg";
     private static final String TICKET_FILE_CONTENT_TYPE = "application/pdf";
 
@@ -43,6 +55,8 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
 
     private final TicketMapper ticketMapper;
+    private final TicketListingMapper ticketListingMapper;
+
     private final QRCodeService qrCodeService;
 
     private final GuestRepository guestRepository;
@@ -54,13 +68,16 @@ public class TicketServiceImpl implements TicketService {
     private final TicketPDFFileService ticketPDFFileService;
 
     public TicketServiceImpl(TicketRepository ticketRepository, TicketMapper ticketMapper,
-                             TicketTypeRepository ticketTypeRepository, PromotorRepository promotorRepository,
-                             QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository,
-                             @Value("${application.tickets.domain}") String ticketDomainUrl,
+        TicketListingMapper ticketListingMapper, TicketTypeRepository ticketTypeRepository,
+        PromotorRepository promotorRepository,
+        QRCodeService qrCodeService, PromoCodeRepository promoCodeRepository,
+        @Value("${application.tickets.domain}") String ticketDomainUrl,
 
-                             GuestRepository guestRepository, GuestService guestService, TicketPDFFileService ticketPDFFileService) {
+        GuestRepository guestRepository, GuestService guestService,
+        TicketPDFFileService ticketPDFFileService) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
+        this.ticketListingMapper = ticketListingMapper;
         this.ticketTypeRepository = ticketTypeRepository;
         this.promotorRepository = promotorRepository;
         this.qrCodeService = qrCodeService;
@@ -201,6 +218,15 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.findAll().stream()
             .map(ticketMapper::toDto)
             .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TicketListingItemDTO> findAll(Pageable pageable) {
+        log.debug("Request to get all Promotors");
+        return ticketRepository
+            .findAll(pageable)
+            .map(ticketListingMapper::toDto);
     }
 
     /**
