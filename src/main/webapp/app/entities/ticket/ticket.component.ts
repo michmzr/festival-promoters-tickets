@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ITicket, TicketListingItem } from 'app/shared/model/ticket.model';
+import { ITicket, Ticket, TicketListingItem } from 'app/shared/model/ticket.model';
 import { TicketService } from './ticket.service';
 import { TicketDeleteDialogComponent } from './ticket-delete-dialog.component';
 import { ITicketType } from '../../shared/model/ticket-type.model';
@@ -168,17 +168,22 @@ export class TicketComponent implements OnInit, OnDestroy {
     if (ticketItem.id) {
       this.isLoading = true;
 
-      const fileName = 'bilet_' + ticketItem.uuid + '.pdf';
-      // @ts-ignore
-      const ticket = this.getTicket(ticketItem.id);
+      this.ticketService.find(ticketItem.id).subscribe((ticketRes: HttpResponse<Ticket>) => {
+        if (ticketRes.body) {
+          const ticket: ITicket = ticketRes.body;
+          const fileName = this.ticketService.getPdfFileName(ticket);
+          // @ts-ignore
+          this.isLoading = false;
 
-      this.isLoading = false;
-
-      return this.dataUtils.downloadFile(
-        ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
-        ticket.ticketFile,
-        fileName
-      );
+          this.dataUtils.downloadFile(
+            ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
+            ticket.ticketFile,
+            fileName
+          );
+        } else {
+          console.error('Not found ticket');
+        }
+      });
     }
   }
 

@@ -8,6 +8,7 @@ import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { ITicket, TicketCreate, TicketListingItem } from 'app/shared/model/ticket.model';
 import { SyncRequestClient } from 'ts-sync-request/dist';
+import { JhiDataUtils } from 'ng-jhipster';
 
 type EntityResponseType = HttpResponse<ITicket>;
 type EntityArrayResponseType = HttpResponse<TicketListingItem[]>;
@@ -16,7 +17,7 @@ type EntityArrayResponseType = HttpResponse<TicketListingItem[]>;
 export class TicketService {
   public resourceUrl = SERVER_API_URL + 'api/tickets';
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, protected dataUtils: JhiDataUtils) {}
 
   create(ticket: TicketCreate): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(ticket);
@@ -71,6 +72,19 @@ export class TicketService {
     return this.http
       .post<Object>(`${this.resourceUrl}/${id}/enable`, {}, { observe: 'response' })
       .pipe(map((res: HttpResponse<any>) => res.body));
+  }
+
+  getPdfFileName(ticket: ITicket): string {
+    return 'bilet_' + ticket.uuid + '.pdf';
+  }
+
+  downloadTicketPdf(ticket: ITicket): void {
+    const fileName = this.getPdfFileName(ticket);
+    this.dataUtils.downloadFile(
+      ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
+      ticket.ticketFile,
+      fileName
+    );
   }
 
   protected convertDateFromClient(ticket: ITicket): ITicket {
