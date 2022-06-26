@@ -4,10 +4,11 @@ import eu.cybershu.domain.*;
 import eu.cybershu.repository.TicketRepository;
 import eu.cybershu.service.dto.TicketCriteria;
 import eu.cybershu.service.dto.TicketDTO;
+import eu.cybershu.service.dto.TicketListingItemDTO;
+import eu.cybershu.service.mapper.TicketListingMapper;
 import eu.cybershu.service.mapper.TicketMapper;
 import io.github.jhipster.service.QueryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,19 +24,21 @@ import java.util.List;
  * in a way that all the filters must apply.
  * It returns a {@link List} of {@link TicketDTO} or a {@link Page} of {@link TicketDTO} which fulfills the criteria.
  */
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class TicketQueryService extends QueryService<Ticket> {
-
-    private final Logger log = LoggerFactory.getLogger(TicketQueryService.class);
-
     private final TicketRepository ticketRepository;
 
     private final TicketMapper ticketMapper;
+    private final TicketListingMapper ticketListingMapper;
 
-    public TicketQueryService(TicketRepository ticketRepository, TicketMapper ticketMapper) {
+    public TicketQueryService(TicketRepository ticketRepository,
+                              TicketMapper ticketMapper,
+                              TicketListingMapper ticketListingMapper) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
+        this.ticketListingMapper = ticketListingMapper;
     }
 
     /**
@@ -45,10 +48,10 @@ public class TicketQueryService extends QueryService<Ticket> {
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public List<TicketDTO> findByCriteria(TicketCriteria criteria) {
+    public List<TicketListingItemDTO> findByCriteria(TicketCriteria criteria) {
         log.debug("find by criteria : {}", criteria);
         final Specification<Ticket> specification = createSpecification(criteria);
-        return ticketMapper.toDto(ticketRepository.findAll(specification));
+        return ticketListingMapper.toDto(ticketRepository.findAll(specification));
     }
 
     /**

@@ -34,6 +34,7 @@
     "ngx-webstorage": "5.0.0",
     "rxjs": "6.5.5",
     "swagger-ui-dist": "3.25.1",
+    "ts-sync-request": "^1.4.1",
     "tslib": "2.0.0",
     "zone.js": "0.10.3"
   },

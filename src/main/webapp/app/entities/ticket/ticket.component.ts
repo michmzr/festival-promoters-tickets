@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { JhiAlert, JhiAlertService, JhiDataUtils, JhiEventManager } from 'ng-jhipster';
+import { JhiAlertService, JhiDataUtils, JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ITicket, Ticket } from 'app/shared/model/ticket.model';
+import { ITicket, TicketListingItem } from 'app/shared/model/ticket.model';
 import { TicketService } from './ticket.service';
 import { TicketDeleteDialogComponent } from './ticket-delete-dialog.component';
 import { ITicketType } from '../../shared/model/ticket-type.model';
@@ -13,17 +13,24 @@ import { TicketDisableDialogComponent } from './ticket-disable-dialog.component'
 import { IPromoCode } from '../../shared/model/promo-code.model';
 import { PromoCodeService } from '../promo-code/promo-code.service';
 import { map } from 'rxjs/operators';
+import { ITEMS_PER_PAGE } from '../../shared/constants/pagination.constants';
+import { IPromotor } from '../../shared/model/promotor.model';
 
 @Component({
   selector: 'jhi-ticket',
   templateUrl: './ticket.component.html',
 })
 export class TicketComponent implements OnInit, OnDestroy {
-  tickets: ITicket[] = [];
+  tickets: TicketListingItem[] = [];
   ticketTypes: ITicketType[] = [];
   promoCodes: Map<number, IPromoCode> = new Map<number, IPromoCode>();
   eventSubscriber?: Subscription;
-  alerts: JhiAlert[] = [];
+  itemsPerPage: number;
+  links: any;
+  page: number;
+  predicate: string;
+  ascending: boolean;
+  isLoading: Boolean = true;
 
   constructor(
     protected ticketService: TicketService,
@@ -32,8 +39,18 @@ export class TicketComponent implements OnInit, OnDestroy {
     protected dataUtils: JhiDataUtils,
     protected alertService: JhiAlertService,
     protected eventManager: JhiEventManager,
-    protected modalService: NgbModal
-  ) {}
+    protected modalService: NgbModal,
+    protected parseLinks: JhiParseLinks
+  ) {
+    this.itemsPerPage = ITEMS_PER_PAGE;
+    this.page = 0;
+    this.links = {
+      last: 0,
+    };
+    this.predicate = 'id';
+    this.ascending = false;
+    this.tickets = [];
+  }
 
   ngOnInit(): void {
     this.loadAll();
@@ -47,6 +64,10 @@ export class TicketComponent implements OnInit, OnDestroy {
     this.loadTickets();
   }
 
+  getTicket(id: number): ITicket {
+    return this.ticketService.findSync(id);
+  }
+
   promoCodeText(id: number): string {
     if (this.promoCodes.has(id)) {
       const promo = this.promoCodes.get(id);
@@ -57,7 +78,10 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   disable(ticket: ITicket): void {
-    const modalRef = this.modalService.open(TicketDisableDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(TicketDisableDialogComponent, {
+      size: 'lg',
+      backdrop: 'static',
+    });
     modalRef.componentInstance.ticket = ticket;
   }
 
@@ -127,13 +151,22 @@ export class TicketComponent implements OnInit, OnDestroy {
     return this.dataUtils.openFile(contentType, base64String);
   }
 
-  downloadFile(ticket: Ticket): void {
-    const fileName = 'bilet_' + ticket.uuid + '.pdf';
-    return this.dataUtils.downloadFile(
-      ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
-      ticket.ticketFile,
-      fileName
-    );
+  downloadFile(ticketItem: TicketListingItem): void {
+    if (ticketItem.id) {
+      this.isLoading = true;
+
+      const fileName = 'bilet_' + ticketItem.uuid + '.pdf';
+      // @ts-ignore
+      const ticket = this.getTicket(ticketItem.id);
+
+      this.isLoading = false;
+
+      return this.dataUtils.downloadFile(
+        ticket.ticketFileContentType ? ticket.ticketFileContentType : 'application/pdf',
+        ticket.ticketFile,
+        fileName
+      );
+    }
   }
 
   registerChangeInTickets(): void {
@@ -141,7 +174,10 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   delete(ticket: ITicket): void {
-    const modalRef = this.modalService.open(TicketDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(TicketDeleteDialogComponent, {
+      size: 'lg',
+      backdrop: 'static',
+    });
     modalRef.componentInstance.ticket = ticket;
     this.loadTickets();
   }
@@ -155,12 +191,40 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   private loadTickets(): void {
-    this.ticketService.query().subscribe((res: HttpResponse<ITicket[]>) => {
-      if (res.body) {
-        this.tickets = res.body.sort((a, b) => (a.id && b.id && a.id < b.id ? -1 : 1));
-      } else {
-        this.tickets = [];
+    this.isLoading = true;
+    this.ticketService
+      .query({
+        page: this.page,
+        size: this.itemsPerPage,
+        sort: this.sort(),
+      })
+      .subscribe((res: HttpResponse<TicketListingItem[]>) => this.paginateTickets(res.body, res.headers));
+  }
+
+  loadPage(page: number): void {
+    this.page = page;
+    this.loadTickets();
+  }
+
+  protected paginateTickets(data: IPromotor[] | null, headers: HttpHeaders): void {
+    if (data != null) {
+      const headersLink = headers.get('link');
+      this.links = this.parseLinks.parse(headersLink ? headersLink : '');
+      if (data) {
+        for (let i = 0; i < data.length; i++) {
+          this.tickets.push(data[i]);
+        }
       }
-    });
+    }
+
+    this.isLoading = false;
+  }
+
+  sort(): string[] {
+    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
+    if (this.predicate !== 'id') {
+      result.push('id');
+    }
+    return result;
   }
 }

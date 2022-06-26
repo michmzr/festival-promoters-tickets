@@ -1,14 +1,31 @@
 package eu.cybershu.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * A Ticket.
@@ -20,17 +37,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "ticket")
-@ToString(of = {"id", "uuid", "ticketType", "orderId", "artistName", "ticketPrice", "ticketDiscount", "createdAt"})
-@EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "ticketType", "artistName", "ticketPrice"})
+@ToString(of = {"id", "orderId", "artistName", "ticketPrice", "ticketDiscount", "createdAt"})
+@EqualsAndHashCode(of = {"id", "uuid", "ticketUrl", "artistName", "ticketPrice"})
 public class Ticket implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
+    private static final long serialVersionUID = 2L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
-
     @NotNull
     @Column(name = "uuid", nullable = false)
     private UUID uuid;
@@ -40,6 +54,7 @@ public class Ticket implements Serializable {
     private String ticketUrl;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "ticket_qr", nullable = false)
     private byte[] ticketQR;
 
@@ -47,6 +62,7 @@ public class Ticket implements Serializable {
     private String ticketQRContentType;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "ticket_file")
     private byte[] ticketFile;
 
@@ -76,28 +92,21 @@ public class Ticket implements Serializable {
     @NotNull
     @Column(name = "order_id")
     private String orderId;
-
     @OneToOne
     @JoinColumn
     private PromoCode promoCode;
-
     @OneToOne
     @JoinColumn
     private Promotor promotor;
-
     private String artistName;
-
     @OneToOne
     @JsonIgnore
     private Guest guest;
-
     @Column(name = "validated_at")
     private Instant validatedAt;
-
     @NotNull
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
-
     @Column(name = "disabled_at")
     private Instant disabledAt;
 

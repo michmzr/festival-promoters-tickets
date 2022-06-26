@@ -5,7 +5,7 @@
 
     <groupId>eu.cybershu</groupId>
     <artifactId>organic-promo-tickets</artifactId>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
     <packaging>jar</packaging>
     <name>Organic Promo Tickets</name>
 
@@ -22,7 +22,7 @@
     <properties>
         <spring-boot.run.jvmArguments>-Duser.timezone=CET</spring-boot.run.jvmArguments>
 
-        <finalName>${project.artifactId}-${version}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
 
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
@@ -1159,7 +1159,7 @@
                 <!-- default Spring profiles -->
                 <spring.profiles.active>prod${profile.swagger}${profile.tls}${profile.no-liquibase}
                 </spring.profiles.active>
-                <finalName>${artifactId}</finalName>
+                <finalName>${project.artifactId}</finalName>
             </properties>
         </profile>
         <profile>

@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {JhiDataUtils} from 'ng-jhipster';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {ITicket} from 'app/shared/model/ticket.model';
-import {ITicketType} from '../../shared/model/ticket-type.model';
-import {map} from 'rxjs/operators';
-import {HttpResponse} from '@angular/common/http';
-import {TicketTypeService} from '../ticket-type/ticket-type.service';
-import {IGuest} from "../../shared/model/guest.model";
-import {GuestService} from "../guest/guest.service";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { JhiDataUtils } from 'ng-jhipster';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ITicket } from 'app/shared/model/ticket.model';
+import { ITicketType } from '../../shared/model/ticket-type.model';
+import { map } from 'rxjs/operators';
+import { HttpResponse } from '@angular/common/http';
+import { TicketTypeService } from '../ticket-type/ticket-type.service';
+import { IGuest } from '../../shared/model/guest.model';
+import { GuestService } from '../guest/guest.service';
 
 @Component({
   selector: 'jhi-ticket-detail',
@@ -42,8 +42,7 @@ export class TicketDetailComponent implements OnInit {
         this.ticketImagePath = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + ticket.ticketFile);
       else this.ticketImagePath = this.qrImagePath;
 
-      this.guestService.find(ticket.guestId)
-        .subscribe(resp => (this.guest = resp.body));
+      this.guestService.find(ticket.guestId).subscribe(resp => (this.guest = resp.body));
 
       if (ticket.ticketTypeId) {
         this.ticketTypeService
@@ -67,11 +66,13 @@ export class TicketDetailComponent implements OnInit {
   }
 
   openQrFile(): void {
-    this.dataUtils.openFile(this.ticket?.ticketQRContentType!, this.ticket?.ticketQR!);
+    return this.dataUtils.openFile(this.ticket?.ticketQRContentType!, this.ticket?.ticketQR!);
   }
 
   openTicketFile(): void {
-    this.dataUtils.openFile(this.ticket?.ticketFileContentType!, this.ticket!.ticketFile);
+    const fileName = 'bilet_' + this.ticket?.uuid + '.pdf';
+    // todo zwraca bajty zamiast pdd-a
+    this.dataUtils.downloadFile(this.ticket?.ticketFileContentType!, this.ticket?.ticketFile, fileName);
   }
 
   downloadFile(contentType = '', base64String: string, fileName: string): void {

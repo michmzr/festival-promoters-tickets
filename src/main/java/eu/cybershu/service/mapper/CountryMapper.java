@@ -10,9 +10,6 @@ import org.mapstruct.Mapper;
  */
 @Mapper(componentModel = "spring", uses = {})
 public interface CountryMapper extends EntityMapper<CountryDTO, Country> {
-
-
-
     default Country fromId(Long id) {
         if (id == null) {
             return null;
