@@ -9,6 +9,7 @@ import { HttpResponse } from '@angular/common/http';
 import { TicketTypeService } from '../ticket-type/ticket-type.service';
 import { IGuest } from '../../shared/model/guest.model';
 import { GuestService } from '../guest/guest.service';
+import { TicketService } from './ticket.service';
 
 @Component({
   selector: 'jhi-ticket-detail',
@@ -24,6 +25,7 @@ export class TicketDetailComponent implements OnInit {
 
   constructor(
     protected ticketTypeService: TicketTypeService,
+    protected ticketService: TicketService,
     protected guestService: GuestService,
     protected dataUtils: JhiDataUtils,
     protected activatedRoute: ActivatedRoute,
@@ -65,18 +67,8 @@ export class TicketDetailComponent implements OnInit {
     return this.dataUtils.byteSize(base64String);
   }
 
-  openQrFile(): void {
-    return this.dataUtils.openFile(this.ticket?.ticketQRContentType!, this.ticket?.ticketQR!);
-  }
-
-  openTicketFile(): void {
-    const fileName = 'bilet_' + this.ticket?.uuid + '.pdf';
-    // todo zwraca bajty zamiast pdd-a
-    this.dataUtils.downloadFile(this.ticket?.ticketFileContentType!, this.ticket?.ticketFile, fileName);
-  }
-
-  downloadFile(contentType = '', base64String: string, fileName: string): void {
-    this.dataUtils.downloadFile(contentType, base64String, fileName);
+  downloadTicketFile(): void {
+    if (this.ticket) this.ticketService.downloadTicketPdf(this.ticket);
   }
 
   previousState(): void {

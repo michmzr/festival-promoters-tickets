@@ -1,16 +1,10 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'form-boolean-label',
-  template: ` <span [ngClass]="{ badge: true, 'badge-success': lbValue, 'badge-warning': !lbValue }">{{ lbValue }}</span> `,
+  template: `<span [ngClass]="{ badge: true, 'badge-success': lbValue, 'badge-warning': !lbValue }">{{ lbValue }}</span>`,
 })
-export class FormBooleanLabelComponent implements OnInit, OnDestroy {
+export class FormBooleanLabelComponent {
   @Input()
   lbValue: boolean | undefined;
-
-  ngOnDestroy(): void {}
-
-  ngOnInit(): void {
-    console.info(`value: ${this.lbValue}`);
-  }
 }
