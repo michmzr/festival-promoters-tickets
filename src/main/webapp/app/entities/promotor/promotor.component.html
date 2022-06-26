@@ -19,15 +19,35 @@
     </div>
 
     <div class="table-responsive" id="entities" *ngIf="promotors && promotors.length > 0">
+        <nav *ngIf="canLoadMore()" class="float-right">
+            <br/>
+            <ul class="pagination">
+                <li class="page-item"><span class="button" (click)="loadPage(page + 1)"><fa-icon icon="sync"></fa-icon> Load next page</span>
+                </li>
+            </ul>
+        </nav>
+
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
-                    <th scope="col"  jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="name"><span>Name</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="lastName"><span>Last Name</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="email"><span>Email</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="phoneNumber"><span>Phone Number</span> <fa-icon icon="sort"></fa-icon></th>
-                    <th scope="col"  jhiSortBy="notes"><span>Notes</span> <fa-icon icon="sort"></fa-icon></th>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
+                <th scope="col" jhiSortBy="id"><span>ID</span>
+                    <fa-icon icon="sort"></fa-icon>
+                </th>
+                <th scope="col" jhiSortBy="name"><span>Name</span>
+                    <fa-icon icon="sort"></fa-icon>
+                </th>
+                <th scope="col" jhiSortBy="lastName"><span>Last Name</span>
+                    <fa-icon icon="sort"></fa-icon>
+                </th>
+                <th scope="col" jhiSortBy="email"><span>Email</span>
+                    <fa-icon icon="sort"></fa-icon>
+                </th>
+                <th scope="col" jhiSortBy="phoneNumber"><span>Phone Number</span>
+                    <fa-icon icon="sort"></fa-icon>
+                </th>
+                <th scope="col" jhiSortBy="notes"><span>Notes</span>
+                    <fa-icon icon="sort"></fa-icon>
+                </th>
                     <th scope="col"  jhiSortBy="createdAt"><span>Created At</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="enabled"><span>Enabled</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
@@ -76,5 +96,13 @@
                 </tr>
             </tbody>
         </table>
+
+        <nav *ngIf="canLoadMore()" class="float-right">
+            <br/>
+            <ul class="pagination">
+                <li class="page-item"><span class="button" (click)="loadPage(page + 1)"><fa-icon icon="sync"></fa-icon> Load next page</span>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>

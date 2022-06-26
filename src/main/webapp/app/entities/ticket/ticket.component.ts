@@ -16,6 +16,8 @@ import { map } from 'rxjs/operators';
 import { ITEMS_PER_PAGE } from '../../shared/constants/pagination.constants';
 import { IPromotor } from '../../shared/model/promotor.model';
 
+const EVENT_ON_LIST_MODIFIED = 'ticketListModification';
+
 @Component({
   selector: 'jhi-ticket',
   templateUrl: './ticket.component.html',
@@ -83,14 +85,26 @@ export class TicketComponent implements OnInit, OnDestroy {
       backdrop: 'static',
     });
     modalRef.componentInstance.ticket = ticket;
+
+    this.tickets.forEach(t => {
+      if (t.id === ticket.id) {
+        t.enabled = false;
+      }
+    });
   }
 
   enable(ticket: ITicket): void {
     const id = ticket.id;
     if (id) {
       this.ticketService.enable(id).subscribe(() => {
-        this.eventManager.broadcast('ticketListModification');
+        this.eventManager.broadcast(EVENT_ON_LIST_MODIFIED);
         this.alertService.success(`Ticket #${id} is enabled again. Can be used by guest.`);
+
+        this.tickets.forEach(t => {
+          if (t.id === ticket.id) {
+            t.enabled = true;
+          }
+        });
       });
     }
   }
@@ -115,7 +129,6 @@ export class TicketComponent implements OnInit, OnDestroy {
       if (res.body) {
         const newTicket = res.body;
         this.tickets = this.tickets.map(t => (t.id === ticket.id ? newTicket : t));
-        this.eventManager.broadcast('ticketListModification');
         this.alertService.success('PDF został wygenerowany ponownie');
       }
     });
@@ -170,7 +183,10 @@ export class TicketComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInTickets(): void {
-    this.eventSubscriber = this.eventManager.subscribe('ticketListModification', () => this.loadAll());
+    this.eventSubscriber = this.eventManager.subscribe(EVENT_ON_LIST_MODIFIED, () => {
+      console.info('got event - list modified');
+      this.reloadTickets();
+    });
   }
 
   delete(ticket: ITicket): void {
@@ -179,7 +195,10 @@ export class TicketComponent implements OnInit, OnDestroy {
       backdrop: 'static',
     });
     modalRef.componentInstance.ticket = ticket;
-    this.loadTickets();
+  }
+
+  canLoadMore(): boolean {
+    return this.page <= this.links['last'];
   }
 
   private loadTicketTypes(): void {
@@ -188,6 +207,15 @@ export class TicketComponent implements OnInit, OnDestroy {
         this.ticketTypes[v.id as number] = v;
       });
     });
+  }
+
+  private reloadTickets(): void {
+    this.page = 0;
+    this.links = {
+      last: 0,
+    };
+    this.tickets = [];
+    this.loadTickets();
   }
 
   private loadTickets(): void {

@@ -15,12 +15,19 @@
 
     <jhi-alert></jhi-alert>
 
-
-    <div class="alert alert-warning" id="no-result" *ngIf="tickets?.length === 0 && !isLoading">
+    <div class="alert alert-warning" id="no-result" *ngIf="tickets.length === 0 && !isLoading">
         <span>No tickets found</span>
     </div>
 
     <div class="table-responsive" id="entities" *ngIf="tickets && tickets.length > 0">
+        <nav *ngIf="canLoadMore()" class="float-right">
+            <br/>
+            <ul class="pagination">
+                <li class="page-item"><span class="button" (click)="loadPage(page + 1)"><fa-icon icon="sync"></fa-icon> Load next page</span>
+                </li>
+            </ul>
+        </nav>
+
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
@@ -44,9 +51,7 @@
                 <td><a [routerLink]="['/ticket', ticket.id, 'view']">#{{ ticket.id }}</a></td>
                 <td>{{ ticket.uuid }}</td>
                 <td>
-                    <span
-                        [ngClass]="{'badge': true, 'badge-success': ticket.enabled, 'badge-warning': !ticket.enabled}">
-                        {{ticket.enabled }}</span>
+                    <form-boolean-label [lbValue]="ticket.enabled"></form-boolean-label>
                 </td>
                 <td>{{ ticket.createdAt | date:'medium' }}</td>
                 <td>{{ ticket.disabledAt | date:'medium' }}</td>
@@ -86,42 +91,50 @@
                             <fa-icon icon="download"></fa-icon>
                             Download
                         </button>
-                    </div>
 
-                    <div ngbDropdown>
-                        <button class="btn btn-outline-primary btn-sm" ngbDropdownToggle type="button">Actions</button>
-                        <div ngbDropdownMenu>
-                            <button (click)="regenerateFile(ticket)"
-                                    class="btn btn-info btn-sm" ngbDropdownItem>
-                                <fa-icon icon="recycle"></fa-icon>
-                                Regenerate
+
+                        <div ngbDropdown>
+                            <button class="btn btn-outline-primary btn-sm" ngbDropdownToggle type="button">Actions
                             </button>
+                            <div ngbDropdownMenu>
+                                <button (click)="regenerateFile(ticket)"
+                                        class="btn btn-info btn-sm" ngbDropdownItem>
+                                    <fa-icon icon="recycle"></fa-icon>
+                                    Regenerate
+                                </button>
 
-                            <div class="dropdown-divider"></div>
+                                <div class="dropdown-divider"></div>
 
-                            <button (click)="disable(ticket)" *ngIf="!ticket.disabledAt" class="dropdown-item"
-                                    ngbDropdownItem type="submit">
-                                <fa-icon icon="archive"></fa-icon>
-                                <span class="d-none d-md-inline">Disable</span>
-                            </button>
+                                <button (click)="disable(ticket)" *ngIf="!ticket.disabledAt" class="dropdown-item"
+                                        ngbDropdownItem type="submit">
+                                    <fa-icon icon="archive"></fa-icon>
+                                    <span class="d-none d-md-inline">Disable</span>
+                                </button>
 
-                            <button (click)="enable(ticket)" *ngIf="ticket.disabledAt" class="dropdown-item"
-                                    ngbDropdownItem type="submit">
-                                <span class="d-none d-md-inline">Enable</span>
-                            </button>
+                                <button (click)="enable(ticket)" *ngIf="ticket.disabledAt" class="dropdown-item"
+                                        ngbDropdownItem type="submit">
+                                    <span class="d-none d-md-inline">Enable</span>
+                                </button>
 
-                            <button (click)="delete(ticket)" class="dropdown-item"
-                                    ngbDropdownItem type="submit">
-                                <fa-icon icon="times"></fa-icon>
-                                <span class="d-none d-md-inline">Delete</span>
-                            </button>
+                                <button (click)="delete(ticket)" class="dropdown-item"
+                                        ngbDropdownItem type="submit">
+                                    <fa-icon icon="times"></fa-icon>
+                                    <span class="d-none d-md-inline">Delete</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-
                 </td>
             </tr>
             </tbody>
         </table>
+        <nav *ngIf="canLoadMore()" class="float-right">
+            <br/>
+            <ul class="pagination">
+                <li class="page-item"><span class="button" (click)="loadPage(page + 1)"><fa-icon icon="sync"></fa-icon> Load next page</span>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <div *ngIf="isLoading">

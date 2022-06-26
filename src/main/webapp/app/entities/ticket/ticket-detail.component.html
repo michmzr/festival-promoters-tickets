@@ -39,9 +39,8 @@
                 </div>
                 <dt><span>Enabled</span></dt>
                 <dd>
-                    <span>{{ ticket.enabled }}</span>
+                    <form-boolean-label [lbValue]="ticket.enabled"></form-boolean-label>
                 </dd>
-
                 <dt *ngIf="ticket.disabledAt"><span>Disabled At</span></dt>
                 <dd>
                     <span>{{ ticket.disabledAt | date:'medium' }}</span>
