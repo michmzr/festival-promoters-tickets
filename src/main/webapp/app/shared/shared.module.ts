@@ -6,10 +6,18 @@ import { LoginModalComponent } from './login/login.component';
 import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
 import { JhMaterialModule } from 'app/shared/jh-material.module';
 import { FormBooleanLabelComponent } from 'app/shared/form/form-boolean-label-component';
+import { LoadingComponent } from 'app/shared/data/loading.component';
 
 @NgModule({
   imports: [OrganicPromoTicketsSharedLibsModule, JhMaterialModule],
-  declarations: [AlertComponent, AlertErrorComponent, LoginModalComponent, HasAnyAuthorityDirective, FormBooleanLabelComponent],
+  declarations: [
+    AlertComponent,
+    AlertErrorComponent,
+    LoginModalComponent,
+    HasAnyAuthorityDirective,
+    FormBooleanLabelComponent,
+    LoadingComponent,
+  ],
   entryComponents: [LoginModalComponent],
   exports: [
     OrganicPromoTicketsSharedLibsModule,
@@ -19,6 +27,7 @@ import { FormBooleanLabelComponent } from 'app/shared/form/form-boolean-label-co
     HasAnyAuthorityDirective,
     JhMaterialModule,
     FormBooleanLabelComponent,
+    LoadingComponent,
   ],
 })
 export class OrganicPromoTicketsSharedModule {}

@@ -41,11 +41,11 @@
                 </dd>
                 <dt><span>Created At</span></dt>
                 <dd>
-                    <span>{{ promotor.createdAt }}</span>
+                    <span>{{ promotor.createdAt  | date:'medium' }}</span>
                 </dd>
                 <dt><span>Enabled</span></dt>
                 <dd>
-                    <span>{{ promotor.enabled }}</span>
+                    <form-boolean-label [lbValue]="promotor.enabled"></form-boolean-label>
                 </dd>
                 <dt><span>Promo codes</span></dt>
                 <dd>
