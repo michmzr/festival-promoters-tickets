@@ -34,11 +34,11 @@
                 </dd>
                 <dt><span>Created At</span></dt>
                 <dd>
-                    <span>{{ guest.createdAt }}</span>
+                    <span>{{ guest.createdAt  | date:'medium' }}</span>
                 </dd>
                 <dt><span>Enabled</span></dt>
                 <dd>
-                    <span>{{ guest.enabled }}</span>
+                    <form-boolean-label [lbValue]="guest.enabled "></form-boolean-label>
                 </dd>
                 <dt><span>Tickets</span></dt>
                 <dd>

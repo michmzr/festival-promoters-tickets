@@ -62,7 +62,9 @@
                     <td>{{ promotor.phoneNumber }}</td>
                     <td>{{ promotor.notes }}</td>
                     <td>{{ promotor.createdAt | date:'medium' }}</td>
-                    <td>{{ promotor.enabled }}</td>
+                    <td>
+                        <form-boolean-label [lbValue]="promotor.enabled"></form-boolean-label>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

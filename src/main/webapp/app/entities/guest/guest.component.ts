@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
@@ -22,6 +22,7 @@ export class GuestComponent implements OnInit, OnDestroy {
   page: number;
   predicate: string;
   ascending: boolean;
+  isLoading: Boolean = true;
 
   constructor(
     protected guestService: GuestService,
@@ -39,7 +40,9 @@ export class GuestComponent implements OnInit, OnDestroy {
     this.ascending = true;
   }
 
-  loadAll(): void {
+  loadGuestPage(): void {
+    this.isLoading = true;
+
     this.guestService
       .query({
         page: this.page,
@@ -52,16 +55,20 @@ export class GuestComponent implements OnInit, OnDestroy {
   reset(): void {
     this.page = 0;
     this.guests = [];
-    this.loadAll();
+    this.loadGuestPage();
   }
 
   loadPage(page: number): void {
     this.page = page;
-    this.loadAll();
+    this.loadGuestPage();
+  }
+
+  canLoadMore(): boolean {
+    return this.page <= this.links['last'];
   }
 
   ngOnInit(): void {
-    this.loadAll();
+    this.loadGuestPage();
     this.registerChangeInGuests();
   }
 
@@ -101,5 +108,6 @@ export class GuestComponent implements OnInit, OnDestroy {
         this.guests.push(data[i]);
       }
     }
+    this.isLoading = false;
   }
 }

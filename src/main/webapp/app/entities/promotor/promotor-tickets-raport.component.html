@@ -35,7 +35,9 @@
                     <tr *ngFor="let ticket of tickets">
                         <td><a [routerLink]="['/ticket', ticket.id, 'view']">#{{ ticket.id }}</a></td>
                         <td>{{ ticket.uuid }}</td>
-                        <td>{{ ticket.enabled }}</td>
+                        <td>
+                            <form-boolean-label [lbValue]="ticket.enabled"></form-boolean-label>
+                        </td>
                         <td>{{ ticket.createdAt | date:'medium' }}</td>
                         <td>{{ ticket.disabledAt | date:'medium' }}</td>
                         <td>

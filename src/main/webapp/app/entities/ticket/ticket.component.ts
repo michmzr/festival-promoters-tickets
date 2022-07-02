@@ -226,7 +226,7 @@ export class TicketComponent implements OnInit, OnDestroy {
   private loadTickets(): void {
     this.isLoading = true;
     this.ticketService
-      .query({
+      .list({
         page: this.page,
         size: this.itemsPerPage,
         sort: this.sort(),
@@ -236,6 +236,12 @@ export class TicketComponent implements OnInit, OnDestroy {
 
   loadPage(page: number): void {
     this.page = page;
+    this.loadTickets();
+  }
+
+  reset(): void {
+    this.page = 0;
+    this.tickets = [];
     this.loadTickets();
   }
 
